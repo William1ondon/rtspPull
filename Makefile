@@ -78,6 +78,6 @@ $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 clean:
-	$(RM) -r $(OBJ_DIR) $(OUTPUT_DIR) $(LIB_DIR)
+	$(RM) -r $(OBJ_DIR) $(OUTPUT_DIR)
 
 .PHONY: all prepare clean static shared app
