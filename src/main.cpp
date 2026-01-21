@@ -56,6 +56,7 @@ bool startOpengl()
 }
 
 static int vi_chn = 0;
+static const uint8_t START_CODE[4] = {0x00, 0x00, 0x00, 0x01};
 
 static void *listen_body(void *arg)
 {
@@ -71,6 +72,10 @@ static void *listen_body(void *arg)
     pFrameDec = new frame_shell;
     long long startTime = 0;
     long long endTime = 0;
+    char* inputBuf = (char*)malloc(DEFAULT_BUF_LEN);
+    H264Packet pkt;
+    std::vector<uint8_t> sps;
+    std::vector<uint8_t> pps;
 
     if (chn_num < DISP_CHN_NUM)
     {
@@ -86,7 +91,66 @@ static void *listen_body(void *arg)
 
     while (!bThreadShouldStop)
     {
-        startTime = sv_safeFunc_GetTimeTick();
+        h264Queue->pop(pkt);
+        uint8_t nalType = pkt.data[0] & 0x1F;
+
+        static uint64_t seq = 0;
+        if (!pkt.data || pkt.size <= 0) {
+            logInfo("invalid packet: data=%p size=%d", pkt.data, pkt.size);
+            continue;
+        }
+
+        if (nalType == 7) { // SPS
+            sps.assign(pkt.data, pkt.data + pkt.size);
+            delete[] pkt.data;
+            continue;
+        }
+
+        if (nalType == 8) { // PPS
+            pps.assign(pkt.data, pkt.data + pkt.size);
+            delete[] pkt.data;
+            continue;
+        }
+
+        /* ---------- 计算需要送给 VDEC 的数据 ---------- */
+        size_t outSize = 4 + pkt.size;
+
+        bool needExtra = false;
+        if (pkt.isIDR && !sps.empty() && !pps.empty()) {
+            outSize += 4 + sps.size();
+            outSize += 4 + pps.size();
+            needExtra = true;
+        }
+
+        uint8_t* inputBuf = new uint8_t[outSize];
+        // bufferIndex = (bufferIndex + 1) % 33;
+        uint8_t* p = inputBuf;
+
+        /* ---------- IDR 前拼 SPS / PPS ---------- */
+        if (needExtra) {
+            memcpy(p, START_CODE, 4); p += 4;
+            memcpy(p, sps.data(), sps.size()); p += sps.size();
+
+            memcpy(p, START_CODE, 4); p += 4;
+            memcpy(p, pps.data(), pps.size()); p += pps.size();
+        }
+
+        /* ---------- 当前 NAL ---------- */
+        memcpy(p, START_CODE, 4); p += 4;
+        memcpy(p, pkt.data, pkt.size);
+
+        /* ---------- 送入 VDEC ---------- */
+        frame_shell* fs = new frame_shell;
+        fs->refill(MEDIA_PT_H264,
+                   inputBuf,
+                   0,
+                   outSize,
+                   1,
+                   0,
+                   false);
+
+        g_vdecNode->sendFrame(fs);
+        // startTime = sv_safeFunc_GetTimeTick();
         // logInfo("start time = %ld\n", startTime);
         // int nalLen = 0;
         // char *temp = g_264File->getFrame(&nalLen);
@@ -117,7 +181,7 @@ static void *listen_body(void *arg)
     }
 }
 
-static const uint8_t START_CODE[4] = {0x00, 0x00, 0x00, 0x01};
+// static const uint8_t START_CODE[4] = {0x00, 0x00, 0x00, 0x01};
 
 static void* decodeThread(void* arg)
 {
@@ -238,8 +302,8 @@ bool startChn()
     pthread_attr_init(&attr);
     pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_DETACHED);
 
-    printf("=========> ready to start decode <=========\n");
-    pthread_create(&ret, &attr, decodeThread, nullptr);
+    // printf("=========> ready to start decode <=========\n");
+    // pthread_create(&ret, &attr, decodeThread, nullptr);
 
     /* 开启视频预览和编码 */
     for (int i = 0; i < DISP_CHN_NUM; i++)
