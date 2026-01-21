@@ -9,9 +9,65 @@
 #include <thread>
 #include <chrono>
 #include <cstring>
+#include <queue>
+#include <mutex>
+#include <condition_variable>
 #include "liveMedia.hh"
 #include "BasicUsageEnvironment.hh"
 #include "media_frame.h"
+#include "t507_vdec.h"
+
+struct H264Packet {
+    uint8_t* data;
+    size_t   size;
+    bool     isIDR;
+};
+
+class H264Queue {
+public:
+    explicit H264Queue(size_t maxDepth)
+        : mMaxDepth(maxDepth) {}
+
+    bool push(uint8_t* data, size_t size, bool isIDR) {
+        std::lock_guard<std::mutex> lk(mMutex);
+
+        // 队列满了：直接丢（防止卡死）
+        if (mQueue.size() >= mMaxDepth) {
+            delete[] data;
+            return false;
+        }
+
+        mQueue.push({data, size, isIDR});
+        mCond.notify_one();
+        return true;
+    }
+
+    bool pop(H264Packet& pkt) {
+        std::unique_lock<std::mutex> lk(mMutex);
+        mCond.wait(lk, [&] { return !mQueue.empty() || mStop; });
+
+        if (mQueue.empty())
+            return false;
+
+        pkt = mQueue.front();
+        mQueue.pop();
+        return true;
+    }
+
+    void stop() {
+        std::lock_guard<std::mutex> lk(mMutex);
+        mStop = true;
+        mCond.notify_all();
+    }
+
+private:
+    std::queue<H264Packet> mQueue;
+    std::mutex mMutex;
+    std::condition_variable mCond;
+    size_t mMaxDepth;
+    bool mStop{false};
+};
+
 
 struct Frame {
     std::vector<uint8_t> data;
@@ -59,7 +115,7 @@ public:
 
 class rtspPuller {
 public:
-	rtspPuller(const char* rtspURL); 
+	rtspPuller(const char* rtspURL, H264Queue* h264queue); 
 	~rtspPuller(){};
   void loop();
 
@@ -76,6 +132,8 @@ public:
   int reconnectMaxTimes;
   int reconnectCount = 0;
   StreamClientState scs;
+
+  H264Queue* h264Queue;
 };
 
 // Define a data sink (a subclass of "MediaSink") to receive the data for each subsession (i.e., each audio or video 'substream').
@@ -120,12 +178,12 @@ class MyH264Sink : public MediaSink {
 public:
   static MyH264Sink* createNew(UsageEnvironment& env,
                                 MediaSubsession& subsession,
-                                FILE* outFp,
+                                H264Queue& queue,
                                 unsigned bufferSize = 512000,
                                 FrameBuffer* fb = NULL);
 
 private:
-  MyH264Sink(UsageEnvironment& env, MediaSubsession& subsession, FILE* outFp, unsigned bufferSize, FrameBuffer* fb);
+  MyH264Sink(UsageEnvironment& env, MediaSubsession& subsession, H264Queue& queue, unsigned bufferSize, FrameBuffer* fb);
     // called only by "createNew()"
   virtual ~MyH264Sink();
 
@@ -148,7 +206,7 @@ private:
   unsigned fBufferSize;
   FrameBuffer* fFrameBuffer;
   Boolean fWrittenSPSPPS;
-  FILE* fOutFp;
+  H264Queue& fQueue;
 
   uint8_t* fSPS = nullptr;
   unsigned fSPSLen = 0;

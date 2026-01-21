@@ -51,11 +51,12 @@ void usage(UsageEnvironment& env, char const* progName) {
 
 char eventLoopWatchVariable = 0;
 
-rtspPuller::rtspPuller(const char* rtspURL) : rtspURL(rtspURL), reconnectIntervalMs(2000), reconnectMaxTimes(10)  {}
+rtspPuller::rtspPuller(const char* rtspURL, H264Queue* h264queue) : rtspURL(rtspURL), h264Queue(h264queue), reconnectIntervalMs(2000), reconnectMaxTimes(10)  {}
 
 void rtspPuller::loop(){
   while(true){
     if(tryConnect()){
+      logInfo("RTSP connected successfully, start eventloop\n");
       scheduler->doEventLoop();
     }
 
@@ -71,12 +72,11 @@ bool rtspPuller::tryConnect() {
   env = BasicUsageEnvironment::createNew(*scheduler);
 
   ourRTSPClient* rtspClient = ourRTSPClient::createNew(*env, rtspURL, &scs, this, 1, "rtspPuller");
-
   if (!rtspClient) {
       std::cerr << "Failed to create RTSPClient\n";
       return false;
   }
-
+  
   rtspClient->sendDescribeCommand(continueAfterDESCRIBE);
   return true;
 }
@@ -134,7 +134,7 @@ void continueAfterDESCRIBE(RTSPClient* rtspClient, int resultCode, char* resultS
     }
 
     // create sink
-    scs->subsession->sink = MyH264Sink::createNew(env, *scs->subsession, outFp);
+    scs->subsession->sink = MyH264Sink::createNew(env, *scs->subsession, *client->owner->h264Queue);
 
     if (!scs->subsession->sink) {
         env << "Failed to create sink\n";
@@ -252,15 +252,15 @@ StreamClientState::~StreamClientState() {
 // Define the size of the buffer that we'll use:
 #define DUMMY_SINK_RECEIVE_BUFFER_SIZE 512*1024
 
-MyH264Sink* MyH264Sink::createNew(UsageEnvironment& env, MediaSubsession& subsession, FILE* outFp, unsigned bufferSize, FrameBuffer* fb) {
+MyH264Sink* MyH264Sink::createNew(UsageEnvironment& env, MediaSubsession& subsession, H264Queue& queue, unsigned bufferSize, FrameBuffer* fb) {
   pFrameDec = new frame_shell;
-  return new MyH264Sink(env, subsession, outFp, bufferSize, fb);
+  return new MyH264Sink(env, subsession, queue, bufferSize, fb);
 }
 
-MyH264Sink::MyH264Sink(UsageEnvironment& env, MediaSubsession& subsession, FILE* outFp, unsigned bufferSize, FrameBuffer* fb)
+MyH264Sink::MyH264Sink(UsageEnvironment& env, MediaSubsession& subsession, H264Queue& queue, unsigned bufferSize, FrameBuffer* fb)
   : MediaSink(env),
     fSubsession(subsession),
-    fOutFp(outFp),
+    fQueue(queue),
     fBufferSize(bufferSize),
     fFrameBuffer(fb),
     fWrittenSPSPPS(False) {
@@ -306,75 +306,17 @@ void MyH264Sink::afterGettingFrame(unsigned frameSize,
                                   unsigned numTruncatedBytes,
                                   struct timeval presentationTime,
                                   unsigned /*duration*/) {
+
+    // 1️⃣ 解析 NAL type
     uint8_t nalType = fReceiveBuffer[0] & 0x1F;
+    bool isIDR = (nalType == 5);
 
-    // SPS
-    if (nalType == 7) {
-        delete[] fSPS;
-        fSPS = new uint8_t[frameSize];
-        memcpy(fSPS, fReceiveBuffer, frameSize);
-        fSPSLen = frameSize;
-        fHaveSPS = true;
-        continuePlaying();
-        return;
-    }
+    // 2️⃣ 拷贝一份数据（RTSP buffer 不能外用）
+    uint8_t* copyBuf = new uint8_t[frameSize];
+    memcpy(copyBuf, fReceiveBuffer, frameSize);
 
-    // PPS
-    if (nalType == 8) {
-        delete[] fPPS;
-        fPPS = new uint8_t[frameSize];
-        memcpy(fPPS, fReceiveBuffer, frameSize);
-        fPPSLen = frameSize;
-        fHavePPS = true;
-        continuePlaying();
-        return;
-    }
-
-    // SEI
-    if (nalType == 6) {
-        delete[] fSEI;
-        fSEI = new uint8_t[frameSize];
-        memcpy(fSEI, fReceiveBuffer, frameSize);
-        fSEILen = frameSize;
-        fHaveSEI = true;
-        continuePlaying();
-        return;
-    }
-
-    // IDR（I 帧）
-    if (nalType == 5 && fHaveSPS && fHavePPS) {
-
-        unsigned totalLen =
-            4 + fSPSLen +
-            4 + fPPSLen +
-            (fHaveSEI ? 4 + fSEILen : 0) +
-            4 + frameSize;
-
-        uint8_t* frameBuf = new uint8_t[totalLen];
-        uint8_t* p = frameBuf;
-
-        memcpy(p, kStartCode, 4); p += 4;
-        memcpy(p, fSPS, fSPSLen); p += fSPSLen;
-
-        memcpy(p, kStartCode, 4); p += 4;
-        memcpy(p, fPPS, fPPSLen); p += fPPSLen;
-
-        if (fHaveSEI) {
-            memcpy(p, kStartCode, 4); p += 4;
-            memcpy(p, fSEI, fSEILen); p += fSEILen;
-        }
-
-        memcpy(p, kStartCode, 4); p += 4;
-        memcpy(p, fReceiveBuffer, frameSize);
-
-        pFrameDec->refill(MEDIA_PT_H264, frameBuf, 0, totalLen, 1, 0, false);
-
-        delete[] frameBuf;
-    }
-    else {
-        // 普通 P 帧
-        pFrameDec->refill(MEDIA_PT_H264, fReceiveBuffer, 0, frameSize, 1, 0, false);
-    }
+    // 3️⃣ 非阻塞入队（满了直接丢）
+    fQueue.push(copyBuf, frameSize, isIDR);
 
     continuePlaying();
 }

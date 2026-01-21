@@ -103,7 +103,7 @@ int my_264test::getFileSize()
     fseek(inFile_, 0L, SEEK_SET);
 
 
-    logInfo("fileSize is  %d success\n",fileSize_);
+    // logInfo("fileSize is  %d success\n",fileSize_);
 
     return 1;
 }
@@ -116,7 +116,7 @@ int my_264test::openFile()
         logError("Open file error: %s \n", filePath_.c_str());
         return -1;
     }
-    logInfo("Openfil %s success\n",filePath_.c_str());
+    // logInfo("Openfil %s success\n",filePath_.c_str());
     return 1;
 }
 
