@@ -318,25 +318,83 @@ static void writeSPSPPS(MediaSubsession& subsession, FILE* fp) {
     delete[] spropRecords;
 }
 
-void MyH264Sink::afterGettingFrame(unsigned frameSize, unsigned numTruncatedBytes,
-				  struct timeval presentationTime, unsigned durationInMicroseconds) {
-  if (numTruncatedBytes > 0) {
-    // buffer too small, you can enlarge bufferSize
-  }
+void MyH264Sink::afterGettingFrame(unsigned frameSize,
+                                  unsigned numTruncatedBytes,
+                                  struct timeval presentationTime,
+                                  unsigned /*duration*/) {
+    uint8_t nalType = fReceiveBuffer[0] & 0x1F;
 
-  // 写 SPS/PPS（只能写一次）
-  if (!fWrittenSPSPPS) {
-      writeSPSPPS(fSubsession, fOutFp);
-      fWrittenSPSPPS = True;
-  }
+    // SPS
+    if (nalType == 7) {
+        delete[] fSPS;
+        fSPS = new uint8_t[frameSize];
+        memcpy(fSPS, fReceiveBuffer, frameSize);
+        fSPSLen = frameSize;
+        fHaveSPS = true;
+        continuePlaying();
+        return;
+    }
 
-  // 写 NALU（Annex-B）
-  fwrite(kStartCode, 1, 4, fOutFp);
-  fwrite(fReceiveBuffer, 1, frameSize, fOutFp);
-  fflush(fOutFp);
+    // PPS
+    if (nalType == 8) {
+        delete[] fPPS;
+        fPPS = new uint8_t[frameSize];
+        memcpy(fPPS, fReceiveBuffer, frameSize);
+        fPPSLen = frameSize;
+        fHavePPS = true;
+        continuePlaying();
+        return;
+    }
 
-  continuePlaying();
+    // SEI
+    if (nalType == 6) {
+        delete[] fSEI;
+        fSEI = new uint8_t[frameSize];
+        memcpy(fSEI, fReceiveBuffer, frameSize);
+        fSEILen = frameSize;
+        fHaveSEI = true;
+        continuePlaying();
+        return;
+    }
+
+    // IDR（I 帧）
+    if (nalType == 5 && fHaveSPS && fHavePPS) {
+
+        unsigned totalLen =
+            4 + fSPSLen +
+            4 + fPPSLen +
+            (fHaveSEI ? 4 + fSEILen : 0) +
+            4 + frameSize;
+
+        uint8_t* frameBuf = new uint8_t[totalLen];
+        uint8_t* p = frameBuf;
+
+        memcpy(p, kStartCode, 4); p += 4;
+        memcpy(p, fSPS, fSPSLen); p += fSPSLen;
+
+        memcpy(p, kStartCode, 4); p += 4;
+        memcpy(p, fPPS, fPPSLen); p += fPPSLen;
+
+        if (fHaveSEI) {
+            memcpy(p, kStartCode, 4); p += 4;
+            memcpy(p, fSEI, fSEILen); p += fSEILen;
+        }
+
+        memcpy(p, kStartCode, 4); p += 4;
+        memcpy(p, fReceiveBuffer, frameSize);
+
+        pFrameDec->refill(MEDIA_PT_H264, frameBuf, 0, totalLen, 1, 0, false);
+
+        delete[] frameBuf;
+    }
+    else {
+        // 普通 P 帧
+        pFrameDec->refill(MEDIA_PT_H264, fReceiveBuffer, 0, frameSize, 1, 0, false);
+    }
+
+    continuePlaying();
 }
+
 
 Boolean MyH264Sink::continuePlaying() {
   if (fSource == NULL) return False; // sanity check (should not happen)

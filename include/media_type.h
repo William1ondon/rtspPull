@@ -7,15 +7,9 @@
 extern "C" {
 #endif
 
-#ifdef QZ_HD250
-#define SV_MEDIA_CHANNEL_CNT        2
-#define MEDIA_CHANNEL_CNT           2
-#define FFMPEG_INIT_CHANNEL_CNT     2
-#elif (defined(QZ_HD291_REC)) || (defined(QZ_HD291_PRE)) || (defined(QZ_HMU318))|| (defined(QZ_HMU318_200008)) || (defined(QZ_HD291_123456)) || defined(QZ_HD277_000000)
 #define SV_MEDIA_CHANNEL_CNT        4
 #define MEDIA_CHANNEL_CNT           4
 #define FFMPEG_INIT_CHANNEL_CNT     4
-#endif
 
 
 /* 这个枚举值在avcodec_common.h中有定义，在这里又赋值一份的原因是: media_muxer.h包含了
