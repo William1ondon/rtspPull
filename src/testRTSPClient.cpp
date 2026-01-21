@@ -285,22 +285,6 @@ void MyH264Sink::onSourceClosure(void* clientData) {
 // If you don't want to see debugging output for each received frame, then comment out the following line:
 #define DEBUG_PRINT_EACH_RECEIVED_FRAME 0
 
-void writeCacheToFile(const void *address, std::size_t size, const std::string &filename)
-{
-    std::ofstream file(filename, std::ios::binary | std::ios::app); // 以二进制模式打开文件
-
-    if (file.is_open())
-    {
-        file.write(reinterpret_cast<const char *>(address), size); // 将地址的缓存内容写入文件
-        file.close();
-        printf("************* saved *************\n");
-    }
-    else
-    {
-        printf("************* can not open file *************\n");
-    }
-}
-
 static const uint8_t kStartCode[4] = {0x00,0x00,0x00,0x01};
 
 static void writeSPSPPS(MediaSubsession& subsession, FILE* fp) {
