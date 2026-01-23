@@ -21,13 +21,11 @@ along with this library; if not, write to the Free Software Foundation, Inc.,
 // "openRTSP": http://www.live555.com/openRTSP/
 
 #include "live555.h"
-
+static frame_shell *pFrameDec;
 // Forward function definitions:
 
 // RTSP 'response handlers':
 void continueAfterDESCRIBE(RTSPClient* rtspClient, int resultCode, char* resultString);
-void continueAfterSETUP(RTSPClient* rtspClient, int resultCode, char* resultString);
-void continueAfterPLAY(RTSPClient* rtspClient, int resultCode, char* resultString);
 
 // Other event handler functions:
 void subsessionAfterPlaying(void* clientData); // called when a stream's subsession (e.g., audio or video substream) ends
@@ -35,11 +33,6 @@ void subsessionByeHandler(void* clientData); // called when a RTCP "BYE" is rece
 void streamTimerHandler(void* clientData);
   // called at the end of a stream's expected duration (if the stream has not already signaled its end using a RTCP "BYE")
 
-// Used to iterate through each stream's 'subsessions', setting up each one:
-void setupNextSubsession(RTSPClient* rtspClient);
-
-// Used to shut down and close a stream (including its "RTSPClient" object):
-void shutdownStream(RTSPClient* rtspClient, int exitCode = 1);
 
 // A function that outputs a string that identifies each stream (for debugging output).  Modify this if you wish:
 UsageEnvironment& operator<<(UsageEnvironment& env, const RTSPClient& rtspClient) {
@@ -58,202 +51,125 @@ void usage(UsageEnvironment& env, char const* progName) {
 
 char eventLoopWatchVariable = 0;
 
-rtspPuller::rtspPuller(const char* rtspURL) {
-  this->rtspURL = rtspURL;
-}
+rtspPuller::rtspPuller(const char* rtspURL, H264Queue* h264queue) : rtspURL(rtspURL), h264Queue(h264queue), reconnectIntervalMs(2000), reconnectMaxTimes(10)  {}
 
 void rtspPuller::loop(){
-  TaskScheduler* scheduler = BasicTaskScheduler::createNew();
-  UsageEnvironment* env = BasicUsageEnvironment::createNew(*scheduler);
+  while(true){
+    if(tryConnect()){
+      logInfo("RTSP connected successfully, start eventloop\n");
+      scheduler->doEventLoop();
+    }
 
-  openURL(*env, "rtspPuller", rtspURL);
+    // 断开后自动重连
+    std::this_thread::sleep_for(std::chrono::milliseconds(reconnectIntervalMs));
+    reconnectCount++;
+    if (reconnectCount >= reconnectMaxTimes) break;
+  }
+}
 
-  env->taskScheduler().doEventLoop(&eventLoopWatchVariable);
+bool rtspPuller::tryConnect() {
+  scheduler = BasicTaskScheduler::createNew();
+  env = BasicUsageEnvironment::createNew(*scheduler);
+
+  ourRTSPClient* rtspClient = ourRTSPClient::createNew(*env, rtspURL, &scs, this, 1, "rtspPuller");
+  if (!rtspClient) {
+      std::cerr << "Failed to create RTSPClient\n";
+      return false;
+  }
+  
+  rtspClient->sendDescribeCommand(continueAfterDESCRIBE);
+  return true;
 }
 
 #define RTSP_CLIENT_VERBOSITY_LEVEL 1 // by default, print verbose output from each "RTSPClient"
 
 static unsigned rtspClientCount = 0; // Counts how many streams (i.e., "RTSPClient"s) are currently in use.
 
-void rtspPuller::openURL(UsageEnvironment& env, char const* progName, char const* rtspURL) {
-  // Begin by creating a "RTSPClient" object.  Note that there is a separate "RTSPClient" object for each stream that we wish
-  // to receive (even if more than stream uses the same "rtsp://" URL).
-  RTSPClient* rtspClient = ourRTSPClient::createNew(env, rtspURL, this, RTSP_CLIENT_VERBOSITY_LEVEL, progName);
-  if (rtspClient == NULL) {
-    env << "Failed to create a RTSP client for URL \"" << rtspURL << "\": " << env.getResultMsg() << "\n";
-    return;
-  }
-
-  ++rtspClientCount;
-
-  // Next, send a RTSP "DESCRIBE" command, to get a SDP description for the stream.
-  // Note that this command - like all RTSP commands - is sent asynchronously; we do not block, waiting for a response.
-  // Instead, the following function call returns immediately, and we handle the RTSP response later, from within the event loop:
-  rtspClient->sendDescribeCommand(continueAfterDESCRIBE); 
-}
-
 
 // Implementation of the RTSP 'response handlers':
 
 void continueAfterDESCRIBE(RTSPClient* rtspClient, int resultCode, char* resultString) {
-  do {
-    UsageEnvironment& env = rtspClient->envir(); // alias
-    StreamClientState& scs = ((ourRTSPClient*)rtspClient)->scs; // alias
+    UsageEnvironment& env = rtspClient->envir();
+    ourRTSPClient* client = (ourRTSPClient*)rtspClient;
+    StreamClientState* scs = client->scs;
 
     if (resultCode != 0) {
-      env << *rtspClient << "Failed to get a SDP description: " << resultString << "\n";
-      delete[] resultString;
-      break;
+        env << "DESCRIBE failed: " << resultString << "\n";
+        delete[] resultString;
+        return;
     }
 
-    char* const sdpDescription = resultString;
-    env << *rtspClient << "Got a SDP description:\n" << sdpDescription << "\n";
+    char* sdpDescription = resultString;
+    scs->session = MediaSession::createNew(env, sdpDescription);
 
-    // Create a media session object from this SDP description:
-    scs.session = MediaSession::createNew(env, sdpDescription);
-    delete[] sdpDescription; // because we don't need it anymore
-    if (scs.session == NULL) {
-      env << *rtspClient << "Failed to create a MediaSession object from the SDP description: " << env.getResultMsg() << "\n";
-      break;
-    } else if (!scs.session->hasSubsessions()) {
-      env << *rtspClient << "This session has no media subsessions (i.e., no \"m=\" lines)\n";
-      break;
+    if (!scs->session) {
+        env << "Failed to create MediaSession\n";
+        return;
     }
 
-    // Then, create and set up our data source objects for the session.  We do this by iterating over the session's 'subsessions',
-    // calling "MediaSubsession::initiate()", and then sending a RTSP "SETUP" command, on each one.
-    // (Each 'subsession' will have its own data source.)
-    scs.iter = new MediaSubsessionIterator(*scs.session);
-    setupNextSubsession(rtspClient);
-    return;
-  } while (0);
+    scs->iter = new MediaSubsessionIterator(*scs->session);
+    scs->subsession = scs->iter->next();
 
-  // An unrecoverable error occurred with this stream.
-  shutdownStream(rtspClient);
+    if (!scs->subsession) {
+        env << "No subsession found\n";
+        return;
+    }
+
+    // only handle first subsession (video)
+    if (strcmp(scs->subsession->mediumName(), "video") != 0) {
+        env << "Not video\n";
+        return;
+    }
+
+    if (!scs->subsession->initiate()) {
+        env << "Failed to initiate subsession\n";
+        return;
+    }
+
+    // open output file
+    FILE* outFp = fopen("output.h264", "wb");
+    if (!outFp) {
+        env << "Failed to open output file\n";
+        return;
+    }
+
+    // create sink
+    scs->subsession->sink = MyH264Sink::createNew(env, *scs->subsession, *client->owner->h264Queue);
+
+    if (!scs->subsession->sink) {
+        env << "Failed to create sink\n";
+        return;
+    }
+
+    scs->subsession->sink->startPlaying(*(scs->subsession->readSource()),
+                                        subsessionAfterPlaying,
+                                        scs->subsession);
+
+    // send SETUP
+    rtspClient->sendSetupCommand(*scs->subsession, [](RTSPClient* rtspClient, int resultCode, char* resultString) {
+        UsageEnvironment& env = rtspClient->envir();
+        if (resultCode != 0) {
+            env << "SETUP failed: " << resultString << "\n";
+            delete[] resultString;
+            return;
+        }
+        delete[] resultString;
+
+        // PLAY
+        rtspClient->sendPlayCommand(*((ourRTSPClient*)rtspClient)->scs->session, [](RTSPClient* rtspClient, int resultCode, char* resultString) {
+            UsageEnvironment& env = rtspClient->envir();
+            if (resultCode != 0) {
+                env << "PLAY failed: " << resultString << "\n";
+                delete[] resultString;
+                return;
+            }
+            env << "PLAY started\n";
+            delete[] resultString;
+        });
+    });
+
+    delete[] resultString;
 }
-
-// By default, we request that the server stream its data using RTP/UDP.
-// If, instead, you want to request that the server stream via RTP-over-TCP, change the following to True:
-#define REQUEST_STREAMING_OVER_TCP False
-
-void setupNextSubsession(RTSPClient* rtspClient) {
-  UsageEnvironment& env = rtspClient->envir(); // alias
-  StreamClientState& scs = ((ourRTSPClient*)rtspClient)->scs; // alias
-  
-  scs.subsession = scs.iter->next();
-  if (scs.subsession != NULL) {
-    if (!scs.subsession->initiate()) {
-      env << *rtspClient << "Failed to initiate the \"" << *scs.subsession << "\" subsession: " << env.getResultMsg() << "\n";
-      setupNextSubsession(rtspClient); // give up on this subsession; go to the next one
-    } else {
-      env << *rtspClient << "Initiated the \"" << *scs.subsession << "\" subsession (";
-      if (scs.subsession->rtcpIsMuxed()) {
-	env << "client port " << scs.subsession->clientPortNum();
-      } else {
-	env << "client ports " << scs.subsession->clientPortNum() << "-" << scs.subsession->clientPortNum()+1;
-      }
-      env << ")\n";
-
-      // Continue setting up this subsession, by sending a RTSP "SETUP" command:
-      rtspClient->sendSetupCommand(*scs.subsession, continueAfterSETUP, False, REQUEST_STREAMING_OVER_TCP);
-    }
-    return;
-  }
-
-  // We've finished setting up all of the subsessions.  Now, send a RTSP "PLAY" command to start the streaming:
-  if (scs.session->absStartTime() != NULL) {
-    // Special case: The stream is indexed by 'absolute' time, so send an appropriate "PLAY" command:
-    rtspClient->sendPlayCommand(*scs.session, continueAfterPLAY, scs.session->absStartTime(), scs.session->absEndTime());
-  } else {
-    scs.duration = scs.session->playEndTime() - scs.session->playStartTime();
-    rtspClient->sendPlayCommand(*scs.session, continueAfterPLAY);
-  }
-}
-
-void continueAfterSETUP(RTSPClient* rtspClient, int resultCode, char* resultString) {
-  do {
-    UsageEnvironment& env = rtspClient->envir(); // alias
-    StreamClientState& scs = ((ourRTSPClient*)rtspClient)->scs; // alias
-
-    if (resultCode != 0) {
-      env << *rtspClient << "Failed to set up the \"" << *scs.subsession << "\" subsession: " << resultString << "\n";
-      break;
-    }
-
-    env << *rtspClient << "Set up the \"" << *scs.subsession << "\" subsession (";
-    if (scs.subsession->rtcpIsMuxed()) {
-      env << "client port " << scs.subsession->clientPortNum();
-    } else {
-      env << "client ports " << scs.subsession->clientPortNum() << "-" << scs.subsession->clientPortNum()+1;
-    }
-    env << ")\n";
-
-    // Having successfully setup the subsession, create a data sink for it, and call "startPlaying()" on it.
-    // (This will prepare the data sink to receive data; the actual flow of data from the client won't start happening until later,
-    // after we've sent a RTSP "PLAY" command.)
-
-    scs.subsession->sink = DummySink::createNew(env, *scs.subsession, rtspClient->url(), &((ourRTSPClient*)rtspClient)->owner->frameBuffer);
-      // perhaps use your own custom "MediaSink" subclass instead
-    if (scs.subsession->sink == NULL) {
-      env << *rtspClient << "Failed to create a data sink for the \"" << *scs.subsession
-	  << "\" subsession: " << env.getResultMsg() << "\n";
-      break;
-    }
-
-    env << *rtspClient << "Created a data sink for the \"" << *scs.subsession << "\" subsession\n";
-    scs.subsession->miscPtr = rtspClient; // a hack to let subsession handle functions get the "RTSPClient" from the subsession 
-    scs.subsession->sink->startPlaying(*(scs.subsession->readSource()),
-				       subsessionAfterPlaying, scs.subsession);
-    // Also set a handler to be called if a RTCP "BYE" arrives for this subsession:
-    if (scs.subsession->rtcpInstance() != NULL) {
-      scs.subsession->rtcpInstance()->setByeHandler(subsessionByeHandler, scs.subsession);
-    }
-  } while (0);
-  delete[] resultString;
-
-  // Set up the next subsession, if any:
-  setupNextSubsession(rtspClient);
-}
-
-void continueAfterPLAY(RTSPClient* rtspClient, int resultCode, char* resultString) {
-  Boolean success = False;
-
-  do {
-    UsageEnvironment& env = rtspClient->envir(); // alias
-    StreamClientState& scs = ((ourRTSPClient*)rtspClient)->scs; // alias
-
-    if (resultCode != 0) {
-      env << *rtspClient << "Failed to start playing session: " << resultString << "\n";
-      break;
-    }
-
-    // Set a timer to be handled at the end of the stream's expected duration (if the stream does not already signal its end
-    // using a RTCP "BYE").  This is optional.  If, instead, you want to keep the stream active - e.g., so you can later
-    // 'seek' back within it and do another RTSP "PLAY" - then you can omit this code.
-    // (Alternatively, if you don't want to receive the entire stream, you could set this timer for some shorter value.)
-    if (scs.duration > 0) {
-      unsigned const delaySlop = 2; // number of seconds extra to delay, after the stream's expected duration.  (This is optional.)
-      scs.duration += delaySlop;
-      unsigned uSecsToDelay = (unsigned)(scs.duration*1000000);
-      scs.streamTimerTask = env.taskScheduler().scheduleDelayedTask(uSecsToDelay, (TaskFunc*)streamTimerHandler, rtspClient);
-    }
-
-    env << *rtspClient << "Started playing session";
-    if (scs.duration > 0) {
-      env << " (for up to " << scs.duration << " seconds)";
-    }
-    env << "...\n";
-
-    success = True;
-  } while (0);
-  delete[] resultString;
-
-  if (!success) {
-    // An unrecoverable error occurred with this stream.
-    shutdownStream(rtspClient);
-  }
-}
-
 
 // Implementation of the other event handlers:
 
@@ -266,21 +182,21 @@ void subsessionAfterPlaying(void* clientData) {
   subsession->sink = NULL;
 
   // Next, check whether *all* subsessions' streams have now been closed:
-  MediaSession& session = subsession->parentSession();
-  MediaSubsessionIterator iter(session);
-  while ((subsession = iter.next()) != NULL) {
-    if (subsession->sink != NULL) return; // this subsession is still active
-  }
+  // MediaSession& session = subsession->parentSession();
+  // MediaSubsessionIterator iter(session);
+  // while ((subsession = iter.next()) != NULL) {
+  //   if (subsession->sink != NULL) return; // this subsession is still active
+  // }
 
   // All subsessions' streams have now been closed, so shutdown the client:
-  shutdownStream(rtspClient);
+  // shutdownStream(rtspClient);
 }
 
 void subsessionByeHandler(void* clientData) {
   MediaSubsession* subsession = (MediaSubsession*)clientData;
   RTSPClient* rtspClient = (RTSPClient*)subsession->miscPtr;
-  UsageEnvironment& env = rtspClient->envir(); // alias
 
+  UsageEnvironment& env = rtspClient->envir(); // alias
   env << *rtspClient << "Received RTCP \"BYE\" on \"" << *subsession << "\" subsession\n";
 
   // Now act as if the subsession had closed:
@@ -289,67 +205,27 @@ void subsessionByeHandler(void* clientData) {
 
 void streamTimerHandler(void* clientData) {
   ourRTSPClient* rtspClient = (ourRTSPClient*)clientData;
-  StreamClientState& scs = rtspClient->scs; // alias
+  StreamClientState* scs = rtspClient->scs;
 
-  scs.streamTimerTask = NULL;
+  UsageEnvironment& env = rtspClient->envir();
+  env << "Stream timeout, closing session\n";
 
-  // Shut down the stream:
-  shutdownStream(rtspClient);
-}
-
-void shutdownStream(RTSPClient* rtspClient, int exitCode) {
-  UsageEnvironment& env = rtspClient->envir(); // alias
-  StreamClientState& scs = ((ourRTSPClient*)rtspClient)->scs; // alias
-
-  // First, check whether any subsessions have still to be closed:
-  if (scs.session != NULL) { 
-    Boolean someSubsessionsWereActive = False;
-    MediaSubsessionIterator iter(*scs.session);
-    MediaSubsession* subsession;
-
-    while ((subsession = iter.next()) != NULL) {
-      if (subsession->sink != NULL) {
-	Medium::close(subsession->sink);
-	subsession->sink = NULL;
-
-	if (subsession->rtcpInstance() != NULL) {
-	  subsession->rtcpInstance()->setByeHandler(NULL, NULL); // in case the server sends a RTCP "BYE" while handling "TEARDOWN"
-	}
-
-	someSubsessionsWereActive = True;
-      }
-    }
-
-    if (someSubsessionsWereActive) {
-      // Send a RTSP "TEARDOWN" command, to tell the server to shutdown the stream.
-      // Don't bother handling the response to the "TEARDOWN".
-      rtspClient->sendTeardownCommand(*scs.session, NULL);
-    }
-  }
-
-  env << *rtspClient << "Closing the stream.\n";
   Medium::close(rtspClient);
-    // Note that this will also cause this stream's "StreamClientState" structure to get reclaimed.
-
-  if (--rtspClientCount == 0) {
-    // The final stream has ended, so exit the application now.
-    // (Of course, if you're embedding this code into your own application, you might want to comment this out,
-    // and replace it with "eventLoopWatchVariable = 1;", so that we leave the LIVE555 event loop, and continue running "main()".)
-    exit(exitCode);
-  }
+  rtspClient = nullptr;
 }
+
 
 
 // Implementation of "ourRTSPClient":
 
-ourRTSPClient* ourRTSPClient::createNew(UsageEnvironment& env, char const* rtspURL, rtspPuller* owner,
+ourRTSPClient* ourRTSPClient::createNew(UsageEnvironment& env, char const* rtspURL, StreamClientState* scs, rtspPuller* owner,
 					int verbosityLevel, char const* applicationName, portNumBits tunnelOverHTTPPortNum) {
-  return new ourRTSPClient(env, rtspURL, owner, verbosityLevel, applicationName, tunnelOverHTTPPortNum);
+  return new ourRTSPClient(env, rtspURL, scs, owner, verbosityLevel, applicationName, tunnelOverHTTPPortNum);
 }
 
-ourRTSPClient::ourRTSPClient(UsageEnvironment& env, char const* rtspURL, rtspPuller* owner,
+ourRTSPClient::ourRTSPClient(UsageEnvironment& env, char const* rtspURL, StreamClientState* scs, rtspPuller* owner,
 			     int verbosityLevel, char const* applicationName, portNumBits tunnelOverHTTPPortNum)
-  : RTSPClient(env,rtspURL, verbosityLevel, applicationName, tunnelOverHTTPPortNum, -1), owner(owner) {
+  : RTSPClient(env,rtspURL, verbosityLevel, applicationName, tunnelOverHTTPPortNum, -1), scs(scs), owner(owner) {
 }
 
 ourRTSPClient::~ourRTSPClient() {
@@ -363,13 +239,9 @@ StreamClientState::StreamClientState()
 }
 
 StreamClientState::~StreamClientState() {
-  delete iter;
-  if (session != NULL) {
-    // We also need to delete "session", and unschedule "streamTimerTask" (if set)
-    UsageEnvironment& env = session->envir(); // alias
-
-    env.taskScheduler().unscheduleDelayedTask(streamTimerTask);
-    Medium::close(session);
+  if (iter) delete iter;
+  if (session) {
+      Medium::close(session);
   }
 }
 
@@ -380,109 +252,81 @@ StreamClientState::~StreamClientState() {
 // Define the size of the buffer that we'll use:
 #define DUMMY_SINK_RECEIVE_BUFFER_SIZE 512*1024
 
-DummySink* DummySink::createNew(UsageEnvironment& env, MediaSubsession& subsession, char const* streamId, FrameBuffer* fb) {
-  return new DummySink(env, subsession, streamId, fb);
+MyH264Sink* MyH264Sink::createNew(UsageEnvironment& env, MediaSubsession& subsession, H264Queue& queue, unsigned bufferSize, FrameBuffer* fb) {
+  pFrameDec = new frame_shell;
+  return new MyH264Sink(env, subsession, queue, bufferSize, fb);
 }
 
-DummySink::DummySink(UsageEnvironment& env, MediaSubsession& subsession, char const* streamId, FrameBuffer* fb)
+MyH264Sink::MyH264Sink(UsageEnvironment& env, MediaSubsession& subsession, H264Queue& queue, unsigned bufferSize, FrameBuffer* fb)
   : MediaSink(env),
     fSubsession(subsession),
+    fQueue(queue),
+    fBufferSize(bufferSize),
     fFrameBuffer(fb),
     fWrittenSPSPPS(False) {
-  fStreamId = strDup(streamId);
-  fReceiveBuffer = new u_int8_t[DUMMY_SINK_RECEIVE_BUFFER_SIZE];
-  fOutFp = fopen("newnewRTSP.h264", "wb");
+  fReceiveBuffer = new uint8_t[fBufferSize];
 }
 
-DummySink::~DummySink() {
+MyH264Sink::~MyH264Sink() {
   delete[] fReceiveBuffer;
-  delete[] fStreamId;
 }
 
-void DummySink::afterGettingFrame(void* clientData, unsigned frameSize, unsigned numTruncatedBytes,
+void MyH264Sink::afterGettingFrame(void* clientData, unsigned frameSize, unsigned numTruncatedBytes,
 				  struct timeval presentationTime, unsigned durationInMicroseconds) {
-  DummySink* sink = (DummySink*)clientData;
+  MyH264Sink* sink = (MyH264Sink*)clientData;
   sink->afterGettingFrame(frameSize, numTruncatedBytes, presentationTime, durationInMicroseconds);
+}
+
+void MyH264Sink::onSourceClosure(void* clientData) {
+  MyH264Sink* sink = (MyH264Sink*)clientData;
+  sink->stopPlaying();
 }
 
 // If you don't want to see debugging output for each received frame, then comment out the following line:
 #define DEBUG_PRINT_EACH_RECEIVED_FRAME 0
 
-void writeCacheToFile(const void *address, std::size_t size, const std::string &filename)
-{
-    std::ofstream file(filename, std::ios::binary | std::ios::app); // 以二进制模式打开文件
+static const uint8_t kStartCode[4] = {0x00,0x00,0x00,0x01};
 
-    if (file.is_open())
-    {
-        file.write(reinterpret_cast<const char *>(address), size); // 将地址的缓存内容写入文件
-        file.close();
-        printf("************* saved *************\n");
-    }
-    else
-    {
-        printf("************* can not open file *************\n");
-    }
-}
-
-static const uint8_t kStartCode[4] = {0x00, 0x00, 0x00, 0x01};
-
-void writeSPSPPS(MediaSubsession& subsession, FILE* fp) {
+static void writeSPSPPS(MediaSubsession& subsession, FILE* fp) {
     char const* sprop = subsession.fmtp_spropparametersets();
-    printf("sprop = %s\n", sprop ? sprop : "NULL");
-
     if (!sprop) return;
 
     unsigned numSPropRecords;
-    SPropRecord* spropRecords =
-        parseSPropParameterSets(sprop, numSPropRecords);
+    SPropRecord* spropRecords = parseSPropParameterSets(sprop, numSPropRecords);
 
     for (unsigned i = 0; i < numSPropRecords; ++i) {
         fwrite(kStartCode, 1, 4, fp);
-        fwrite(spropRecords[i].sPropBytes,
-               1,
-               spropRecords[i].sPropLength,
-               fp);
+        fwrite(spropRecords[i].sPropBytes, 1, spropRecords[i].sPropLength, fp);
     }
 
     delete[] spropRecords;
 }
 
-void DummySink::afterGettingFrame(unsigned frameSize, unsigned numTruncatedBytes,
-				  struct timeval presentationTime, unsigned /*durationInMicroseconds*/) {
-  // We've just received a frame of data.  (Optionally) print out information about it:
-  
-  // uint64_t pts = presentationTime.tv_sec * 1000000ULL + presentationTime.tv_usec;
-  // printf("DummySink::afterGettingFrame: received frame size=%u, truncated=%u, pts=%lu\n",
-  //        frameSize, numTruncatedBytes, pts);
+void MyH264Sink::afterGettingFrame(unsigned frameSize,
+                                  unsigned numTruncatedBytes,
+                                  struct timeval presentationTime,
+                                  unsigned /*duration*/) {
 
-  // if (fFrameBuffer) {
-  //     fFrameBuffer->push(fReceiveBuffer, frameSize, pts);
-  // }
+    // 1️⃣ 解析 NAL type
+    uint8_t nalType = fReceiveBuffer[0] & 0x1F;
+    bool isIDR = (nalType == 5);
 
-   uint8_t nalType = fReceiveBuffer[0] & 0x1F;
+    // 2️⃣ 拷贝一份数据（RTSP buffer 不能外用）
+    uint8_t* copyBuf = new uint8_t[frameSize];
+    memcpy(copyBuf, fReceiveBuffer, frameSize);
 
-    if (!fWrittenSPSPPS) {
-      writeSPSPPS(fSubsession, fOutFp);
-      fWrittenSPSPPS = True;
-  }
+    // 3️⃣ 非阻塞入队（满了直接丢）
+    fQueue.push(copyBuf, frameSize, isIDR);
 
-    fwrite(kStartCode, 1, 4, fOutFp);
-
-    fwrite(fReceiveBuffer, 1, frameSize, fOutFp);
-    fflush(fOutFp);
-
-
-  // writeCacheToFile(fReceiveBuffer, frameSize, "outputRtsp.h264");
-
-  // Then continue, to request the next frame of data:
-  continuePlaying();
+    continuePlaying();
 }
 
-Boolean DummySink::continuePlaying() {
+
+Boolean MyH264Sink::continuePlaying() {
   if (fSource == NULL) return False; // sanity check (should not happen)
 
   // Request the next frame of data from our input source.  "afterGettingFrame()" will get called later, when it arrives:
-  fSource->getNextFrame(fReceiveBuffer, DUMMY_SINK_RECEIVE_BUFFER_SIZE,
+  fSource->getNextFrame(fReceiveBuffer, fBufferSize,
                         afterGettingFrame, this,
                         onSourceClosure, this);
   return True;
