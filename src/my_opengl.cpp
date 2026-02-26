@@ -721,6 +721,8 @@ int CT507Graphics::setupTexture()
 
 int CT507Graphics::picDraw()
 {
+    static long long startTime = 0;
+    static long long endTime = 0;
     pthread_mutex_lock(&RenderMutex);
     while (!bRender)
     {
@@ -729,6 +731,7 @@ int CT507Graphics::picDraw()
     bRender = false;
     pthread_mutex_unlock(&RenderMutex);
 
+    startTime = sv_safeFunc_GetTimeTick();
     // printf("PIC DRAW!!!!\n");
 
     glUseProgram(shader_program[0]);
@@ -746,6 +749,9 @@ int CT507Graphics::picDraw()
 
     eglSwapBuffers(m_egl.egl_display, m_egl.egl_surface);
     glFinish();
+
+    endTime = sv_safeFunc_GetTimeTick();
+    // printf("===============> Render time = %lld ms\n", endTime - startTime);
 
     return 0;
 }

@@ -71,6 +71,8 @@ static void *listen_body(void *arg)
 
     pFrameDec = new frame_shell;
     long long startTime = 0;
+    long long middleTime0 = 0;
+    long long middleTime1 = 0;
     long long endTime = 0;
     char* inputBuf = (char*)malloc(DEFAULT_BUF_LEN);
     H264Packet pkt;
@@ -91,6 +93,7 @@ static void *listen_body(void *arg)
 
     while (!bThreadShouldStop)
     {
+        // startTime = sv_safeFunc_GetTimeTick();
         h264Queue->pop(pkt);
         uint8_t nalType = pkt.data[0] & 0x1F;
 
@@ -98,6 +101,10 @@ static void *listen_body(void *arg)
         if (!pkt.data || pkt.size <= 0) {
             logInfo("invalid packet: data=%p size=%d", pkt.data, pkt.size);
             continue;
+        }
+
+        if(nalType == 6) { // SEI
+            printf("===============> get SEI NAL\n");
         }
 
         if (nalType == 7) { // SPS
@@ -138,7 +145,7 @@ static void *listen_body(void *arg)
         /* ---------- 当前 NAL ---------- */
         memcpy(p, START_CODE, 4); p += 4;
         memcpy(p, pkt.data, pkt.size);
-
+        // middleTime0 = sv_safeFunc_GetTimeTick();
         /* ---------- 送入 VDEC ---------- */
         frame_shell* fs = new frame_shell;
         fs->refill(MEDIA_PT_H264,
@@ -170,7 +177,10 @@ static void *listen_body(void *arg)
         tempFrame->lockPacket(0, &virAddr, NULL);
 
         CT507Graphics::getInstance()->load_texture(virAddr, 1920, 1080, chn_num);
-        endTime = sv_safeFunc_GetTimeTick();
+
+
+        // endTime = sv_safeFunc_GetTimeTick();
+        // printf("============> combined one frame = %ld ms, 22 = %ld ms\n", middleTime0 - startTime, endTime - startTime);
         // logInfo("end time = %ld\n", endTime);
         // logWarn("all time = %ld\n", endTime - startTime); // 16ms
 
@@ -328,7 +338,13 @@ static void recvSignal(int sig)
     bThreadShouldStop = true;
 }
 
-// usage : v4l2_to_screen ([0-CAM_MAX])
+static void print_usage(const char *prog)
+{
+    printf("Usage: %s [-u rtsp_url] [-d queue_depth]\n", prog);
+    printf("  -u : RTSP url (default: rtsp://192.168.88.146/mainstream)\n");
+    printf("  -d : H264 queue depth (default: 100)\n");
+}
+
 int main(int argc, char *argv[])
 {
     signal(SIGINT, exit_handle);
@@ -342,9 +358,42 @@ int main(int argc, char *argv[])
     // g_264File = new my_264test(h264Path);
 #endif
 
+    std::string rtspUrl = "rtsp://192.168.88.146/mainstream";
+    int queueDepth = 100;
+
+    int opt;
+    while((opt = getopt(argc, argv, "u:d:h")) != -1)
+    {
+        switch(opt)
+        {
+            case 'u':
+                rtspUrl = optarg;
+                break;
+
+            case 'd':
+                queueDepth = atoi(optarg);
+                if (queueDepth <= 0)
+                {
+                    printf("Invalid queue depth!\n");
+                    return -1;
+                }
+                break;
+
+            case 'h':
+            default:
+                print_usage(argv[0]);
+                return 0;
+        }
+    }
+
+    printf("========== Runtime Config ==========\n");
+    printf("RTSP URL    : %s\n", rtspUrl.c_str());
+    printf("Queue Depth : %d\n", queueDepth);
+    printf("====================================\n");
+
     g_vdecNode = new t507_vdec_node(0);
-    h264Queue = new H264Queue(100);
-    rtspPuller puller("rtsp://192.168.88.88/mainstream", h264Queue);
+    h264Queue = new H264Queue(queueDepth);
+    rtspPuller puller(rtspUrl.c_str(), h264Queue);
 
     // alloc buffer
     for (int i = 0; i < DISP_CHN_NUM; i++)

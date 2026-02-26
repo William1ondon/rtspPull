@@ -385,7 +385,7 @@ int t507_vdec_node::decoderDataReady(awvideodecoder::AVPacket *packet)
 
     my_buffer::getInstance()->getVideobuffer(m_chn, T507_PREVIEW_BUF_NUM + bufIndex[m_chn], &mem);
 
-    logWarn("chn%d before memcpy,bufIndex num = %d, mem.virt = %ld\n",m_chn,bufIndex[m_chn],mem.virt);
+    // logWarn("chn%d before memcpy,bufIndex num = %d, mem.virt = %ld\n",m_chn,bufIndex[m_chn],mem.virt);
 
     if (ALIGN_16B(m_height) == 1088)
     {
