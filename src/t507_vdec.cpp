@@ -339,7 +339,7 @@ int t507_vdec_node::sendFrame(media_frame *frame)
 
     FrameType ft = parseH264FrameType(pkt.pAddrVir0, pkt.dataLen0);
     // logDebug("addrVir0 = %#x,  nalLen=%d,  m_decoder=%#x\n", pkt.pAddrVir0, pkt.dataLen0, m_decoder);
-    logDebug("get %s frame\n",getFrameTypeName(ft));
+    // logDebug("get %s frame\n",getFrameTypeName(ft));
 
 
     if (memcmp(pkt.pAddrVir0, CODE_SPS, 5) == 0)
@@ -356,10 +356,7 @@ int t507_vdec_node::sendFrame(media_frame *frame)
             return 0;
         }
     }
-    if (m_height == 1080)
-        usleep(4 * 1000);
-    if (m_height == 720)
-        usleep(12 * 1000);
+
     ret = m_decoder->decode(&pkt);
     if (ret < 0)
     {

@@ -74,7 +74,6 @@ static void *listen_body(void *arg)
     long long middleTime0 = 0;
     long long middleTime1 = 0;
     long long endTime = 0;
-    char* inputBuf = (char*)malloc(DEFAULT_BUF_LEN);
     H264Packet pkt;
     std::vector<uint8_t> sps;
     std::vector<uint8_t> pps;
@@ -89,13 +88,21 @@ static void *listen_body(void *arg)
 
     printf("listen_body:chn:%d\n", chn_num);
 
-    usleep(2500 * 1000);
-
     while (!bThreadShouldStop)
     {
-        // startTime = sv_safeFunc_GetTimeTick();
-        h264Queue->pop(pkt);
+        if (!h264Queue->pop(pkt))
+        {
+            break;
+        }
+        startTime = sv_safeFunc_GetTimeTick();
+    //     struct timespec now;
+    //     clock_gettime(CLOCK_MONOTONIC, &now);
+    //     int64_t delta_ms =
+    // (now.tv_sec  - pkt.ts.tv_sec)  * 1000 +
+    // (now.tv_nsec - pkt.ts.tv_nsec) / 1000000;
         uint8_t nalType = pkt.data[0] & 0x1F;
+
+        // printf("============> from enqueue to dequeue = %lld ms, isIDR = %d\n", startTime - pkt.pts, pkt.isIDR);
 
         static uint64_t seq = 0;
         if (!pkt.data || pkt.size <= 0) {
@@ -119,7 +126,7 @@ static void *listen_body(void *arg)
             continue;
         }
 
-        /* ---------- 计算需要送给 VDEC 的数据 ---------- */
+        /* ---------- 计算需要送给 VDEC 的数�?---------- */
         size_t outSize = 4 + pkt.size;
 
         bool needExtra = false;
@@ -145,7 +152,8 @@ static void *listen_body(void *arg)
         /* ---------- 当前 NAL ---------- */
         memcpy(p, START_CODE, 4); p += 4;
         memcpy(p, pkt.data, pkt.size);
-        // middleTime0 = sv_safeFunc_GetTimeTick();
+        delete[] pkt.data;
+        middleTime0 = sv_safeFunc_GetTimeTick();
         /* ---------- 送入 VDEC ---------- */
         frame_shell* fs = new frame_shell;
         fs->refill(MEDIA_PT_H264,
@@ -179,8 +187,8 @@ static void *listen_body(void *arg)
         CT507Graphics::getInstance()->load_texture(virAddr, 1920, 1080, chn_num);
 
 
-        // endTime = sv_safeFunc_GetTimeTick();
-        // printf("============> combined one frame = %ld ms, 22 = %ld ms\n", middleTime0 - startTime, endTime - startTime);
+        endTime = sv_safeFunc_GetTimeTick();
+        // printf("============> eq to dq: %ld, combined: %ld ms, send = %ld ms\n", startTime - pkt.pts, middleTime0 - startTime, endTime - middleTime0);
         // logInfo("end time = %ld\n", endTime);
         // logWarn("all time = %ld\n", endTime - startTime); // 16ms
 
@@ -205,8 +213,6 @@ static void* decodeThread(void* arg)
     // {
     //     outBuf[i] = new uint8_t[512000];
     // }
-    char* inputBuf = (char*)malloc(DEFAULT_BUF_LEN);
-
     H264Packet pkt;
 
     while (h264Queue->pop(pkt))
@@ -321,7 +327,6 @@ bool startChn()
         printf("ready to start chn: i = %d\n", i);
         vi_chn = i;
         pthread_create(&ret, &attr, listen_body, nullptr);
-        usleep(200 * 1000);
     }
     pthread_attr_destroy(&attr);
     return true;
@@ -342,7 +347,7 @@ static void print_usage(const char *prog)
 {
     printf("Usage: %s [-u rtsp_url] [-d queue_depth]\n", prog);
     printf("  -u : RTSP url (default: rtsp://192.168.88.146/mainstream)\n");
-    printf("  -d : H264 queue depth (default: 100)\n");
+    printf("  -d : H264 queue depth (default: 8)\n");
 }
 
 int main(int argc, char *argv[])
@@ -359,7 +364,7 @@ int main(int argc, char *argv[])
 #endif
 
     std::string rtspUrl = "rtsp://192.168.88.146/mainstream";
-    int queueDepth = 100;
+    int queueDepth = 8;
 
     int opt;
     while((opt = getopt(argc, argv, "u:d:h")) != -1)

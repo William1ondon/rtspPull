@@ -21,6 +21,7 @@ struct H264Packet {
     uint8_t* data;
     size_t   size;
     bool     isIDR;
+    long long pts;
 };
 
 class H264Queue {
@@ -28,16 +29,17 @@ public:
     explicit H264Queue(size_t maxDepth)
         : mMaxDepth(maxDepth) {}
 
-    bool push(uint8_t* data, size_t size, bool isIDR) {
+    bool push(uint8_t* data, size_t size, bool isIDR, long long pts) {
         std::lock_guard<std::mutex> lk(mMutex);
 
-        // 队列满了：直接丢（防止卡死）
+        // Low-latency policy: if full, drop the oldest packet and keep newest data.
         if (mQueue.size() >= mMaxDepth) {
-            delete[] data;
-            return false;
+            H264Packet old = mQueue.front();
+            mQueue.pop();
+            delete[] old.data;
         }
 
-        mQueue.push({data, size, isIDR});
+        mQueue.push({data, size, isIDR, pts});
         mCond.notify_one();
         return true;
     }
