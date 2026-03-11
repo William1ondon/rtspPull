@@ -10,6 +10,14 @@
 #include <asm/types.h>
 #include <string.h>
 #include <signal.h>
+#include <pthread.h>
+
+#include <algorithm>
+#include <array>
+#include <cctype>
+#include <string>
+#include <thread>
+#include <vector>
 
 #include "my_opengl.h"
 #include "common.h"
@@ -22,14 +30,79 @@
 
 bool bThreadShouldStop = false;
 
-t507_vdec_node *g_vdecNode = nullptr;
-my_264test *g_264File = nullptr;
-FILE *g_out = nullptr;
-H264Queue *h264Queue = nullptr;
+my_264test* g_264File = nullptr;
+FILE* g_out = nullptr;
 
-static void *runOpenGL(void *arg)
+struct DecodeThreadContext
 {
-    int fd = -1;
+    int chn;
+    t507_vdec_node* vdecNode;
+    H264Queue* h264Queue;
+};
+
+static std::array<t507_vdec_node*, DISP_CHN_NUM> g_vdecNodes{};
+static std::array<H264Queue*, DISP_CHN_NUM> g_h264Queues{};
+static std::array<rtspPuller*, DISP_CHN_NUM> g_pullers{};
+static std::array<DecodeThreadContext, DISP_CHN_NUM> g_decodeCtx{};
+
+static const uint8_t START_CODE[4] = {0x00, 0x00, 0x00, 0x01};
+
+static std::string trim(const std::string& str)
+{
+    size_t first = 0;
+    while (first < str.size() && std::isspace(static_cast<unsigned char>(str[first])))
+    {
+        ++first;
+    }
+
+    size_t last = str.size();
+    while (last > first && std::isspace(static_cast<unsigned char>(str[last - 1])))
+    {
+        --last;
+    }
+
+    return str.substr(first, last - first);
+}
+
+static std::vector<std::string> splitUrls(const std::string& raw)
+{
+    std::vector<std::string> urls;
+    size_t start = 0;
+
+    while (start <= raw.size())
+    {
+        size_t commaPos = raw.find(',', start);
+        std::string token;
+
+        if (commaPos == std::string::npos)
+        {
+            token = raw.substr(start);
+        }
+        else
+        {
+            token = raw.substr(start, commaPos - start);
+        }
+
+        token = trim(token);
+        if (!token.empty())
+        {
+            urls.push_back(token);
+        }
+
+        if (commaPos == std::string::npos)
+        {
+            break;
+        }
+        start = commaPos + 1;
+    }
+
+    return urls;
+}
+
+static void* runOpenGL(void* arg)
+{
+    (void)arg;
+
     CT507Graphics::getInstance()->initOpenGL();
 
     cpu_set_t mask;
@@ -41,6 +114,8 @@ static void *runOpenGL(void *arg)
     {
         CT507Graphics::getInstance()->picDraw();
     }
+
+    return nullptr;
 }
 
 bool startOpengl()
@@ -48,35 +123,23 @@ bool startOpengl()
     pthread_t ret = 0;
     pthread_attr_t attr;
 
-    // 单独设置一个线程用于创建和刷新openGL
     pthread_attr_init(&attr);
     pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_DETACHED);
     pthread_create(&ret, &attr, runOpenGL, nullptr);
+    pthread_attr_destroy(&attr);
     return true;
 }
 
-static int vi_chn = 0;
-static const uint8_t START_CODE[4] = {0x00, 0x00, 0x00, 0x01};
-
-static void *listen_body(void *arg)
+static void* listen_body(void* arg)
 {
+    DecodeThreadContext* ctx = static_cast<DecodeThreadContext*>(arg);
+    if (ctx == nullptr || ctx->vdecNode == nullptr || ctx->h264Queue == nullptr)
+    {
+        logError("listen_body invalid context\n");
+        return nullptr;
+    }
 
-    int chn_num = vi_chn; // 当前的线程所表示的vi通道
-
-    int ret, fd, maxFd = 0;
-
-    struct timeval tv;
-    fd_set read_fds;
-    frame_shell *pFrameDec = nullptr;
-
-    pFrameDec = new frame_shell;
-    long long startTime = 0;
-    long long middleTime0 = 0;
-    long long middleTime1 = 0;
-    long long endTime = 0;
-    H264Packet pkt;
-    std::vector<uint8_t> sps;
-    std::vector<uint8_t> pps;
+    int chn_num = ctx->chn;
 
     if (chn_num < DISP_CHN_NUM)
     {
@@ -86,230 +149,101 @@ static void *listen_body(void *arg)
         pthread_setaffinity_np(pthread_self(), sizeof(mask), &mask);
     }
 
-    printf("listen_body:chn:%d\n", chn_num);
+    printf("listen_body: chn:%d\n", chn_num);
+
+    H264Packet pkt;
+    std::vector<uint8_t> sps;
+    std::vector<uint8_t> pps;
 
     while (!bThreadShouldStop)
     {
-        if (!h264Queue->pop(pkt))
+        if (!ctx->h264Queue->pop(pkt))
         {
             break;
         }
-        startTime = sv_safeFunc_GetTimeTick();
-    //     struct timespec now;
-    //     clock_gettime(CLOCK_MONOTONIC, &now);
-    //     int64_t delta_ms =
-    // (now.tv_sec  - pkt.ts.tv_sec)  * 1000 +
-    // (now.tv_nsec - pkt.ts.tv_nsec) / 1000000;
-        uint8_t nalType = pkt.data[0] & 0x1F;
 
-        // printf("============> from enqueue to dequeue = %lld ms, isIDR = %d\n", startTime - pkt.pts, pkt.isIDR);
-
-        static uint64_t seq = 0;
-        if (!pkt.data || pkt.size <= 0) {
-            logInfo("invalid packet: data=%p size=%d", pkt.data, pkt.size);
+        if (pkt.data == nullptr || pkt.size == 0)
+        {
+            delete[] pkt.data;
             continue;
         }
 
-        if(nalType == 6) { // SEI
-            printf("===============> get SEI NAL\n");
+        const uint8_t nalType = pkt.data[0] & 0x1F;
+
+        if (nalType == 6)
+        {
+            printf("chn %d got SEI NAL\n", chn_num);
         }
 
-        if (nalType == 7) { // SPS
+        if (nalType == 7)
+        {
             sps.assign(pkt.data, pkt.data + pkt.size);
             delete[] pkt.data;
             continue;
         }
 
-        if (nalType == 8) { // PPS
+        if (nalType == 8)
+        {
             pps.assign(pkt.data, pkt.data + pkt.size);
             delete[] pkt.data;
             continue;
         }
 
-        /* ---------- 计算需要送给 VDEC 的数�?---------- */
         size_t outSize = 4 + pkt.size;
-
         bool needExtra = false;
-        if (pkt.isIDR && !sps.empty() && !pps.empty()) {
+
+        if (pkt.isIDR && !sps.empty() && !pps.empty())
+        {
             outSize += 4 + sps.size();
             outSize += 4 + pps.size();
             needExtra = true;
         }
 
         uint8_t* inputBuf = new uint8_t[outSize];
-        // bufferIndex = (bufferIndex + 1) % 33;
         uint8_t* p = inputBuf;
 
-        /* ---------- IDR 前拼 SPS / PPS ---------- */
-        if (needExtra) {
-            memcpy(p, START_CODE, 4); p += 4;
-            memcpy(p, sps.data(), sps.size()); p += sps.size();
+        if (needExtra)
+        {
+            memcpy(p, START_CODE, 4);
+            p += 4;
+            memcpy(p, sps.data(), sps.size());
+            p += sps.size();
 
-            memcpy(p, START_CODE, 4); p += 4;
-            memcpy(p, pps.data(), pps.size()); p += pps.size();
+            memcpy(p, START_CODE, 4);
+            p += 4;
+            memcpy(p, pps.data(), pps.size());
+            p += pps.size();
         }
 
-        /* ---------- 当前 NAL ---------- */
-        memcpy(p, START_CODE, 4); p += 4;
+        memcpy(p, START_CODE, 4);
+        p += 4;
         memcpy(p, pkt.data, pkt.size);
         delete[] pkt.data;
-        middleTime0 = sv_safeFunc_GetTimeTick();
-        /* ---------- 送入 VDEC ---------- */
+
         frame_shell* fs = new frame_shell;
-        fs->refill(MEDIA_PT_H264,
-                   inputBuf,
-                   0,
-                   outSize,
-                   1,
-                   0,
-                   false);
+        fs->refill(MEDIA_PT_H264, inputBuf, 0, outSize, 1, 0, false);
 
-        g_vdecNode->sendFrame(fs);
-        // startTime = sv_safeFunc_GetTimeTick();
-        // logInfo("start time = %ld\n", startTime);
-        // int nalLen = 0;
-        // char *temp = g_264File->getFrame(&nalLen);
-        // g_264File->updateFileSeek(nalLen);
+        if (ctx->vdecNode->sendFrame(fs) != 0)
+        {
+            continue;
+        }
 
-        // if (temp == nullptr)
-        // {
-        //     bThreadShouldStop = true;
-        //     break;
-        // }
+        media_frame* tempFrame = ctx->vdecNode->getFrame();
+        if (tempFrame == nullptr)
+        {
+            continue;
+        }
 
-        // pFrameDec->refill(MEDIA_PT_H264, temp, 0, nalLen, 1, 0, false);
-        // g_vdecNode->sendFrame(pFrameDec);
-
-        media_frame *tempFrame = g_vdecNode->getFrame();
-        void *virAddr;
+        void* virAddr = nullptr;
         tempFrame->lockPacket(0, &virAddr, NULL);
-
-        CT507Graphics::getInstance()->load_texture(virAddr, 1920, 1080, chn_num);
-
-
-        endTime = sv_safeFunc_GetTimeTick();
-        // printf("============> eq to dq: %ld, combined: %ld ms, send = %ld ms\n", startTime - pkt.pts, middleTime0 - startTime, endTime - middleTime0);
-        // logInfo("end time = %ld\n", endTime);
-        // logWarn("all time = %ld\n", endTime - startTime); // 16ms
-
-        // if (endTime - startTime < 1000 / FRAME_RATE)
-        // {
-        //     usleep((endTime - startTime) * 1000);
-        // }
-    }
-}
-
-// static const uint8_t START_CODE[4] = {0x00, 0x00, 0x00, 0x01};
-
-static void* decodeThread(void* arg)
-{
-    static int bufferIndex = 0;
-    std::vector<uint8_t> sps;
-    std::vector<uint8_t> pps;
-    long long startTime = 0;
-    long long endTime = 0;
-    // uint8_t* outBuf[33];
-    // for(int i  = 0; i < 33; i++)
-    // {
-    //     outBuf[i] = new uint8_t[512000];
-    // }
-    H264Packet pkt;
-
-    while (h264Queue->pop(pkt))
-    {
-        uint8_t nalType = pkt.data[0] & 0x1F;
-
-// bool has4Start = (pkt.size>=4 && pkt.data[0]==0x00 && pkt.data[1]==0x00 && pkt.data[2]==0x00 && pkt.data[3]==0x01);
-// bool has3Start = (pkt.size>=3 && pkt.data[0]==0x00 && pkt.data[1]==0x00 && pkt.data[2]==0x01);
-
-// logInfo("pkt size=%d nalType=%d has4Start=%d has3Start=%d isIDR=%d",
-//         pkt.size, nalType, has4Start, has3Start, pkt.isIDR);
-
-        // 打印pkt.date的前16字节hex
-        // logInfo("pkt data (first 16 bytes):");
-        // for (int i = 0; i < 16 && i < pkt.size; i++) {
-        //     printf("%02X ", pkt.data[i]);
-        // }
-        // logInfo("\n");
-        // logInfo("pkt.size=%d nalType=%d isIDR=%d", pkt.size, nalType, pkt.isIDR);
-
-
-        static uint64_t seq = 0;
-        // startTime = sv_safeFunc_GetTimeTick();
-        // logInfo("decode start time = %ld\n", startTime);
-        if (!pkt.data || pkt.size <= 0) {
-            logInfo("invalid packet: data=%p size=%d", pkt.data, pkt.size);
-            continue;
+        if (virAddr != nullptr)
+        {
+            CT507Graphics::getInstance()->load_texture(virAddr, IMAGEWIDTH, IMAGEHEIGHT, chn_num);
         }
-
-
-        // uint8_t nalType = pkt.data[0] & 0x1F;
-
-        /* ---------- 缓存 SPS / PPS ---------- */
-        if (nalType == 7) { // SPS
-            sps.assign(pkt.data, pkt.data + pkt.size);
-            delete[] pkt.data;
-            continue;
-        }
-
-        if (nalType == 8) { // PPS
-            pps.assign(pkt.data, pkt.data + pkt.size);
-            delete[] pkt.data;
-            continue;
-        }
-
-        /* ---------- 计算需要送给 VDEC 的数据 ---------- */
-        size_t outSize = 4 + pkt.size;
-
-        bool needExtra = false;
-        if (pkt.isIDR && !sps.empty() && !pps.empty()) {
-            outSize += 4 + sps.size();
-            outSize += 4 + pps.size();
-            needExtra = true;
-        }
-
-        uint8_t* inputBuf = new uint8_t[outSize];
-        // bufferIndex = (bufferIndex + 1) % 33;
-        uint8_t* p = inputBuf;
-
-        /* ---------- IDR 前拼 SPS / PPS ---------- */
-        if (needExtra) {
-            memcpy(p, START_CODE, 4); p += 4;
-            memcpy(p, sps.data(), sps.size()); p += sps.size();
-
-            memcpy(p, START_CODE, 4); p += 4;
-            memcpy(p, pps.data(), pps.size()); p += pps.size();
-        }
-
-        /* ---------- 当前 NAL ---------- */
-        memcpy(p, START_CODE, 4); p += 4;
-        memcpy(p, pkt.data, pkt.size);
-
-        /* ---------- 送入 VDEC ---------- */
-        frame_shell* fs = new frame_shell;
-        fs->refill(MEDIA_PT_H264,
-                   inputBuf,
-                   0,
-                   outSize,
-                   pkt.isIDR ? 1 : 0,
-                   0,
-                   false);
-
-        g_vdecNode->sendFrame(fs);
-
-        // writeCacheToFile(outBuf, outSize, "decoded.h264");
-
-        // endTime = sv_safeFunc_GetTimeTick();
-        // logInfo("decode end time = %ld\n", endTime);
-
-        /* ---------- 清理 ---------- */
-        // delete[] outBuf;
-        delete[] pkt.data;
     }
 
     return nullptr;
 }
-
 
 bool startChn()
 {
@@ -318,39 +252,37 @@ bool startChn()
     pthread_attr_init(&attr);
     pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_DETACHED);
 
-    // printf("=========> ready to start decode <=========\n");
-    // pthread_create(&ret, &attr, decodeThread, nullptr);
-
-    /* 开启视频预览和编码 */
     for (int i = 0; i < DISP_CHN_NUM; i++)
     {
-        printf("ready to start chn: i = %d\n", i);
-        vi_chn = i;
-        pthread_create(&ret, &attr, listen_body, nullptr);
+        printf("ready to start decode channel: %d\n", i);
+        pthread_create(&ret, &attr, listen_body, &g_decodeCtx[i]);
     }
+
     pthread_attr_destroy(&attr);
     return true;
 }
 
 static void exit_handle(int signalnum)
 {
+    (void)signalnum;
     bThreadShouldStop = true;
 }
 
 static void recvSignal(int sig)
 {
-
+    (void)sig;
     bThreadShouldStop = true;
 }
 
-static void print_usage(const char *prog)
+static void print_usage(const char* prog)
 {
-    printf("Usage: %s [-u rtsp_url] [-d queue_depth]\n", prog);
-    printf("  -u : RTSP url (default: rtsp://192.168.88.146/mainstream)\n");
-    printf("  -d : H264 queue depth (default: 8)\n");
+    printf("Usage: %s [-u rtsp_url]... [-d queue_depth]\n", prog);
+    printf("  -u : RTSP url. Repeat up to %d times, or pass comma-separated list\n", DISP_CHN_NUM);
+    printf("       Example: -u rtsp://cam1/main -u rtsp://cam2/main -u rtsp://cam3/main -u rtsp://cam4/main\n");
+    printf("  -d : H264 queue depth per channel (default: 8)\n");
 }
 
-int main(int argc, char *argv[])
+int main(int argc, char* argv[])
 {
     signal(SIGINT, exit_handle);
     signal(SIGKILL, exit_handle);
@@ -358,22 +290,34 @@ int main(int argc, char *argv[])
 
 #ifdef FILE_TEST
     // std::string h264Path = "/mnt/tmp.h264";
-    // std::string h264Path = "/mnt/1080P30.h264";
-    // std::string h264Path = "/mnt/rtp_dump.h264"; // error
     // g_264File = new my_264test(h264Path);
 #endif
 
-    std::string rtspUrl = "rtsp://192.168.88.146/mainstream";
+    const std::string defaultUrl = "rtsp://192.168.88.146/mainstream";
+    std::array<std::string, DISP_CHN_NUM> rtspUrls;
+    rtspUrls.fill(defaultUrl);
+
+    std::vector<std::string> userUrls;
     int queueDepth = 8;
 
     int opt;
-    while((opt = getopt(argc, argv, "u:d:h")) != -1)
+    while ((opt = getopt(argc, argv, "u:d:h")) != -1)
     {
-        switch(opt)
+        switch (opt)
         {
             case 'u':
-                rtspUrl = optarg;
+            {
+                std::vector<std::string> parsed = splitUrls(optarg);
+                if (parsed.empty())
+                {
+                    userUrls.emplace_back(optarg);
+                }
+                else
+                {
+                    userUrls.insert(userUrls.end(), parsed.begin(), parsed.end());
+                }
                 break;
+            }
 
             case 'd':
                 queueDepth = atoi(optarg);
@@ -391,42 +335,82 @@ int main(int argc, char *argv[])
         }
     }
 
+    if (!userUrls.empty())
+    {
+        if (userUrls.size() == 1)
+        {
+            rtspUrls.fill(userUrls[0]);
+        }
+        else
+        {
+            size_t copyCount = std::min(userUrls.size(), rtspUrls.size());
+            for (size_t i = 0; i < copyCount; ++i)
+            {
+                rtspUrls[i] = userUrls[i];
+            }
+
+            if (userUrls.size() < rtspUrls.size())
+            {
+                for (size_t i = userUrls.size(); i < rtspUrls.size(); ++i)
+                {
+                    rtspUrls[i] = userUrls.back();
+                }
+
+                printf("Only %zu RTSP URL(s) provided. Remaining channels reuse the last URL.\n", userUrls.size());
+            }
+            else if (userUrls.size() > rtspUrls.size())
+            {
+                printf("Provided %zu RTSP URL(s); only the first %zu will be used.\n", userUrls.size(), rtspUrls.size());
+            }
+        }
+    }
+
     printf("========== Runtime Config ==========\n");
-    printf("RTSP URL    : %s\n", rtspUrl.c_str());
-    printf("Queue Depth : %d\n", queueDepth);
+    for (size_t i = 0; i < rtspUrls.size(); ++i)
+    {
+        printf("RTSP URL[%zu] : %s\n", i, rtspUrls[i].c_str());
+    }
+    printf("Queue Depth : %d (per channel)\n", queueDepth);
+    printf("Display Chn : %d\n", DISP_CHN_NUM);
     printf("====================================\n");
 
-    g_vdecNode = new t507_vdec_node(0);
-    h264Queue = new H264Queue(queueDepth);
-    rtspPuller puller(rtspUrl.c_str(), h264Queue);
-
-    // alloc buffer
+    // Alloc buffers for every display channel.
     for (int i = 0; i < DISP_CHN_NUM; i++)
     {
         my_buffer::getInstance()->AllocVideoBuffer(i, 1920 * 1088 * 3 / 2);
     }
 
-    // init openGL
+    // Init OpenGL singleton.
     CT507Graphics::getInstance();
 
-    // start vdec
-    if (g_vdecNode->create() == -1)
+    for (int i = 0; i < DISP_CHN_NUM; ++i)
     {
-        return 1;
+        g_vdecNodes[i] = new t507_vdec_node(i);
+        if (g_vdecNodes[i]->create() == -1)
+        {
+            printf("Failed to create decoder for channel %d\n", i);
+            return 1;
+        }
+
+        g_h264Queues[i] = new H264Queue(queueDepth);
+        g_pullers[i] = new rtspPuller(rtspUrls[i].c_str(), g_h264Queues[i]);
+
+        g_decodeCtx[i].chn = i;
+        g_decodeCtx[i].vdecNode = g_vdecNodes[i];
+        g_decodeCtx[i].h264Queue = g_h264Queues[i];
     }
-    else
+
+    for (int i = 0; i < DISP_CHN_NUM; ++i)
     {
-        std::thread t([&] {
-            puller.loop();
+        std::thread t([i] {
+            g_pullers[i]->loop();
         });
         t.detach();
     }
 
     logInfo("puller loop started, start Opengl\n");
-    // create thread to run OpenGL
     startOpengl();
 
-    // create thread to Q buffer
 #ifdef FILE_TEST
     startChn();
 #endif
@@ -435,5 +419,14 @@ int main(int argc, char *argv[])
     {
         usleep(1000 * 1000);
     }
-    return 1;
+
+    for (int i = 0; i < DISP_CHN_NUM; ++i)
+    {
+        if (g_h264Queues[i] != nullptr)
+        {
+            g_h264Queues[i]->stop();
+        }
+    }
+
+    return 0;
 }

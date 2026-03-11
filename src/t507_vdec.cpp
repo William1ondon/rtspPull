@@ -378,7 +378,7 @@ int t507_vdec_node::decoderDataReady(awvideodecoder::AVPacket *packet)
     int ret = 0;
     frame_shell frame;
     // ion_mem mem;
-    static int bufIndex[2] = {0};
+    static int bufIndex[MAX_CAM_NUM] = {0};
 
     my_buffer::getInstance()->getVideobuffer(m_chn, T507_PREVIEW_BUF_NUM + bufIndex[m_chn], &mem);
 

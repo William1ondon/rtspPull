@@ -662,13 +662,11 @@ int CT507Graphics::load_texture(void *yuv_virAddr, int w, int h, int chn)
     //     writeCacheToFile(yuv_virAddr,1920*1080*3/2, "/root/test.yuv");
     // }
 
-    if (chn == 0) // chn0触发渲染
-    {
-        pthread_mutex_lock(&RenderMutex);
-        bRender = true;
-        pthread_cond_signal(&RenderCond);
-        pthread_mutex_unlock(&RenderMutex);
-    }
+    // Trigger render whenever any channel gets a new frame.`r`n    pthread_mutex_lock(&RenderMutex);`r`n    bRender = true;`r`n    pthread_cond_signal(&RenderCond);`r`n    pthread_mutex_unlock(&RenderMutex);
+    pthread_mutex_lock(&RenderMutex);
+    bRender = true;
+    pthread_cond_signal(&RenderCond);
+    pthread_mutex_unlock(&RenderMutex);
     return 0;
 }
 

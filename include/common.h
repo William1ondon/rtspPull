@@ -13,7 +13,7 @@ typedef unsigned int    color_t;
 // 摄像头数量，用来限制输入
 #define MAX_CAM_NUM     6
 // 显示几路
-#define DISP_CHN_NUM    1
+#define DISP_CHN_NUM    4
 #define FRAME_RATE      30
 // 摄像头分辨率
 #define IMAGEWIDTH      1920
