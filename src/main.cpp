@@ -154,6 +154,10 @@ static void* listen_body(void* arg)
     H264Packet pkt;
     std::vector<uint8_t> sps;
     std::vector<uint8_t> pps;
+    bool waitingForIDR = false;
+    constexpr size_t kDecodeBufSlotCount = 64;
+    std::array<std::vector<uint8_t>, kDecodeBufSlotCount> decodeSlots;
+    size_t decodeSlotIdx = 0;
 
     while (!bThreadShouldStop)
     {
@@ -170,9 +174,10 @@ static void* listen_body(void* arg)
 
         const uint8_t nalType = pkt.data[0] & 0x1F;
 
-        if (nalType == 6)
+        if (waitingForIDR && nalType != 5 && nalType != 7 && nalType != 8)
         {
-            printf("chn %d got SEI NAL\n", chn_num);
+            delete[] pkt.data;
+            continue;
         }
 
         if (nalType == 7)
@@ -199,7 +204,11 @@ static void* listen_body(void* arg)
             needExtra = true;
         }
 
-        uint8_t* inputBuf = new uint8_t[outSize];
+        std::vector<uint8_t>& decodeBuf = decodeSlots[decodeSlotIdx];
+        decodeSlotIdx = (decodeSlotIdx + 1) % kDecodeBufSlotCount;
+        decodeBuf.resize(outSize);
+
+        uint8_t* inputBuf = decodeBuf.data();
         uint8_t* p = inputBuf;
 
         if (needExtra)
@@ -220,12 +229,20 @@ static void* listen_body(void* arg)
         memcpy(p, pkt.data, pkt.size);
         delete[] pkt.data;
 
-        frame_shell* fs = new frame_shell;
-        fs->refill(MEDIA_PT_H264, inputBuf, 0, outSize, 1, 0, false);
+        frame_shell fs;
+        fs.refill(MEDIA_PT_H264, inputBuf, 0, outSize, 1, 0, pkt.isIDR);
 
-        if (ctx->vdecNode->sendFrame(fs) != 0)
+        int sendRet = ctx->vdecNode->sendFrame(&fs);
+
+        if (sendRet != 0)
         {
+            waitingForIDR = true;
             continue;
+        }
+
+        if (pkt.isIDR)
+        {
+            waitingForIDR = false;
         }
 
         media_frame* tempFrame = ctx->vdecNode->getFrame();

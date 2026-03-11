@@ -32,11 +32,33 @@ public:
     bool push(uint8_t* data, size_t size, bool isIDR, long long pts) {
         std::lock_guard<std::mutex> lk(mMutex);
 
-        // Low-latency policy: if full, drop the oldest packet and keep newest data.
+        if (mStop) {
+            delete[] data;
+            return false;
+        }
+
+        const uint8_t nalType = (data != nullptr && size > 0) ? (data[0] & 0x1F) : 0;
+        const bool isSpsOrPps = (nalType == 7 || nalType == 8);
+        const bool isSei = (nalType == 6);
+
+        // Once overflow happens, flush broken backlog and wait for next IDR.
         if (mQueue.size() >= mMaxDepth) {
-            H264Packet old = mQueue.front();
-            mQueue.pop();
-            delete[] old.data;
+            while (!mQueue.empty()) {
+                H264Packet old = mQueue.front();
+                mQueue.pop();
+                delete[] old.data;
+            }
+            printf("===== H264Queue overflow, flush all packets and wait for next IDR =====\n");
+            mWaitingForIDR = true;
+        }
+
+        if (mWaitingForIDR) {
+            if (isIDR) {
+                mWaitingForIDR = false;
+            } else if (!isSpsOrPps && !isSei) {
+                delete[] data;
+                return false;
+            }
         }
 
         mQueue.push({data, size, isIDR, pts});
@@ -59,6 +81,11 @@ public:
     void stop() {
         std::lock_guard<std::mutex> lk(mMutex);
         mStop = true;
+        while (!mQueue.empty()) {
+            H264Packet old = mQueue.front();
+            mQueue.pop();
+            delete[] old.data;
+        }
         mCond.notify_all();
     }
 
@@ -68,6 +95,7 @@ private:
     std::condition_variable mCond;
     size_t mMaxDepth;
     bool mStop{false};
+    bool mWaitingForIDR{false};
 };
 
 
