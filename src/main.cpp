@@ -154,7 +154,6 @@ static void* listen_body(void* arg)
     H264Packet pkt;
     std::vector<uint8_t> sps;
     std::vector<uint8_t> pps;
-    bool waitingForIDR = false;
     constexpr size_t kDecodeBufSlotCount = 64;
     std::array<std::vector<uint8_t>, kDecodeBufSlotCount> decodeSlots;
     size_t decodeSlotIdx = 0;
@@ -173,12 +172,6 @@ static void* listen_body(void* arg)
         }
 
         const uint8_t nalType = pkt.data[0] & 0x1F;
-
-        if (waitingForIDR && nalType != 5 && nalType != 7 && nalType != 8)
-        {
-            delete[] pkt.data;
-            continue;
-        }
 
         if (nalType == 7)
         {
@@ -236,13 +229,8 @@ static void* listen_body(void* arg)
 
         if (sendRet != 0)
         {
-            waitingForIDR = true;
+            printf("== Failed to send frame to decoder, chn:%d, nalType:%d\n", chn_num, nalType);
             continue;
-        }
-
-        if (pkt.isIDR)
-        {
-            waitingForIDR = false;
         }
 
         media_frame* tempFrame = ctx->vdecNode->getFrame();

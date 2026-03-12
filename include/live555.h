@@ -48,17 +48,6 @@ public:
                 mQueue.pop();
                 delete[] old.data;
             }
-            printf("===== H264Queue overflow, flush all packets and wait for next IDR =====\n");
-            mWaitingForIDR = true;
-        }
-
-        if (mWaitingForIDR) {
-            if (isIDR) {
-                mWaitingForIDR = false;
-            } else if (!isSpsOrPps && !isSei) {
-                delete[] data;
-                return false;
-            }
         }
 
         mQueue.push({data, size, isIDR, pts});
@@ -95,7 +84,6 @@ private:
     std::condition_variable mCond;
     size_t mMaxDepth;
     bool mStop{false};
-    bool mWaitingForIDR{false};
 };
 
 
