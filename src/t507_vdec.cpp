@@ -360,7 +360,7 @@ int t507_vdec_node::sendFrame(media_frame *frame)
     ret = m_decoder->decode(&pkt);
     if (ret < 0)
     {
-        logError("decode failed. [chn:%d, err:%d]\n", m_chn, ret);
+        // logError("decode failed. [chn:%d, err:%d]\n", m_chn, ret);
         return -1;
     }
 

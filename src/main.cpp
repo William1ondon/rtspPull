@@ -11,6 +11,7 @@
 #include <string.h>
 #include <signal.h>
 #include <pthread.h>
+#include <sys/syscall.h>
 
 #include <algorithm>
 #include <array>
@@ -126,6 +127,7 @@ bool startOpengl()
     pthread_attr_init(&attr);
     pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_DETACHED);
     pthread_create(&ret, &attr, runOpenGL, nullptr);
+    printf("=============> OpenGL thread started, tid: %ld\n", ret);
     pthread_attr_destroy(&attr);
     return true;
 }
@@ -229,7 +231,7 @@ static void* listen_body(void* arg)
 
         if (sendRet != 0)
         {
-            printf("== Failed to send frame to decoder, chn:%d, nalType:%d\n", chn_num, nalType);
+            // printf("== Failed to send frame to decoder, chn:%d, nalType:%d\n", chn_num, nalType);
             continue;
         }
 
@@ -245,6 +247,9 @@ static void* listen_body(void* arg)
         {
             CT507Graphics::getInstance()->load_texture(virAddr, IMAGEWIDTH, IMAGEHEIGHT, chn_num);
         }
+
+        if(pkt.isIDR)
+            printf("I==D==R\n");
     }
 
     return nullptr;
@@ -259,8 +264,8 @@ bool startChn()
 
     for (int i = 0; i < DISP_CHN_NUM; i++)
     {
-        printf("ready to start decode channel: %d\n", i);
         pthread_create(&ret, &attr, listen_body, &g_decodeCtx[i]);
+        printf("=============> Decode thread for channel %d started, tid: %ld\n", i, ret);
     }
 
     pthread_attr_destroy(&attr);
@@ -408,8 +413,24 @@ int main(int argc, char* argv[])
     for (int i = 0; i < DISP_CHN_NUM; ++i)
     {
         std::thread t([i] {
+
+            cpu_set_t cpuset;
+            CPU_ZERO(&cpuset);
+            CPU_SET(i % 4, &cpuset);
+
+            pthread_setaffinity_np(
+                pthread_self(),
+                sizeof(cpu_set_t),
+                &cpuset
+            );
+
+            pid_t tid = syscall(SYS_gettid);
+
+            printf("puller[%d] start, tid=%d bind cpu=%d\n", i, tid, i);
+
             g_pullers[i]->loop();
         });
+
         t.detach();
     }
 
