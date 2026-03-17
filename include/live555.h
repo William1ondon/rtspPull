@@ -3,6 +3,7 @@
 
 #include <mutex>
 #include <condition_variable>
+#include <cstdio>
 #include <vector>
 #include <fstream>
 #include <iostream>
@@ -43,6 +44,15 @@ public:
 
         // Once overflow happens, flush broken backlog and wait for next IDR.
         if (mQueue.size() >= mMaxDepth) {
+            // printf("[queue] overflow flush depth=%zu max=%zu incoming_nal=%u incoming_size=%zu isIDR=%d isSpsOrPps=%d isSei=%d pts=%lld\n",
+            //        mQueue.size(),
+            //        mMaxDepth,
+            //        static_cast<unsigned>(nalType),
+            //        size,
+            //        isIDR ? 1 : 0,
+            //        isSpsOrPps ? 1 : 0,
+            //        isSei ? 1 : 0,
+            //        pts);
             while (!mQueue.empty()) {
                 H264Packet old = mQueue.front();
                 mQueue.pop();

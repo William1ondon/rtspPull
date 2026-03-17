@@ -285,6 +285,79 @@ void MyH264Sink::onSourceClosure(void* clientData) {
 
 static const uint8_t kStartCode[4] = {0x00,0x00,0x00,0x01};
 
+static int readBit(const uint8_t* data, size_t bitLen, size_t& bitPos) {
+    if (bitPos >= bitLen) {
+        return -1;
+    }
+
+    int bit = (data[bitPos / 8] >> (7 - (bitPos % 8))) & 0x01;
+    ++bitPos;
+    return bit;
+}
+
+static int readUnsignedExpGolomb(const uint8_t* data, size_t bitLen, size_t& bitPos) {
+    size_t leadingZeroBits = 0;
+
+    while (true) {
+        int bit = readBit(data, bitLen, bitPos);
+        if (bit < 0) {
+            return -1;
+        }
+        if (bit == 1) {
+            break;
+        }
+
+        ++leadingZeroBits;
+        if (leadingZeroBits > 31) {
+            return -1;
+        }
+    }
+
+    unsigned value = 1;
+    for (size_t i = 0; i < leadingZeroBits; ++i) {
+        int bit = readBit(data, bitLen, bitPos);
+        if (bit < 0) {
+            return -1;
+        }
+        value = (value << 1) | static_cast<unsigned>(bit);
+    }
+
+    return static_cast<int>(value - 1);
+}
+
+static int parseFirstMbInSliceNoStartCode(const uint8_t* nal, size_t len) {
+    if (nal == nullptr || len < 2) {
+        return -1;
+    }
+
+    uint8_t nalType = nal[0] & 0x1F;
+    if (nalType != 1 && nalType != 5) {
+        return -1;
+    }
+
+    const uint8_t* payload = nal + 1;
+    size_t payloadLen = len - 1;
+    std::vector<uint8_t> rbsp;
+    rbsp.reserve(payloadLen);
+
+    for (size_t i = 0; i < payloadLen; ++i) {
+        if (i + 2 < payloadLen && payload[i] == 0x00 && payload[i + 1] == 0x00 && payload[i + 2] == 0x03) {
+            rbsp.push_back(0x00);
+            rbsp.push_back(0x00);
+            i += 2;
+            continue;
+        }
+        rbsp.push_back(payload[i]);
+    }
+
+    if (rbsp.empty()) {
+        return -1;
+    }
+
+    size_t bitPos = 0;
+    return readUnsignedExpGolomb(rbsp.data(), rbsp.size() * 8, bitPos);
+}
+
 static void writeSPSPPS(MediaSubsession& subsession, FILE* fp) {
     char const* sprop = subsession.fmtp_spropparametersets();
     if (!sprop) return;
@@ -315,7 +388,22 @@ void MyH264Sink::afterGettingFrame(unsigned frameSize,
     // printf("===> presentation time: %lld, now Time: %lld, delay: %lld\n", ts_ms, getFramFromNetPts, getFramFromNetPts - ts_ms);
 
     // 1️⃣ 解析 NAL type
-    uint8_t nalType = fReceiveBuffer[0] & 0x1F;
+    uint8_t nalType = (frameSize > 0) ? (fReceiveBuffer[0] & 0x1F) : 0;
+    // int firstMbInSlice = parseFirstMbInSliceNoStartCode(fReceiveBuffer, frameSize);
+    // printf("[sink] size=%u trunc=%u nal=%u first_mb=%d head=%02X %02X %02X %02X pts=%ld.%06ld\n",
+    //        frameSize,
+    //        numTruncatedBytes,
+    //        nalType,
+    //        firstMbInSlice,
+    //        static_cast<unsigned>(frameSize > 0 ? fReceiveBuffer[0] : 0),
+    //        static_cast<unsigned>(frameSize > 1 ? fReceiveBuffer[1] : 0),
+    //        static_cast<unsigned>(frameSize > 2 ? fReceiveBuffer[2] : 0),
+    //        static_cast<unsigned>(frameSize > 3 ? fReceiveBuffer[3] : 0),
+    //        static_cast<long>(presentationTime.tv_sec),
+    //        static_cast<long>(presentationTime.tv_usec));
+    if (numTruncatedBytes > 0) {
+        printf("[sink] WARNING truncated bytes=%u, recvBuffer=%u\n", numTruncatedBytes, fBufferSize);
+    }
     bool isIDR = (nalType == 5);
     long long pts = 0;
     long long spts = 0;

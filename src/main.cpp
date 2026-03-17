@@ -100,6 +100,94 @@ static std::vector<std::string> splitUrls(const std::string& raw)
     return urls;
 }
 
+static int readBit(const uint8_t* data, size_t bitLen, size_t& bitPos)
+{
+    if (bitPos >= bitLen)
+    {
+        return -1;
+    }
+
+    int bit = (data[bitPos / 8] >> (7 - (bitPos % 8))) & 0x01;
+    ++bitPos;
+    return bit;
+}
+
+static int readUnsignedExpGolomb(const uint8_t* data, size_t bitLen, size_t& bitPos)
+{
+    size_t leadingZeroBits = 0;
+
+    while (true)
+    {
+        int bit = readBit(data, bitLen, bitPos);
+        if (bit < 0)
+        {
+            return -1;
+        }
+        if (bit == 1)
+        {
+            break;
+        }
+
+        ++leadingZeroBits;
+        if (leadingZeroBits > 31)
+        {
+            return -1;
+        }
+    }
+
+    unsigned value = 1;
+    for (size_t i = 0; i < leadingZeroBits; ++i)
+    {
+        int bit = readBit(data, bitLen, bitPos);
+        if (bit < 0)
+        {
+            return -1;
+        }
+        value = (value << 1) | static_cast<unsigned>(bit);
+    }
+
+    return static_cast<int>(value - 1);
+}
+
+static int parseFirstMbInSliceNoStartCode(const uint8_t* nal, size_t len)
+{
+    if (nal == nullptr || len < 2)
+    {
+        return -1;
+    }
+
+    uint8_t nalType = nal[0] & 0x1F;
+    if (nalType != 1 && nalType != 5)
+    {
+        return -1;
+    }
+
+    const uint8_t* payload = nal + 1;
+    size_t payloadLen = len - 1;
+    std::vector<uint8_t> rbsp;
+    rbsp.reserve(payloadLen);
+
+    for (size_t i = 0; i < payloadLen; ++i)
+    {
+        if (i + 2 < payloadLen && payload[i] == 0x00 && payload[i + 1] == 0x00 && payload[i + 2] == 0x03)
+        {
+            rbsp.push_back(0x00);
+            rbsp.push_back(0x00);
+            i += 2;
+            continue;
+        }
+        rbsp.push_back(payload[i]);
+    }
+
+    if (rbsp.empty())
+    {
+        return -1;
+    }
+
+    size_t bitPos = 0;
+    return readUnsignedExpGolomb(rbsp.data(), rbsp.size() * 8, bitPos);
+}
+
 static void* runOpenGL(void* arg)
 {
     (void)arg;
@@ -174,6 +262,7 @@ static void* listen_body(void* arg)
         }
 
         const uint8_t nalType = pkt.data[0] & 0x1F;
+        int firstMbInSlice = parseFirstMbInSliceNoStartCode(pkt.data, pkt.size);
 
         if (nalType == 7)
         {
@@ -227,11 +316,23 @@ static void* listen_body(void* arg)
         frame_shell fs;
         fs.refill(MEDIA_PT_H264, inputBuf, 0, outSize, 1, 0, pkt.isIDR);
 
+        // printf("[dec-in] chn=%d nal=%u size=%zu idr=%d first_mb=%d\n",
+        //        chn_num,
+        //        static_cast<unsigned>(nalType),
+        //        pkt.size,
+        //        pkt.isIDR ? 1 : 0,
+        //        firstMbInSlice);
+
         int sendRet = ctx->vdecNode->sendFrame(&fs);
 
         if (sendRet != 0)
         {
-            // printf("== Failed to send frame to decoder, chn:%d, nalType:%d\n", chn_num, nalType);
+            // printf("[dec-fail] chn=%d nal=%u size=%zu idr=%d first_mb=%d\n",
+            //        chn_num,
+            //        static_cast<unsigned>(nalType),
+            //        pkt.size,
+            //        pkt.isIDR ? 1 : 0,
+            //        firstMbInSlice);
             continue;
         }
 
@@ -255,17 +356,17 @@ static void* listen_body(void* arg)
     return nullptr;
 }
 
-bool startChn()
+bool startChn(size_t activeChnCount)
 {
     pthread_t ret = 0;
     pthread_attr_t attr;
     pthread_attr_init(&attr);
     pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_DETACHED);
 
-    for (int i = 0; i < DISP_CHN_NUM; i++)
+    for (size_t i = 0; i < activeChnCount; ++i)
     {
         pthread_create(&ret, &attr, listen_body, &g_decodeCtx[i]);
-        printf("=============> Decode thread for channel %d started, tid: %ld\n", i, ret);
+        printf("=============> Decode thread for channel %zu started, tid: %ld\n", i, ret);
     }
 
     pthread_attr_destroy(&attr);
@@ -304,9 +405,7 @@ int main(int argc, char* argv[])
 #endif
 
     const std::string defaultUrl = "rtsp://192.168.88.146/mainstream";
-    std::array<std::string, DISP_CHN_NUM> rtspUrls;
-    rtspUrls.fill(defaultUrl);
-
+    std::vector<std::string> rtspUrls;
     std::vector<std::string> userUrls;
     int queueDepth = 8;
 
@@ -345,42 +444,29 @@ int main(int argc, char* argv[])
         }
     }
 
-    if (!userUrls.empty())
+    if (userUrls.empty())
     {
-        if (userUrls.size() == 1)
-        {
-            rtspUrls.fill(userUrls[0]);
-        }
-        else
-        {
-            size_t copyCount = std::min(userUrls.size(), rtspUrls.size());
-            for (size_t i = 0; i < copyCount; ++i)
-            {
-                rtspUrls[i] = userUrls[i];
-            }
+        rtspUrls.emplace_back(defaultUrl);
+    }
+    else
+    {
+        size_t activeCount = std::min(userUrls.size(), static_cast<size_t>(DISP_CHN_NUM));
+        rtspUrls.assign(userUrls.begin(), userUrls.begin() + activeCount);
 
-            if (userUrls.size() < rtspUrls.size())
-            {
-                for (size_t i = userUrls.size(); i < rtspUrls.size(); ++i)
-                {
-                    rtspUrls[i] = userUrls.back();
-                }
-
-                printf("Only %zu RTSP URL(s) provided. Remaining channels reuse the last URL.\n", userUrls.size());
-            }
-            else if (userUrls.size() > rtspUrls.size())
-            {
-                printf("Provided %zu RTSP URL(s); only the first %zu will be used.\n", userUrls.size(), rtspUrls.size());
-            }
+        if (userUrls.size() > static_cast<size_t>(DISP_CHN_NUM))
+        {
+            printf("Provided %zu RTSP URL(s); only the first %d will be used.\n", userUrls.size(), DISP_CHN_NUM);
         }
     }
 
+    const size_t activeStreamCount = rtspUrls.size();
     printf("========== Runtime Config ==========\n");
-    for (size_t i = 0; i < rtspUrls.size(); ++i)
+    for (size_t i = 0; i < activeStreamCount; ++i)
     {
         printf("RTSP URL[%zu] : %s\n", i, rtspUrls[i].c_str());
     }
     printf("Queue Depth : %d (per channel)\n", queueDepth);
+    printf("Puller Chn : %zu\n", activeStreamCount);
     printf("Display Chn : %d\n", DISP_CHN_NUM);
     printf("====================================\n");
 
@@ -393,24 +479,24 @@ int main(int argc, char* argv[])
     // Init OpenGL singleton.
     CT507Graphics::getInstance();
 
-    for (int i = 0; i < DISP_CHN_NUM; ++i)
+    for (size_t i = 0; i < activeStreamCount; ++i)
     {
-        g_vdecNodes[i] = new t507_vdec_node(i);
+        g_vdecNodes[i] = new t507_vdec_node(static_cast<int>(i));
         if (g_vdecNodes[i]->create() == -1)
         {
-            printf("Failed to create decoder for channel %d\n", i);
+            printf("Failed to create decoder for channel %zu\n", i);
             return 1;
         }
 
         g_h264Queues[i] = new H264Queue(queueDepth);
         g_pullers[i] = new rtspPuller(rtspUrls[i].c_str(), g_h264Queues[i]);
 
-        g_decodeCtx[i].chn = i;
+        g_decodeCtx[i].chn = static_cast<int>(i);
         g_decodeCtx[i].vdecNode = g_vdecNodes[i];
         g_decodeCtx[i].h264Queue = g_h264Queues[i];
     }
 
-    for (int i = 0; i < DISP_CHN_NUM; ++i)
+    for (size_t i = 0; i < activeStreamCount; ++i)
     {
         std::thread t([i] {
 
@@ -426,7 +512,7 @@ int main(int argc, char* argv[])
 
             pid_t tid = syscall(SYS_gettid);
 
-            printf("puller[%d] start, tid=%d bind cpu=%d\n", i, tid, i);
+            printf("puller[%zu] start, tid=%d bind cpu=%zu\n", i, tid, i);
 
             g_pullers[i]->loop();
         });
@@ -438,7 +524,7 @@ int main(int argc, char* argv[])
     startOpengl();
 
 #ifdef FILE_TEST
-    startChn();
+    startChn(activeStreamCount);
 #endif
 
     while (!bThreadShouldStop)
