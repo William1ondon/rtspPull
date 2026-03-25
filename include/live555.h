@@ -143,7 +143,7 @@ public:
 
 class rtspPuller {
 public:
-	rtspPuller(const char* rtspURL, H264Queue* h264queue); 
+	rtspPuller(const char* rtspURL, H264Queue* h264queue, int chn); 
 	~rtspPuller(){};
   void loop();
 
@@ -159,6 +159,7 @@ public:
   int reconnectIntervalMs;
   int reconnectMaxTimes;
   int reconnectCount = 0;
+  int chn = -1;
   StreamClientState scs;
 
   H264Queue* h264Queue;
@@ -207,11 +208,12 @@ public:
   static MyH264Sink* createNew(UsageEnvironment& env,
                                 MediaSubsession& subsession,
                                 H264Queue& queue,
+                                int chn,
                                 unsigned bufferSize = 512000,
                                 FrameBuffer* fb = NULL);
 
 private:
-  MyH264Sink(UsageEnvironment& env, MediaSubsession& subsession, H264Queue& queue, unsigned bufferSize, FrameBuffer* fb);
+  MyH264Sink(UsageEnvironment& env, MediaSubsession& subsession, H264Queue& queue, int chn, unsigned bufferSize, FrameBuffer* fb);
     // called only by "createNew()"
   virtual ~MyH264Sink();
 
@@ -232,6 +234,7 @@ private:
   u_int8_t* fReceiveBuffer;
   MediaSubsession& fSubsession;
   unsigned fBufferSize;
+  int fChannel;
   FrameBuffer* fFrameBuffer;
   Boolean fWrittenSPSPPS;
   H264Queue& fQueue;
@@ -248,6 +251,7 @@ private:
   bool fHaveSPS = false;
   bool fHavePPS = false;
   bool fHaveSEI = false;
+  bool fPreQueueDumpStarted = false;
 
 };
 

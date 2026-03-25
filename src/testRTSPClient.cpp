@@ -21,6 +21,7 @@ along with this library; if not, write to the Free Software Foundation, Inc.,
 // "openRTSP": http://www.live555.com/openRTSP/
 
 #include "live555.h"
+#include "my_util.h"
 static frame_shell *pFrameDec;
 // Forward function definitions:
 
@@ -51,7 +52,7 @@ void usage(UsageEnvironment& env, char const* progName) {
 
 char eventLoopWatchVariable = 0;
 
-rtspPuller::rtspPuller(const char* rtspURL, H264Queue* h264queue) : rtspURL(rtspURL), h264Queue(h264queue), reconnectIntervalMs(2000), reconnectMaxTimes(10)  {}
+rtspPuller::rtspPuller(const char* rtspURL, H264Queue* h264queue, int chn) : rtspURL(rtspURL), h264Queue(h264queue), reconnectIntervalMs(2000), reconnectMaxTimes(10), chn(chn)  {}
 
 void rtspPuller::loop(){
   while(true){
@@ -126,7 +127,7 @@ void continueAfterDESCRIBE(RTSPClient* rtspClient, int resultCode, char* resultS
     }
 
     // create sink
-    scs->subsession->sink = MyH264Sink::createNew(env, *scs->subsession, *client->owner->h264Queue);
+    scs->subsession->sink = MyH264Sink::createNew(env, *scs->subsession, *client->owner->h264Queue, client->owner->chn);
 
     if (!scs->subsession->sink) {
         env << "Failed to create sink\n";
@@ -250,23 +251,27 @@ StreamClientState::~StreamClientState() {
 // Define the size of the buffer that we'll use:
 #define DUMMY_SINK_RECEIVE_BUFFER_SIZE 512*1024
 
-MyH264Sink* MyH264Sink::createNew(UsageEnvironment& env, MediaSubsession& subsession, H264Queue& queue, unsigned bufferSize, FrameBuffer* fb) {
+MyH264Sink* MyH264Sink::createNew(UsageEnvironment& env, MediaSubsession& subsession, H264Queue& queue, int chn, unsigned bufferSize, FrameBuffer* fb) {
   pFrameDec = new frame_shell;
-  return new MyH264Sink(env, subsession, queue, bufferSize, fb);
+  return new MyH264Sink(env, subsession, queue, chn, bufferSize, fb);
 }
 
-MyH264Sink::MyH264Sink(UsageEnvironment& env, MediaSubsession& subsession, H264Queue& queue, unsigned bufferSize, FrameBuffer* fb)
+MyH264Sink::MyH264Sink(UsageEnvironment& env, MediaSubsession& subsession, H264Queue& queue, int chn, unsigned bufferSize, FrameBuffer* fb)
   : MediaSink(env),
     fSubsession(subsession),
-    fQueue(queue),
     fBufferSize(bufferSize),
+    fChannel(chn),
     fFrameBuffer(fb),
-    fWrittenSPSPPS(False) {
+    fWrittenSPSPPS(False),
+    fQueue(queue) {
   fReceiveBuffer = new uint8_t[fBufferSize];
 }
 
 MyH264Sink::~MyH264Sink() {
   delete[] fReceiveBuffer;
+  delete[] fSPS;
+  delete[] fPPS;
+  delete[] fSEI;
 }
 
 void MyH264Sink::afterGettingFrame(void* clientData, unsigned frameSize, unsigned numTruncatedBytes,
@@ -358,6 +363,35 @@ static int parseFirstMbInSliceNoStartCode(const uint8_t* nal, size_t len) {
     return readUnsignedExpGolomb(rbsp.data(), rbsp.size() * 8, bitPos);
 }
 
+static void cacheNal(uint8_t*& dst, unsigned& dstLen, bool& have, const uint8_t* src, unsigned srcLen) {
+    delete[] dst;
+    dst = nullptr;
+    dstLen = 0;
+    have = false;
+
+    if (src == nullptr || srcLen == 0) {
+        return;
+    }
+
+    dst = new uint8_t[srcLen];
+    memcpy(dst, src, srcLen);
+    dstLen = srcLen;
+    have = true;
+}
+
+static void writeAnnexBNalToFile(const uint8_t* data, std::size_t size, const std::string& filename) {
+    if (data == nullptr || size == 0) {
+        return;
+    }
+
+    std::ofstream file(filename, std::ios::binary | std::ios::app);
+    if (!file.is_open()) {
+        return;
+    }
+
+    file.write(reinterpret_cast<const char*>(kStartCode), sizeof(kStartCode));
+    file.write(reinterpret_cast<const char*>(data), size);
+}
 static void writeSPSPPS(MediaSubsession& subsession, FILE* fp) {
     char const* sprop = subsession.fmtp_spropparametersets();
     if (!sprop) return;
@@ -389,22 +423,36 @@ void MyH264Sink::afterGettingFrame(unsigned frameSize,
 
     // 1️⃣ 解析 NAL type
     uint8_t nalType = (frameSize > 0) ? (fReceiveBuffer[0] & 0x1F) : 0;
-    // int firstMbInSlice = parseFirstMbInSliceNoStartCode(fReceiveBuffer, frameSize);
-    // printf("[sink] size=%u trunc=%u nal=%u first_mb=%d head=%02X %02X %02X %02X pts=%ld.%06ld\n",
-    //        frameSize,
-    //        numTruncatedBytes,
-    //        nalType,
-    //        firstMbInSlice,
-    //        static_cast<unsigned>(frameSize > 0 ? fReceiveBuffer[0] : 0),
-    //        static_cast<unsigned>(frameSize > 1 ? fReceiveBuffer[1] : 0),
-    //        static_cast<unsigned>(frameSize > 2 ? fReceiveBuffer[2] : 0),
-    //        static_cast<unsigned>(frameSize > 3 ? fReceiveBuffer[3] : 0),
-    //        static_cast<long>(presentationTime.tv_sec),
-    //        static_cast<long>(presentationTime.tv_usec));
     if (numTruncatedBytes > 0) {
-        printf("[sink] WARNING truncated bytes=%u, recvBuffer=%u\n", numTruncatedBytes, fBufferSize);
+        printf("[sink] WARNING chn=%d truncated bytes=%u, recvBuffer=%u\n", fChannel, numTruncatedBytes, fBufferSize);
     }
     bool isIDR = (nalType == 5);
+
+    if (nalType == 7) {
+        cacheNal(fSPS, fSPSLen, fHaveSPS, fReceiveBuffer, frameSize);
+    } else if (nalType == 8) {
+        cacheNal(fPPS, fPPSLen, fHavePPS, fReceiveBuffer, frameSize);
+    } else if (nalType == 6) {
+        cacheNal(fSEI, fSEILen, fHaveSEI, fReceiveBuffer, frameSize);
+    }
+
+    const std::string preQueueDumpFile = "pre_queue_chn" + std::to_string(fChannel) + ".h264";
+    if (!fPreQueueDumpStarted && isIDR) {
+        fPreQueueDumpStarted = true;
+        if (fHaveSPS) {
+            writeAnnexBNalToFile(fSPS, fSPSLen, preQueueDumpFile);
+        }
+        if (fHavePPS) {
+            writeAnnexBNalToFile(fPPS, fPPSLen, preQueueDumpFile);
+        }
+        if (fHaveSEI) {
+            writeAnnexBNalToFile(fSEI, fSEILen, preQueueDumpFile);
+        }
+    }
+
+    if (fPreQueueDumpStarted) {
+        writeAnnexBNalToFile(fReceiveBuffer, frameSize, preQueueDumpFile);
+    }
     long long pts = 0;
     long long spts = 0;
 

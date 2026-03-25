@@ -48,6 +48,20 @@ static std::array<DecodeThreadContext, DISP_CHN_NUM> g_decodeCtx{};
 
 static const uint8_t START_CODE[4] = {0x00, 0x00, 0x00, 0x01};
 
+static void removeDumpFile(const std::string& filename)
+{
+    ::remove(filename.c_str());
+}
+
+static void clearDumpFiles()
+{
+    for (int i = 0; i < DISP_CHN_NUM; ++i)
+    {
+        removeDumpFile("chn" + std::to_string(i) + ".h264");
+        removeDumpFile("pre_queue_chn" + std::to_string(i) + ".h264");
+    }
+}
+
 static std::string trim(const std::string& str)
 {
     size_t first = 0;
@@ -219,7 +233,7 @@ bool startOpengl()
     pthread_attr_destroy(&attr);
     return true;
 }
-// static int ifReceiveIDR[DISP_CHN_NUM] = {0};
+static int ifReceiveIDR[DISP_CHN_NUM] = {0};
 static void* listen_body(void* arg)
 {
     DecodeThreadContext* ctx = static_cast<DecodeThreadContext*>(arg);
@@ -314,12 +328,12 @@ static void* listen_body(void* arg)
         delete[] pkt.data;
 
         frame_shell fs;
-        // if(pkt.isIDR == true)
-        // {
-        //     ifReceiveIDR[chn_num] = 1;
-        // }
-        // if(ifReceiveIDR[chn_num] == 1)
-        //     writeCacheToFile(inputBuf, outSize, "chn" + std::to_string(chn_num) + ".h264");
+        if(pkt.isIDR == true)
+        {
+            ifReceiveIDR[chn_num] = 1;
+        }
+        if(ifReceiveIDR[chn_num] == 1)
+            writeCacheToFile(inputBuf, outSize, "chn" + std::to_string(chn_num) + ".h264");
         fs.refill(MEDIA_PT_H264, inputBuf, 0, outSize, 1, 0, pkt.isIDR);
 
         // printf("[dec-in] chn=%d nal=%u size=%zu idr=%d first_mb=%d\n",
@@ -476,6 +490,8 @@ int main(int argc, char* argv[])
     printf("Display Chn : %d\n", DISP_CHN_NUM);
     printf("====================================\n");
 
+    clearDumpFiles();
+
     // Alloc buffers for every display channel.
     for (int i = 0; i < DISP_CHN_NUM; i++)
     {
@@ -495,7 +511,7 @@ int main(int argc, char* argv[])
         }
 
         g_h264Queues[i] = new H264Queue(queueDepth);
-        g_pullers[i] = new rtspPuller(rtspUrls[i].c_str(), g_h264Queues[i]);
+        g_pullers[i] = new rtspPuller(rtspUrls[i].c_str(), g_h264Queues[i], static_cast<int>(i));
 
         g_decodeCtx[i].chn = static_cast<int>(i);
         g_decodeCtx[i].vdecNode = g_vdecNodes[i];
