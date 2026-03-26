@@ -328,12 +328,12 @@ static void* listen_body(void* arg)
         delete[] pkt.data;
 
         frame_shell fs;
-        if(pkt.isIDR == true)
-        {
-            ifReceiveIDR[chn_num] = 1;
-        }
-        if(ifReceiveIDR[chn_num] == 1)
-            writeCacheToFile(inputBuf, outSize, "chn" + std::to_string(chn_num) + ".h264");
+        // if(pkt.isIDR == true)
+        // {
+        //     ifReceiveIDR[chn_num] = 1;
+        // }
+        // if(ifReceiveIDR[chn_num] == 1)
+        //     writeCacheToFile(inputBuf, outSize, "chn" + std::to_string(chn_num) + ".h264");
         fs.refill(MEDIA_PT_H264, inputBuf, 0, outSize, 1, 0, pkt.isIDR);
 
         // printf("[dec-in] chn=%d nal=%u size=%zu idr=%d first_mb=%d\n",

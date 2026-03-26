@@ -1,4 +1,4 @@
-/**********
+﻿/**********
 This library is free software; you can redistribute it and/or modify it under
 the terms of the GNU Lesser General Public License as published by the
 Free Software Foundation; either version 2.1 of the License, or (at your
@@ -138,7 +138,7 @@ void continueAfterDESCRIBE(RTSPClient* rtspClient, int resultCode, char* resultS
                                         subsessionAfterPlaying,
                                         scs->subsession);
 
-    // send SETUP
+    // Use RTP-over-RTSP(TCP) so the embedded pull path matches the PC ffmpeg check.
     rtspClient->sendSetupCommand(*scs->subsession, [](RTSPClient* rtspClient, int resultCode, char* resultString) {
         UsageEnvironment& env = rtspClient->envir();
         if (resultCode != 0) {
@@ -147,12 +147,6 @@ void continueAfterDESCRIBE(RTSPClient* rtspClient, int resultCode, char* resultS
             return;
         }
         delete[] resultString;
-
-        MediaSubsession* subsession = ((ourRTSPClient*)rtspClient)->scs->subsession;
-        if (subsession != nullptr && subsession->rtpSource() != nullptr) {
-            // Minimize RTP reordering wait to reduce glass-to-glass latency.
-            subsession->rtpSource()->setPacketReorderingThresholdTime(0);
-        }
 
         // PLAY
         rtspClient->sendPlayCommand(*((ourRTSPClient*)rtspClient)->scs->session, [](RTSPClient* rtspClient, int resultCode, char* resultString) {
@@ -165,7 +159,7 @@ void continueAfterDESCRIBE(RTSPClient* rtspClient, int resultCode, char* resultS
             env << "PLAY started\n";
             delete[] resultString;
         });
-    });
+    }, False, True);
 
     delete[] resultString;
 }
@@ -436,23 +430,23 @@ void MyH264Sink::afterGettingFrame(unsigned frameSize,
         cacheNal(fSEI, fSEILen, fHaveSEI, fReceiveBuffer, frameSize);
     }
 
-    const std::string preQueueDumpFile = "pre_queue_chn" + std::to_string(fChannel) + ".h264";
-    if (!fPreQueueDumpStarted && isIDR) {
-        fPreQueueDumpStarted = true;
-        if (fHaveSPS) {
-            writeAnnexBNalToFile(fSPS, fSPSLen, preQueueDumpFile);
-        }
-        if (fHavePPS) {
-            writeAnnexBNalToFile(fPPS, fPPSLen, preQueueDumpFile);
-        }
-        if (fHaveSEI) {
-            writeAnnexBNalToFile(fSEI, fSEILen, preQueueDumpFile);
-        }
-    }
+    // const std::string preQueueDumpFile = "pre_queue_chn" + std::to_string(fChannel) + ".h264";
+    // if (!fPreQueueDumpStarted && isIDR) {
+    //     fPreQueueDumpStarted = true;
+    //     if (fHaveSPS) {
+    //         writeAnnexBNalToFile(fSPS, fSPSLen, preQueueDumpFile);
+    //     }
+    //     if (fHavePPS) {
+    //         writeAnnexBNalToFile(fPPS, fPPSLen, preQueueDumpFile);
+    //     }
+    //     if (fHaveSEI) {
+    //         writeAnnexBNalToFile(fSEI, fSEILen, preQueueDumpFile);
+    //     }
+    // }
 
-    if (fPreQueueDumpStarted) {
-        writeAnnexBNalToFile(fReceiveBuffer, frameSize, preQueueDumpFile);
-    }
+    // if (fPreQueueDumpStarted) {
+    //     writeAnnexBNalToFile(fReceiveBuffer, frameSize, preQueueDumpFile);
+    // }
     long long pts = 0;
     long long spts = 0;
 
