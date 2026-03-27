@@ -1,4 +1,4 @@
-#include <unistd.h>
+﻿#include <unistd.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
@@ -16,6 +16,7 @@
 #include <algorithm>
 #include <array>
 #include <cctype>
+#include <memory>
 #include <string>
 #include <thread>
 #include <vector>
@@ -258,9 +259,6 @@ static void* listen_body(void* arg)
     H264Packet pkt;
     std::vector<uint8_t> sps;
     std::vector<uint8_t> pps;
-    constexpr size_t kDecodeBufSlotCount = 64;
-    std::array<std::vector<uint8_t>, kDecodeBufSlotCount> decodeSlots;
-    size_t decodeSlotIdx = 0;
 
     while (!bThreadShouldStop)
     {
@@ -302,11 +300,8 @@ static void* listen_body(void* arg)
             needExtra = true;
         }
 
-        std::vector<uint8_t>& decodeBuf = decodeSlots[decodeSlotIdx];
-        decodeSlotIdx = (decodeSlotIdx + 1) % kDecodeBufSlotCount;
-        decodeBuf.resize(outSize);
-
-        uint8_t* inputBuf = decodeBuf.data();
+        std::shared_ptr<std::vector<uint8_t>> decodeBuf = std::make_shared<std::vector<uint8_t>>(outSize);
+        uint8_t* inputBuf = decodeBuf->data();
         uint8_t* p = inputBuf;
 
         if (needExtra)
@@ -328,12 +323,12 @@ static void* listen_body(void* arg)
         delete[] pkt.data;
 
         frame_shell fs;
-        // if(pkt.isIDR == true)
-        // {
-        //     ifReceiveIDR[chn_num] = 1;
-        // }
-        // if(ifReceiveIDR[chn_num] == 1)
-        //     writeCacheToFile(inputBuf, outSize, "chn" + std::to_string(chn_num) + ".h264");
+        if(pkt.isIDR == true)
+        {
+            ifReceiveIDR[chn_num] = 1;
+        }
+        if(ifReceiveIDR[chn_num] == 1)
+            writeCacheToFile(inputBuf, outSize, "chn" + std::to_string(chn_num) + ".h264");
         fs.refill(MEDIA_PT_H264, inputBuf, 0, outSize, 1, 0, pkt.isIDR);
 
         // printf("[dec-in] chn=%d nal=%u size=%zu idr=%d first_mb=%d\n",
@@ -347,14 +342,16 @@ static void* listen_body(void* arg)
 
         if (sendRet != 0)
         {
-            // printf("[dec-fail] chn=%d nal=%u size=%zu idr=%d first_mb=%d\n",
+            // printf("[dec-fail] chn=%d nal=%u size=%zu idr=%d first_mb=%d\\n",
             //        chn_num,
             //        static_cast<unsigned>(nalType),
             //        pkt.size,
             //        pkt.isIDR ? 1 : 0,
             //        firstMbInSlice);
             continue;
-        } 
+        }
+
+        ctx->vdecNode->retainInputBuffer(decodeBuf);
 
         media_frame* tempFrame = ctx->vdecNode->getFrame();
         if (tempFrame == nullptr)

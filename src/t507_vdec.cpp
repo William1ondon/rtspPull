@@ -1,4 +1,4 @@
-#include <stdio.h>
+﻿#include <stdio.h>
 #include <stdint.h>
 #include <unistd.h>
 #include <stdlib.h>
@@ -21,6 +21,10 @@
 
 using namespace awvideodecoder;
 
+namespace {
+constexpr size_t kRetainedInputSafetyCount = 256;
+constexpr size_t kRetainedInputMaxBytes = 128 * 1024 * 1024;
+}
 
 static bool findStartCode(const uint8_t* data, size_t len, size_t* scLen)
 {
@@ -231,6 +235,7 @@ t507_vdec_node::t507_vdec_node(int chn)
     m_count = 0;
 
     m_curFrame = 0;
+    m_retainedInputBytes = 0;
 
     for (int i = 0; i < T507_PLAYBACK_BUF_NUM; i++)
     {
@@ -300,6 +305,12 @@ int t507_vdec_node::destroy()
     else
         logWarn("vdec had been destoryed already. \n");
 
+    {
+        std::lock_guard<std::mutex> lock(m_retainedInputsMutex);
+        m_retainedInputs.clear();
+        m_retainedInputBytes = 0;
+    }
+
     return 0;
 }
 
@@ -367,6 +378,24 @@ int t507_vdec_node::sendFrame(media_frame *frame)
     return 0;
 }
 
+void t507_vdec_node::retainInputBuffer(const std::shared_ptr<std::vector<uint8_t>>& buffer)
+{
+    if (!buffer)
+    {
+        return;
+    }
+
+    std::lock_guard<std::mutex> lock(m_retainedInputsMutex);
+    m_retainedInputs.push_back(buffer);
+    m_retainedInputBytes += buffer->size();
+
+    while (m_retainedInputBytes > kRetainedInputMaxBytes && m_retainedInputs.size() > kRetainedInputSafetyCount)
+    {
+        m_retainedInputBytes -= m_retainedInputs.front()->size();
+        m_retainedInputs.pop_front();
+    }
+}
+
 media_frame *t507_vdec_node::getFrame()
 {
     return m_frame[m_curFrame];
@@ -409,6 +438,16 @@ int t507_vdec_node::decoderDataReady(awvideodecoder::AVPacket *packet)
     bufIndex[m_chn]++;
     if (bufIndex[m_chn] == T507_PLAYBACK_BUF_NUM)
         bufIndex[m_chn] = 0;
+
+    {
+        std::lock_guard<std::mutex> lock(m_retainedInputsMutex);
+        if (m_retainedInputs.size() > kRetainedInputSafetyCount)
+        {
+            // printf("======> vdec[%d] retained input buffers count: %zu, bytes: %zu, dropping oldest buffer\n", m_chn, m_retainedInputs.size(), m_retainedInputBytes);
+            m_retainedInputBytes -= m_retainedInputs.front()->size();
+            m_retainedInputs.pop_front();
+        }
+    }
 
     return 0;
 }

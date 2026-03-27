@@ -1,11 +1,14 @@
-#pragma once
+﻿#pragma once
 
 #include "AWVideoDecoder.h"
 #include "my_buffer.h"
 #include "my_log.h"
 #include "media_frame.h"
 #include "DmaIon.h"
+#include <deque>
 #include <list>
+#include <memory>
+#include <mutex>
 #include <vector>
 
 using namespace awvideodecoder;
@@ -33,6 +36,9 @@ private:
     ion_mem mem;
 
     int m_curFrame;
+    std::deque<std::shared_ptr<std::vector<uint8_t>>> m_retainedInputs;
+    std::mutex m_retainedInputsMutex;
+    size_t m_retainedInputBytes;
 
 public:
     // t507_vdec_node(int chn, const MEDIA_VDEC_ATTR *attr);
@@ -54,6 +60,7 @@ public:
     // int getInputId();
     // /* vdec没有实现getFrame 直接调用sendFrame就是开启数据解码 */
     int sendFrame(media_frame *frame);
+    void retainInputBuffer(const std::shared_ptr<std::vector<uint8_t>>& buffer);
     // bool isBound();
     // // media_output *getBindObject();
     // bool unbind();
