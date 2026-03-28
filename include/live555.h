@@ -27,8 +27,23 @@ struct H264Packet {
 
 class H264Queue {
 public:
-    explicit H264Queue(size_t maxDepth)
-        : mMaxDepth(maxDepth) {}
+    H264Queue(int chn, size_t maxDepth)
+        : mChn(chn), mMaxDepth(maxDepth) {}
+
+    void copyLatestParameterSets(std::vector<uint8_t>& sps, std::vector<uint8_t>& pps) {
+        std::lock_guard<std::mutex> lk(mMutex);
+        if (!mLatestSps.empty()) {
+            sps = mLatestSps;
+        }
+        if (!mLatestPps.empty()) {
+            pps = mLatestPps;
+        }
+    }
+
+    size_t depth() {
+        std::lock_guard<std::mutex> lk(mMutex);
+        return mQueue.size();
+    }
 
     bool push(uint8_t* data, size_t size, bool isIDR, long long pts) {
         std::lock_guard<std::mutex> lk(mMutex);
@@ -42,22 +57,57 @@ public:
         const bool isSpsOrPps = (nalType == 7 || nalType == 8);
         const bool isSei = (nalType == 6);
 
-        // Once overflow happens, flush broken backlog and wait for next IDR.
+        if (nalType == 7) {
+            mLatestSps.assign(data, data + size);
+            delete[] data;
+            return true;
+        }
+
+        if (nalType == 8) {
+            mLatestPps.assign(data, data + size);
+            delete[] data;
+            return true;
+        }
+
+        if (isSei) {
+            delete[] data;
+            return true;
+        }
+
+        // Once overflow happens, flush broken backlog and wait for the next clean sync point.
         if (mQueue.size() >= mMaxDepth) {
-            // printf("[queue] overflow flush depth=%zu max=%zu incoming_nal=%u incoming_size=%zu isIDR=%d isSpsOrPps=%d isSei=%d pts=%lld\n",
-            //        mQueue.size(),
-            //        mMaxDepth,
-            //        static_cast<unsigned>(nalType),
-            //        size,
-            //        isIDR ? 1 : 0,
-            //        isSpsOrPps ? 1 : 0,
-            //        isSei ? 1 : 0,
-            //        pts);
-            printf("========> Oh no! Queue is full! <=========\n");
+            printf("[queue] overflow flush chn=%d depth=%zu max=%zu incoming_nal=%u incoming_size=%zu isIDR=%d isSpsOrPps=%d isSei=%d pts=%lld\n",
+                   mChn,
+                   mQueue.size(),
+                   mMaxDepth,
+                   static_cast<unsigned>(nalType),
+                   size,
+                   isIDR ? 1 : 0,
+                   isSpsOrPps ? 1 : 0,
+                   isSei ? 1 : 0,
+                   pts);
             while (!mQueue.empty()) {
                 H264Packet old = mQueue.front();
                 mQueue.pop();
                 delete[] old.data;
+            }
+            mNeedIdr = true;
+            mDroppedWhileWaitingIdr = 0;
+        }
+
+        if (mNeedIdr) {
+            if (isIDR) {
+                printf("[queue] resync chn=%d dropped=%zu incoming_size=%zu pts=%lld\n",
+                       mChn,
+                       mDroppedWhileWaitingIdr,
+                       size,
+                       pts);
+                mNeedIdr = false;
+                mDroppedWhileWaitingIdr = 0;
+            } else if (!isSpsOrPps && !isSei) {
+                ++mDroppedWhileWaitingIdr;
+                delete[] data;
+                return false;
             }
         }
 
@@ -81,6 +131,10 @@ public:
     void stop() {
         std::lock_guard<std::mutex> lk(mMutex);
         mStop = true;
+        mNeedIdr = false;
+        mDroppedWhileWaitingIdr = 0;
+        mLatestSps.clear();
+        mLatestPps.clear();
         while (!mQueue.empty()) {
             H264Packet old = mQueue.front();
             mQueue.pop();
@@ -93,8 +147,13 @@ private:
     std::queue<H264Packet> mQueue;
     std::mutex mMutex;
     std::condition_variable mCond;
+    int mChn;
     size_t mMaxDepth;
+    bool mNeedIdr{false};
+    size_t mDroppedWhileWaitingIdr{0};
     bool mStop{false};
+    std::vector<uint8_t> mLatestSps;
+    std::vector<uint8_t> mLatestPps;
 };
 
 

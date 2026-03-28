@@ -1,0 +1,211 @@
+PLAY started
+secceed to setupTexture!
+[vdec-fail] chn=3 ret=-6 streak=1 total=1 nal=7 frameType=U inputLen=42637 retained=0 retainedBytes=0 head=00 00 00 01
+[dec-resync-arm] chn=3 sendRet=-1 q=0 nal=5 pkt=42603 out=42637 idr=1 first_mb=0 primed=0 sps=17 pps=5 extra=1
+[dec-fail] chn=3 sendRet=-1 q=0 nal=5 pkt=42603 out=42637 idr=1 first_mb=0 primed=0 sps=17 pps=5 extra=1
+[dec-fail-hist] chn=3 idx=0 q=0 nal=5 pkt=42603 out=42637 idr=1 first_mb=0 primed=0 sps=17 pps=5 extra=1
+debug  : cedarc <AvcSbmFrameCheckBitStreamType:325>: result: bStreamWithStartCode[1], with[1], whitout[0]
+[vdec-fail] chn=0 ret=-6 streak=1 total=1 nal=7 frameType=U inputLen=58699 retained=0 retainedBytes=0 head=00 00 00 01
+[dec-resync-arm] chn=0 sendRet=-1 q=1 nal=5 pkt=58663 out=58699 idr=1 first_mb=0 primed=0 sps=20 pps=4 extra=1
+[dec-fail] chn=0 sendRet=-1 q=1 nal=5 pkt=58663 out=58699 idr=1 first_mb=0 primed=0 sps=20 pps=4 extra=1
+[dec-fail-hist] chn=0 idx=0 q=1 nal=5 pkt=58663 out=58699 idr=1 first_mb=0 primed=0 sps=20 pps=4 extra=1
+debug  : cedarc <AvcSbmFrameCheckBitStreamType:325>: result: bStreamWithStartCode[1], with[1], whitout[0]
+[vdec-fail] chn=2 ret=-6 streak=1 total=1 nal=7 frameType=U inputLen=97647 retained=0 retainedBytes=0 head=00 00 00 01
+[dec-resync-arm] chn=2 sendRet=-1 q=0 nal=5 pkt=97611 out=97647 idr=1 first_mb=0 primed=0 sps=20 pps=4 extra=1
+[dec-fail] chn=2 sendRet=-1 q=0 nal=5 pkt=97611 out=97647 idr=1 first_mb=0 primed=0 sps=20 pps=4 extra=1
+[dec-fail-hist] chn=2 idx=0 q=0 nal=5 pkt=97611 out=97647 idr=1 first_mb=0 primed=0 sps=20 pps=4 extra=1
+debug  : cedarc <AvcSbmFrameCheckBitStreamType:325>: result: bStreamWithStartCode[1], with[1], whitout[0]
+debug  : cedarc <AvcSbmFrameCheckBitStreamType:325>: result: bStreamWithStartCode[1], with[1], whitout[0]
+[vdec-fail] chn=1 ret=-6 streak=1 total=1 nal=7 frameType=U inputLen=77972 retained=0 retainedBytes=0 head=00 00 00 01
+[dec-resync-arm] chn=1 sendRet=-1 q=2 nal=5 pkt=77936 out=77972 idr=1 first_mb=0 primed=0 sps=20 pps=4 extra=1
+[dec-fail] chn=1 sendRet=-1 q=2 nal=5 pkt=77936 out=77972 idr=1 first_mb=0 primed=0 sps=20 pps=4 extra=1
+[dec-fail-hist] chn=1 idx=0 q=2 nal=5 pkt=77936 out=77972 idr=1 first_mb=0 primed=0 sps=20 pps=4 extra=1
+[dec-fail] chn=0 sendRet=-1 q=0 nal=5 pkt=62506 out=62542 idr=1 first_mb=0 primed=0 sps=20 pps=4 extra=1
+[dec-fail-hist] chn=0 idx=0 q=1 nal=5 pkt=58663 out=58699 idr=1 first_mb=0 primed=0 sps=20 pps=4 extra=1
+[dec-fail-hist] chn=0 idx=1 q=0 nal=5 pkt=62506 out=62542 idr=1 first_mb=0 primed=0 sps=20 pps=4 extra=1
+[dec-fail] chn=3 sendRet=-1 q=0 nal=5 pkt=44871 out=44905 idr=1 first_mb=0 primed=0 sps=17 pps=5 extra=1
+[dec-fail-hist] chn=3 idx=0 q=0 nal=5 pkt=42603 out=42637 idr=1 first_mb=0 primed=0 sps=17 pps=5 extra=1
+[dec-fail-hist] chn=3 idx=1 q=0 nal=5 pkt=44871 out=44905 idr=1 first_mb=0 primed=0 sps=17 pps=5 extra=1
+debug  : cedarc <H264DecVuiParameters:341>: nFrameRate=25
+debug  : cedarc <H264DecodePictureScanType:2779>: here3:hCtx->bProgressice=1
+
+[dec-fail] chn=1 sendRet=-1 q=1 nal=5 pkt=77568 out=77604 idr=1 first_mb=0 primed=0 sps=20 pps=4 extra=1
+[dec-fail-hist] chn=1 idx=0 q=2 nal=5 pkt=77936 out=77972 idr=1 first_mb=0 primed=0 sps=20 pps=4 extra=1
+[dec-fail-hist] chn=1 idx=1 q=1 nal=5 pkt=77568 out=77604 idr=1 first_mb=0 primed=0 sps=20 pps=4 extra=1
+[dec-fail] chn=2 sendRet=-1 q=0 nal=5 pkt=95151 out=95187 idr=1 first_mb=0 primed=0 sps=20 pps=4 extra=1
+[dec-fail-hist] chn=2 idx=0 q=0 nal=5 pkt=97611 out=97647 idr=1 first_mb=0 primed=0 sps=20 pps=4 extra=1
+[dec-fail-hist] chn=2 idx=1 q=0 nal=5 pkt=95151 out=95187 idr=1 first_mb=0 primed=0 sps=20 pps=4 extra=1
+debug  : cedarc <H264DecVuiParameters:341>: nFrameRate=25
+debug  : cedarc <H264DecodePictureScanType:2779>: here3:hCtx->bProgressice=1
+
+[dec-fail] chn=0 sendRet=-1 q=0 nal=5 pkt=59730 out=59766 idr=1 first_mb=0 primed=0 sps=20 pps=4 extra=1
+[dec-fail-hist] chn=0 idx=0 q=1 nal=5 pkt=58663 out=58699 idr=1 first_mb=0 primed=0 sps=20 pps=4 extra=1
+[dec-fail-hist] chn=0 idx=1 q=0 nal=5 pkt=62506 out=62542 idr=1 first_mb=0 primed=0 sps=20 pps=4 extra=1
+[dec-fail-hist] chn=0 idx=2 q=0 nal=5 pkt=59730 out=59766 idr=1 first_mb=0 primed=0 sps=20 pps=4 extra=1
+debug  : cedarc <H264DecodePictureScanType:2779>: here3:hCtx->bProgressice=1
+
+[dec-fail] chn=3 sendRet=-1 q=0 nal=5 pkt=44643 out=44677 idr=1 first_mb=0 primed=0 sps=17 pps=5 extra=1
+[dec-fail-hist] chn=3 idx=0 q=0 nal=5 pkt=42603 out=42637 idr=1 first_mb=0 primed=0 sps=17 pps=5 extra=1
+[dec-fail-hist] chn=3 idx=1 q=0 nal=5 pkt=44871 out=44905 idr=1 first_mb=0 primed=0 sps=17 pps=5 extra=1
+[dec-fail-hist] chn=3 idx=2 q=0 nal=5 pkt=44643 out=44677 idr=1 first_mb=0 primed=0 sps=17 pps=5 extra=1
+debug  : cedarc <VeSetEnableAfbcFlag:1771>: **** VeSetEnableAfbcFlag: 0
+debug  : fbm.c <FbmCreateBuffer:148>: FbmCreate, total fbm number: 6, decoder needed: 2,  nWidth=1920, nHeight=1088 nAlignStride = 0
+debug  : fbm.c <FbmCreateBuffer:252>: ** call allocate pic buf, i = 0, maxNum = 6
+debug  : fbm.c <FbmAllocatePictureBuffer:1454>: pPicture->bEnableAfbcFlag = 0
+debug  : fbm.c <FbmCreateBuffer:252>: ** call allocate pic buf, i = 1, maxNum = 6
+debug  : fbm.c <FbmAllocatePictureBuffer:1454>: pPicture->bEnableAfbcFlag = 0
+debug  : fbm.c <FbmCreateBuffer:252>: ** call allocate pic buf, i = 2, maxNum = 6
+debug  : fbm.c <FbmAllocatePictureBuffer:1454>: pPicture->bEnableAfbcFlag = 0
+debug  : fbm.c <FbmCreateBuffer:252>: ** call allocate pic buf, i = 3, maxNum = 6
+debug  : fbm.c <FbmAllocatePictureBuffer:1454>: pPicture->bEnableAfbcFlag = 0
+debug  : fbm.c <FbmCreateBuffer:252>: ** call allocate pic buf, i = 4, maxNum = 6
+debug  : fbm.c <FbmAllocatePictureBuffer:1454>: pPicture->bEnableAfbcFlag = 0
+debug  : fbm.c <FbmCreateBuffer:252>: ** call allocate pic buf, i = 5, maxNum = 6
+debug  : fbm.c <FbmAllocatePictureBuffer:1454>: pPicture->bEnableAfbcFlag = 0
+debug  : fbm.c <FbmCreateBuffer:405>: *** finish fbmCreateBuffer
+[vdec-recover] chn=1 streak=2 total=2 frameType=U inputLen=84323
+[dec-resync-release] chn=1 dropped=48 idr_size=84287
+I==D==R
+debug  : cedarc <H264DecVuiParameters:341>: nFrameRate=25
+debug  : cedarc <H264DecodePictureScanType:2779>: here3:hCtx->bProgressice=1
+
+[dec-fail] chn=2 sendRet=-1 q=0 nal=5 pkt=109584 out=109620 idr=1 first_mb=0 primed=0 sps=20 pps=4 extra=1
+[dec-fail-hist] chn=2 idx=0 q=0 nal=5 pkt=97611 out=97647 idr=1 first_mb=0 primed=0 sps=20 pps=4 extra=1
+[dec-fail-hist] chn=2 idx=1 q=0 nal=5 pkt=95151 out=95187 idr=1 first_mb=0 primed=0 sps=20 pps=4 extra=1
+[dec-fail-hist] chn=2 idx=2 q=0 nal=5 pkt=109584 out=109620 idr=1 first_mb=0 primed=0 sps=20 pps=4 extra=1
+debug  : cedarc <VeSetEnableAfbcFlag:1771>: **** VeSetEnableAfbcFlag: 0
+debug  : fbm.c <FbmCreateBuffer:148>: FbmCreate, total fbm number: 6, decoder needed: 2,  nWidth=1920, nHeight=1088 nAlignStride = 0
+debug  : fbm.c <FbmCreateBuffer:252>: ** call allocate pic buf, i = 0, maxNum = 6
+debug  : fbm.c <FbmAllocatePictureBuffer:1454>: pPicture->bEnableAfbcFlag = 0
+debug  : fbm.c <FbmCreateBuffer:252>: ** call allocate pic buf, i = 1, maxNum = 6
+debug  : fbm.c <FbmAllocatePictureBuffer:1454>: pPicture->bEnableAfbcFlag = 0
+debug  : fbm.c <FbmCreateBuffer:252>: ** call allocate pic buf, i = 2, maxNum = 6
+debug  : fbm.c <FbmAllocatePictureBuffer:1454>: pPicture->bEnableAfbcFlag = 0
+debug  : fbm.c <FbmCreateBuffer:252>: ** call allocate pic buf, i = 3, maxNum = 6
+debug  : fbm.c <FbmAllocatePictureBuffer:1454>: pPicture->bEnableAfbcFlag = 0
+debug  : fbm.c <FbmCreateBuffer:252>: ** call allocate pic buf, i = 4, maxNum = 6
+debug  : fbm.c <FbmAllocatePictureBuffer:1454>: pPicture->bEnableAfbcFlag = 0
+debug  : fbm.c <FbmCreateBuffer:252>: ** call allocate pic buf, i = 5, maxNum = 6
+debug  : fbm.c <FbmAllocatePictureBuffer:1454>: pPicture->bEnableAfbcFlag = 0
+debug  : fbm.c <FbmCreateBuffer:405>: *** finish fbmCreateBuffer
+[vdec-recover] chn=0 streak=3 total=3 frameType=U inputLen=58300
+[dec-resync-release] chn=0 dropped=59 idr_size=58264
+I==D==R
+debug  : cedarc <VeSetEnableAfbcFlag:1771>: **** VeSetEnableAfbcFlag: 0
+debug  : fbm.c <FbmCreateBuffer:148>: FbmCreate, total fbm number: 6, decoder needed: 2,  nWidth=1920, nHeight=1088 nAlignStride = 0
+debug  : fbm.c <FbmCreateBuffer:252>: ** call allocate pic buf, i = 0, maxNum = 6
+debug  : fbm.c <FbmAllocatePictureBuffer:1454>: pPicture->bEnableAfbcFlag = 0
+debug  : fbm.c <FbmCreateBuffer:252>: ** call allocate pic buf, i = 1, maxNum = 6
+debug  : fbm.c <FbmAllocatePictureBuffer:1454>: pPicture->bEnableAfbcFlag = 0
+debug  : fbm.c <FbmCreateBuffer:252>: ** call allocate pic buf, i = 2, maxNum = 6
+debug  : fbm.c <FbmAllocatePictureBuffer:1454>: pPicture->bEnableAfbcFlag = 0
+debug  : fbm.c <FbmCreateBuffer:252>: ** call allocate pic buf, i = 3, maxNum = 6
+debug  : fbm.c <FbmAllocatePictureBuffer:1454>: pPicture->bEnableAfbcFlag = 0
+debug  : fbm.c <FbmCreateBuffer:252>: ** call allocate pic buf, i = 4, maxNum = 6
+debug  : fbm.c <FbmAllocatePictureBuffer:1454>: pPicture->bEnableAfbcFlag = 0
+debug  : fbm.c <FbmCreateBuffer:252>: ** call allocate pic buf, i = 5, maxNum = 6
+debug  : fbm.c <FbmAllocatePictureBuffer:1454>: pPicture->bEnableAfbcFlag = 0
+debug  : fbm.c <FbmCreateBuffer:405>: *** finish fbmCreateBuffer
+[vdec-recover] chn=3 streak=3 total=3 frameType=U inputLen=46845
+[dec-resync-release] chn=3 dropped=72 idr_size=46811
+I==D==R
+debug  : cedarc <VeSetEnableAfbcFlag:1771>: **** VeSetEnableAfbcFlag: 0
+debug  : fbm.c <FbmCreateBuffer:148>: FbmCreate, total fbm number: 6, decoder needed: 2,  nWidth=1920, nHeight=1088 nAlignStride = 0
+debug  : fbm.c <FbmCreateBuffer:252>: ** call allocate pic buf, i = 0, maxNum = 6
+debug  : fbm.c <FbmAllocatePictureBuffer:1454>: pPicture->bEnableAfbcFlag = 0
+debug  : fbm.c <FbmCreateBuffer:252>: ** call allocate pic buf, i = 1, maxNum = 6
+debug  : fbm.c <FbmAllocatePictureBuffer:1454>: pPicture->bEnableAfbcFlag = 0
+debug  : fbm.c <FbmCreateBuffer:252>: ** call allocate pic buf, i = 2, maxNum = 6
+debug  : fbm.c <FbmAllocatePictureBuffer:1454>: pPicture->bEnableAfbcFlag = 0
+debug  : fbm.c <FbmCreateBuffer:252>: ** call allocate pic buf, i = 3, maxNum = 6
+I==D==R
+debug  : fbm.c <FbmAllocatePictureBuffer:1454>: pPicture->bEnableAfbcFlag = 0
+debug  : fbm.c <FbmCreateBuffer:252>: ** call allocate pic buf, i = 4, maxNum = 6
+debug  : fbm.c <FbmAllocatePictureBuffer:1454>: pPicture->bEnableAfbcFlag = 0
+debug  : fbm.c <FbmCreateBuffer:252>: ** call allocate pic buf, i = 5, maxNum = 6
+debug  : fbm.c <FbmAllocatePictureBuffer:1454>: pPicture->bEnableAfbcFlag = 0
+debug  : fbm.c <FbmCreateBuffer:405>: *** finish fbmCreateBuffer
+[vdec-recover] chn=2 streak=3 total=3 frameType=U inputLen=104821
+[dec-resync-release] chn=2 dropped=72 idr_size=104785
+I==D==R
+[queue] overflow flush chn=2 depth=8 max=8 incoming_nal=1 incoming_size=5475 isIDR=0 isSpsOrPps=0 isSei=0 pts=32540
+I==D==R
+I==D==R
+[queue] resync chn=2 dropped=14 incoming_size=105797 pts=33372
+I==D==R
+I==D==R
+[queue] overflow flush chn=1 depth=8 max=8 incoming_nal=1 incoming_size=1160 isIDR=0 isSpsOrPps=0 isSei=0 pts=33574
+I==D==R
+I==D==R
+I==D==R
+[queue] resync chn=1 dropped=14 incoming_size=80131 pts=34523
+I==D==R
+[queue] overflow flush chn=1 depth=8 max=8 incoming_nal=1 incoming_size=2071 isIDR=0 isSpsOrPps=0 isSei=0 pts=34614
+I==D==R
+[queue] overflow flush chn=2 depth=8 max=8 incoming_nal=1 incoming_size=4900 isIDR=0 isSpsOrPps=0 isSei=0 pts=34815
+I==D==R
+[queue] resync chn=2 dropped=7 incoming_size=102627 pts=35359
+I==D==R
+[queue] resync chn=1 dropped=15 incoming_size=78864 pts=35443
+I==D==R
+[queue] overflow flush chn=1 depth=8 max=8 incoming_nal=1 incoming_size=1173 isIDR=0 isSpsOrPps=0 isSei=0 pts=35678
+I==D==R
+I==D==R
+[queue] resync chn=1 dropped=12 incoming_size=66335 pts=36444
+I==D==R
+I==D==R
+I==D==R
+[queue] overflow flush chn=1 depth=8 max=8 incoming_nal=1 incoming_size=946 isIDR=0 isSpsOrPps=0 isSei=0 pts=36848
+[queue] overflow flush chn=2 depth=8 max=8 incoming_nal=1 incoming_size=2936 isIDR=0 isSpsOrPps=0 isSei=0 pts=36889
+I==D==R
+[queue] resync chn=2 dropped=7 incoming_size=18492 pts=37131
+I==D==R
+[queue] resync chn=1 dropped=9 incoming_size=36972 pts=37223
+I==D==R
+I==D==R
+I==D==R
+I==D==R
+[queue] overflow flush chn=1 depth=8 max=8 incoming_nal=1 incoming_size=2972 isIDR=0 isSpsOrPps=0 isSei=0 pts=38458
+[queue] overflow flush chn=0 depth=8 max=8 incoming_nal=1 incoming_size=1376 isIDR=0 isSpsOrPps=0 isSei=0 pts=38750
+I==D==R
+[queue] resync chn=1 dropped=18 incoming_size=33510 pts=39247
+I==D==R
+I==D==R
+[queue] resync chn=0 dropped=21 incoming_size=51752 pts=39680
+I==D==R
+I==D==R
+I==D==R
+I==D==R
+[queue] overflow flush chn=0 depth=8 max=8 incoming_nal=1 incoming_size=6264 isIDR=0 isSpsOrPps=0 isSei=0 pts=40588
+[queue] overflow flush chn=2 depth=8 max=8 incoming_nal=1 incoming_size=5574 isIDR=0 isSpsOrPps=0 isSei=0 pts=40665
+[queue] resync chn=0 dropped=1 incoming_size=52356 pts=40768
+I==D==R
+I==D==R
+[queue] resync chn=2 dropped=12 incoming_size=87733 pts=41326
+I==D==R
+I==D==R
+[queue] overflow flush chn=1 depth=8 max=8 incoming_nal=1 incoming_size=2367 isIDR=0 isSpsOrPps=0 isSei=0 pts=41626
+[queue] overflow flush chn=2 depth=8 max=8 incoming_nal=1 incoming_size=13312 isIDR=0 isSpsOrPps=0 isSei=0 pts=41825
+I==D==R
+I==D==R
+[queue] resync chn=2 dropped=7 incoming_size=99160 pts=42340
+I==D==R
+[queue] resync chn=1 dropped=13 incoming_size=77530 pts=42379
+I==D==R
+[queue] overflow flush chn=2 depth=8 max=8 incoming_nal=1 incoming_size=2714 isIDR=0 isSpsOrPps=0 isSei=0 pts=42568
+I==D==R
+I==D==R
+[queue] resync chn=2 dropped=13 incoming_size=94830 pts=43396
+I==D==R
+I==D==R
+[queue] overflow flush chn=2 depth=8 max=8 incoming_nal=1 incoming_size=4177 isIDR=0 isSpsOrPps=0 isSei=0 pts=43778
+[queue] overflow flush chn=1 depth=8 max=8 incoming_nal=1 incoming_size=1904 isIDR=0 isSpsOrPps=0 isSei=0 pts=43808
+I==D==R
+I==D==R
+[queue] resync chn=1 dropped=8 incoming_size=82750 pts=44318
+I==D==R
+[queue] resync chn=2 dropped=9 incoming_size=102776 pts=44402
+I==D==R
+[queue] overflow flush chn=2 depth=8 max=8 incoming_nal=1 incoming_size=6714 isIDR=0 isSpsOrPps=0 isSei=0 pts=44537
+I==D==R
+I==D==R

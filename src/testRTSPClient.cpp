@@ -422,31 +422,31 @@ void MyH264Sink::afterGettingFrame(unsigned frameSize,
     }
     bool isIDR = (nalType == 5);
 
-    if (nalType == 7) {
-        cacheNal(fSPS, fSPSLen, fHaveSPS, fReceiveBuffer, frameSize);
-    } else if (nalType == 8) {
-        cacheNal(fPPS, fPPSLen, fHavePPS, fReceiveBuffer, frameSize);
-    } else if (nalType == 6) {
-        cacheNal(fSEI, fSEILen, fHaveSEI, fReceiveBuffer, frameSize);
-    }
+    // if (nalType == 7) {
+    //     cacheNal(fSPS, fSPSLen, fHaveSPS, fReceiveBuffer, frameSize);
+    // } else if (nalType == 8) {
+    //     cacheNal(fPPS, fPPSLen, fHavePPS, fReceiveBuffer, frameSize);
+    // } else if (nalType == 6) {
+    //     cacheNal(fSEI, fSEILen, fHaveSEI, fReceiveBuffer, frameSize);
+    // }
 
-    const std::string preQueueDumpFile = "pre_queue_chn" + std::to_string(fChannel) + ".h264";
-    if (!fPreQueueDumpStarted && isIDR) {
-        fPreQueueDumpStarted = true;
-        if (fHaveSPS) {
-            writeAnnexBNalToFile(fSPS, fSPSLen, preQueueDumpFile);
-        }
-        if (fHavePPS) {
-            writeAnnexBNalToFile(fPPS, fPPSLen, preQueueDumpFile);
-        }
-        if (fHaveSEI) {
-            writeAnnexBNalToFile(fSEI, fSEILen, preQueueDumpFile);
-        }
-    }
+    // const std::string preQueueDumpFile = "pre_queue_chn" + std::to_string(fChannel) + ".h264";
+    // if (!fPreQueueDumpStarted && isIDR) {
+    //     fPreQueueDumpStarted = true;
+    //     if (fHaveSPS) {
+    //         writeAnnexBNalToFile(fSPS, fSPSLen, preQueueDumpFile);
+    //     }
+    //     if (fHavePPS) {
+    //         writeAnnexBNalToFile(fPPS, fPPSLen, preQueueDumpFile);
+    //     }
+    //     if (fHaveSEI) {
+    //         writeAnnexBNalToFile(fSEI, fSEILen, preQueueDumpFile);
+    //     }
+    // }
 
-    if (fPreQueueDumpStarted) {
-        writeAnnexBNalToFile(fReceiveBuffer, frameSize, preQueueDumpFile);
-    }
+    // if (fPreQueueDumpStarted) {
+    //     writeAnnexBNalToFile(fReceiveBuffer, frameSize, preQueueDumpFile);
+    // }
     long long pts = 0;
     long long spts = 0;
 

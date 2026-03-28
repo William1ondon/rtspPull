@@ -1,4 +1,4 @@
-﻿#include <unistd.h>
+#include <unistd.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
@@ -16,6 +16,7 @@
 #include <algorithm>
 #include <array>
 #include <cctype>
+#include <deque>
 #include <memory>
 #include <string>
 #include <thread>
@@ -259,6 +260,11 @@ static void* listen_body(void* arg)
     H264Packet pkt;
     std::vector<uint8_t> sps;
     std::vector<uint8_t> pps;
+    bool decoderPrimed = false;
+    bool decoderNeedResync = false;
+    size_t decoderResyncDropped = 0;
+    std::deque<std::string> recentDecHistory;
+    constexpr size_t kRecentDecHistoryMax = 8;
 
     while (!bThreadShouldStop)
     {
@@ -290,6 +296,31 @@ static void* listen_body(void* arg)
             continue;
         }
 
+        // Skip standalone non-VCL NALs (SEI/AUD/etc.); cedarc only needs SPS/PPS plus slice NALs here.
+        if (nalType != 1 && nalType != 5)
+        {
+            delete[] pkt.data;
+            continue;
+        }
+
+        // SPS/PPS now stay cached in the queue object, so slice packets can keep the queue shallow.
+        if (pkt.isIDR || sps.empty() || pps.empty())
+        {
+            ctx->h264Queue->copyLatestParameterSets(sps, pps);
+        }
+
+        // Drop non-IDR slices until the decoder has been primed, or while waiting for a clean resync point.
+        if ((!decoderPrimed || decoderNeedResync) && !pkt.isIDR)
+        {
+            if (decoderNeedResync)
+            {
+                ++decoderResyncDropped;
+            }
+            delete[] pkt.data;
+            continue;
+        }
+
+        const size_t queueDepthBeforeSend = ctx->h264Queue->depth();
         size_t outSize = 4 + pkt.size;
         bool needExtra = false;
 
@@ -323,13 +354,31 @@ static void* listen_body(void* arg)
         delete[] pkt.data;
 
         frame_shell fs;
-        if(pkt.isIDR == true)
-        {
-            ifReceiveIDR[chn_num] = 1;
-        }
-        if(ifReceiveIDR[chn_num] == 1)
-            writeCacheToFile(inputBuf, outSize, "chn" + std::to_string(chn_num) + ".h264");
+        // if(pkt.isIDR == true)
+        // {
+        //     ifReceiveIDR[chn_num] = 1;
+        // }
+        // if(ifReceiveIDR[chn_num] == 1)
+        //     writeCacheToFile(inputBuf, outSize, "chn" + std::to_string(chn_num) + ".h264");
         fs.refill(MEDIA_PT_H264, inputBuf, 0, outSize, 1, 0, pkt.isIDR);
+        char decHistoryBuf[256] = {0};
+        snprintf(decHistoryBuf, sizeof(decHistoryBuf),
+                 "q=%zu nal=%u pkt=%zu out=%zu idr=%d first_mb=%d primed=%d sps=%zu pps=%zu extra=%d",
+                 queueDepthBeforeSend,
+                 static_cast<unsigned>(nalType),
+                 pkt.size,
+                 outSize,
+                 pkt.isIDR ? 1 : 0,
+                 firstMbInSlice,
+                 decoderPrimed ? 1 : 0,
+                 sps.size(),
+                 pps.size(),
+                 needExtra ? 1 : 0);
+        recentDecHistory.emplace_back(decHistoryBuf);
+        while (recentDecHistory.size() > kRecentDecHistoryMax)
+        {
+            recentDecHistory.pop_front();
+        }
 
         // printf("[dec-in] chn=%d nal=%u size=%zu idr=%d first_mb=%d\n",
         //        chn_num,
@@ -342,6 +391,20 @@ static void* listen_body(void* arg)
 
         if (sendRet != 0)
         {
+            if (!decoderNeedResync)
+            {
+                printf("[dec-resync-arm] chn=%d sendRet=%d %s\n", chn_num, sendRet, decHistoryBuf);
+                decoderResyncDropped = 0;
+            }
+            decoderNeedResync = true;
+            decoderPrimed = false;
+            printf("[dec-fail] chn=%d sendRet=%d %s\n", chn_num, sendRet, decHistoryBuf);
+            size_t histIdx = 0;
+            for (const std::string& hist : recentDecHistory)
+            {
+                printf("[dec-fail-hist] chn=%d idx=%zu %s\n", chn_num, histIdx, hist.c_str());
+                ++histIdx;
+            }
             // printf("[dec-fail] chn=%d nal=%u size=%zu idr=%d first_mb=%d\\n",
             //        chn_num,
             //        static_cast<unsigned>(nalType),
@@ -349,6 +412,19 @@ static void* listen_body(void* arg)
             //        pkt.isIDR ? 1 : 0,
             //        firstMbInSlice);
             continue;
+        }
+
+        if (pkt.isIDR && decoderNeedResync)
+        {
+            decoderNeedResync = false;
+            decoderPrimed = true;
+            printf("[dec-resync-release] chn=%d dropped=%zu idr_size=%zu\n", chn_num, decoderResyncDropped, pkt.size);
+            decoderResyncDropped = 0;
+        }
+        else if (pkt.isIDR && !decoderPrimed)
+        {
+            decoderPrimed = true;
+            printf("[vdec-sync] chn=%d primed on IDR size=%zu\n", chn_num, pkt.size);
         }
 
         ctx->vdecNode->retainInputBuffer(decodeBuf);
@@ -507,7 +583,7 @@ int main(int argc, char* argv[])
             return 1;
         }
 
-        g_h264Queues[i] = new H264Queue(queueDepth);
+        g_h264Queues[i] = new H264Queue(static_cast<int>(i), queueDepth);
         g_pullers[i] = new rtspPuller(rtspUrls[i].c_str(), g_h264Queues[i], static_cast<int>(i));
 
         g_decodeCtx[i].chn = static_cast<int>(i);

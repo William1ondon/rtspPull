@@ -1,4 +1,4 @@
-ï»¿#include <stdio.h>
+#include <stdio.h>
 #include <stdint.h>
 #include <unistd.h>
 #include <stdlib.h>
@@ -44,11 +44,11 @@ static bool findStartCode(const uint8_t* data, size_t len, size_t* scLen)
 
 unsigned int Ue(unsigned char *pBuff, unsigned int nLen, unsigned int &nStartBit)
 {
-    // è®¡ç®—0bitçš„ä¸ªæ•°
+    // ¼ÆËã0bitµÄ¸öÊý
     unsigned int nZeroNum = 0;
     while (nStartBit < nLen * 8)
     {
-        if (pBuff[nStartBit / 8] & (0x80 >> (nStartBit % 8))) //&:æŒ‰ä½ä¸Žï¼Œ%å–ä½™
+        if (pBuff[nStartBit / 8] & (0x80 >> (nStartBit % 8))) //&:°´Î»Óë£¬%È¡Óà
         {
             break;
         }
@@ -57,7 +57,7 @@ unsigned int Ue(unsigned char *pBuff, unsigned int nLen, unsigned int &nStartBit
     }
     nStartBit++;
 
-    // è®¡ç®—ç»“æžœ
+    // ¼ÆËã½á¹û
     unsigned long dwRet = 0;
     for (unsigned int i = 0; i < nZeroNum; i++)
     {
@@ -75,7 +75,7 @@ int Se(unsigned char *pBuff, unsigned int nLen, unsigned int &nStartBit)
 {
     int UeVal = Ue(pBuff, nLen, nStartBit);
     double k = UeVal;
-    int nValue = ceil(k / 2); // ceilå‡½æ•°ï¼šceilå‡½æ•°çš„ä½œç”¨æ˜¯æ±‚ä¸å°äºŽç»™å®šå®žæ•°çš„æœ€å°æ•´æ•°ã€‚ceil(2)=ceil(1.2)=cei(1.5)=2.00
+    int nValue = ceil(k / 2); // ceilº¯Êý£ºceilº¯ÊýµÄ×÷ÓÃÊÇÇó²»Ð¡ÓÚ¸ø¶¨ÊµÊýµÄ×îÐ¡ÕûÊý¡£ceil(2)=ceil(1.2)=cei(1.5)=2.00
     if (UeVal % 2 == 0)
         nValue = -nValue;
     return nValue;
@@ -96,7 +96,7 @@ unsigned long u(unsigned int BitCount, unsigned char *buf, unsigned int &nStartB
     return dwRet;
 }
 
-// ä»…ç”¨äºŽåŒºåˆ† I/P/Bï¼Œè§£æž slice_type
+// ½öÓÃÓÚÇø·Ö I/P/B£¬½âÎö slice_type
 static FrameType parseH264FrameType(const uint8_t* data, size_t len)
 {
     size_t scLen = 0;
@@ -107,9 +107,9 @@ static FrameType parseH264FrameType(const uint8_t* data, size_t len)
     uint8_t nalType = nalHdr & 0x1f;
     if (nalType == 5) return FRAME_I; // IDR
 
-    if (nalType != 1) return FRAME_UNKNOWN; // éž slice
+    if (nalType != 1) return FRAME_UNKNOWN; // ·Ç slice
 
-    // ç”Ÿæˆ RBSPï¼ˆåŽ»æŽ‰ emulation_prevention_three_byteï¼‰
+    // Éú³É RBSP£¨È¥µô emulation_prevention_three_byte£©
     const uint8_t* p = data + scLen + 1;
     size_t payloadLen = len - scLen - 1;
     std::vector<uint8_t> rbsp;
@@ -236,10 +236,12 @@ t507_vdec_node::t507_vdec_node(int chn)
 
     m_curFrame = 0;
     m_retainedInputBytes = 0;
+    m_decodeFailStreak = 0;
+    m_decodeFailCount = 0;
 
     for (int i = 0; i < T507_PLAYBACK_BUF_NUM; i++)
     {
-        /* åˆå§‹åŒ–å¸§æ•°ç»„ è¦ç”¨è¿™äº›å¸§åŽ»è£…è½½v4l2æ•°æ® */
+        /* ³õÊ¼»¯Ö¡Êý×é ÒªÓÃÕâÐ©Ö¡È¥×°ÔØv4l2Êý¾Ý */
         m_frame[i] = new frame_shell();
     }
 
@@ -282,13 +284,14 @@ int t507_vdec_node::create()
     // if (ret < 0)
     {
         logError("Decoder init fail:%d \n", ret);
-        // system("reboot -f");//ä¸çŸ¥é“åŽŸå› ï¼Œåªèƒ½é‡å¯
+        // system("reboot -f");//²»ÖªµÀÔ­Òò£¬Ö»ÄÜÖØÆô
         return -1;
     }
     else
         logInfo("decoder init success. \n");
 
     m_bCreated = true;
+    m_decodeFailStreak = 0;
     return 0;
 }
 
@@ -297,7 +300,7 @@ int t507_vdec_node::destroy()
     if (m_decoder != NULL)
     {
         m_bCreated = false;
-        usleep(100 * 1000); // å»¶æ—¶æ˜¯è®©é€è¿‡åŽ»çš„è§£ç è§†é¢‘å¸§è§£å®Œ
+        usleep(100 * 1000); // ÑÓÊ±ÊÇÈÃËÍ¹ýÈ¥µÄ½âÂëÊÓÆµÖ¡½âÍê
         AWVideoDecoder::destroy(m_decoder);
 
         m_decoder = NULL;
@@ -371,8 +374,53 @@ int t507_vdec_node::sendFrame(media_frame *frame)
     ret = m_decoder->decode(&pkt);
     if (ret < 0)
     {
-        // logError("decode failed. [chn:%d, err:%d]\n", m_chn, ret);
+        ++m_decodeFailStreak;
+        ++m_decodeFailCount;
+
+        size_t retainedCount = 0;
+        size_t retainedBytes = 0;
+        {
+            std::lock_guard<std::mutex> lock(m_retainedInputsMutex);
+            retainedCount = m_retainedInputs.size();
+            retainedBytes = m_retainedInputBytes;
+        }
+
+        size_t scLen = 0;
+        unsigned nalType = 0;
+        if (findStartCode(pkt.pAddrVir0, pkt.dataLen0, &scLen) && pkt.dataLen0 > scLen)
+        {
+            nalType = pkt.pAddrVir0[scLen] & 0x1F;
+        }
+
+        if (m_decodeFailStreak == 1 || (m_decodeFailStreak % 20) == 0)
+        {
+            printf("[vdec-fail] chn=%d ret=%d streak=%u total=%lu nal=%u frameType=%s inputLen=%u retained=%zu retainedBytes=%zu head=%02X %02X %02X %02X\n",
+                   m_chn,
+                   ret,
+                   m_decodeFailStreak,
+                   m_decodeFailCount,
+                   nalType,
+                   getFrameTypeName(ft),
+                   pkt.dataLen0,
+                   retainedCount,
+                   retainedBytes,
+                   pkt.dataLen0 > 0 ? pkt.pAddrVir0[0] : 0,
+                   pkt.dataLen0 > 1 ? pkt.pAddrVir0[1] : 0,
+                   pkt.dataLen0 > 2 ? pkt.pAddrVir0[2] : 0,
+                   pkt.dataLen0 > 3 ? pkt.pAddrVir0[3] : 0);
+        }
         return -1;
+    }
+
+    if (m_decodeFailStreak > 0)
+    {
+        printf("[vdec-recover] chn=%d streak=%u total=%lu frameType=%s inputLen=%u\n",
+               m_chn,
+               m_decodeFailStreak,
+               m_decodeFailCount,
+               getFrameTypeName(ft),
+               pkt.dataLen0);
+        m_decodeFailStreak = 0;
     }
 
     return 0;
@@ -401,7 +449,7 @@ media_frame *t507_vdec_node::getFrame()
     return m_frame[m_curFrame];
 }
 
-// 1920x1080è§£ç åŽå¾—åˆ°çš„YUVå®žé™…å¤§å°1920x1088
+// 1920x1080½âÂëºóµÃµ½µÄYUVÊµ¼Ê´óÐ¡1920x1088
 int t507_vdec_node::decoderDataReady(awvideodecoder::AVPacket *packet)
 {
     int ret = 0;
@@ -425,9 +473,9 @@ int t507_vdec_node::decoderDataReady(awvideodecoder::AVPacket *packet)
             memcpy((void *)mem.virt + i * 1920, packet->pAddrVir0 + i * 1280, 1280); // Y
         for (int i = 0; i < 720 / 2; i++)
             memcpy((void *)mem.virt + 1920 * 1080 + i * 1920, packet->pAddrVir0 + 1280 * 720 + i * 1280, 1280); // Y
-        IonDmaSync(mem.dmafd);                                                                                  // å¢žåŠ 720pçš„ionåŒæ­¥ï¼Œå¦åˆ™ä¼šå‡ºçŽ°åŠ¨æ€ç”»é¢æ’•è£‚
+        IonDmaSync(mem.dmafd);                                                                                  // Ôö¼Ó720pµÄionÍ¬²½£¬·ñÔò»á³öÏÖ¶¯Ì¬»­ÃæËºÁÑ
     }
-    // é«˜ä¸€å®šè¦å¯¹é½ å¦åˆ™å›žæ”¾è§†é¢‘ä¼šæœ‰ä¸€é“ç»¿è¾¹
+    // ¸ßÒ»¶¨Òª¶ÔÆë ·ñÔò»Ø·ÅÊÓÆµ»áÓÐÒ»µÀÂÌ±ß
 
     // frame.refill(MEDIA_PT_YUV_420SP_NV21, (void *)mem.virt,mem.phy, m_width, m_height, packet->pts, false);
     m_frame[bufIndex[m_chn]]->refill(MEDIA_PT_YUV_420SP_NV21, (void *)mem.virt, mem.phy, m_width, m_height, packet->pts, false);
