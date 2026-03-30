@@ -1,53 +1,338 @@
+########## bypass off
+PLAY started
+[vdec-fail] chn=3 ret=-6 streak=1 total=1 nal=7 frameType=U inputLen=51094 retained=0 retainedBytes=0 head=00 00 00 01
+[dec-resync-arm] chn=3 sendRet=-1 q=0 nal=5 pkt=51060 out=51094 idr=1 first_mb=0 primed=0 sps=17 pps=5 extra=1
+[dec-fail] chn=3 sendRet=-1 q=0 nal=5 pkt=51060 out=51094 idr=1 first_mb=0 primed=0 sps=17 pps=5 extra=1
+[dec-fail-hist] chn=3 idx=0 q=0 nal=5 pkt=51060 out=51094 idr=1 first_mb=0 primed=0 sps=17 pps=5 extra=1
+debug  : cedarc <AvcSbmFrameCheckBitStreamType:325>: result: bStreamWithStartCode[1], with[1], whitout[0]
+debug  : cedarc <AvcSbmFrameCheckBitStreamType:325>: result: bStreamWithStartCode[1], with[1], whitout[0]
+[vdec-fail] chn=1 ret=-6 streak=1 total=1 nal=7 frameType=U inputLen=63531 retained=0 retainedBytes=0 head=00 00 00 01
+[dec-resync-arm] chn=1 sendRet=-1 q=0 nal=5 pkt=63495 out=63531 idr=1 first_mb=0 primed=0 sps=20 pps=4 extra=1
+[dec-fail] chn=1 sendRet=-1 q=0 nal=5 pkt=63495 out=63531 idr=1 first_mb=0 primed=0 sps=20 pps=4 extra=1
+[dec-fail-hist] chn=1 idx=0 q=0 nal=5 pkt=63495 out=63531 idr=1 first_mb=0 primed=0 sps=20 pps=4 extra=1
+debug  : cedarc <AvcSbmFrameCheckBitStreamType:325>: result: bStreamWithStartCode[1], with[1], whitout[0]
+[vdec-fail] chn=2 ret=-6 streak=1 total=1 nal=7 frameType=U inputLen=95001 retained=0 retainedBytes=0 head=00 00 00 01
+[dec-resync-arm] chn=2 sendRet=-1 q=3 nal=5 pkt=94965 out=95001 idr=1 first_mb=0 primed=0 sps=20 pps=4 extra=1
+[dec-fail] chn=2 sendRet=-1 q=3 nal=5 pkt=94965 out=95001 idr=1 first_mb=0 primed=0 sps=20 pps=4 extra=1
+[dec-fail-hist] chn=2 idx=0 q=3 nal=5 pkt=94965 out=95001 idr=1 first_mb=0 primed=0 sps=20 pps=4 extra=1
+[pipe-prof] chn=1 elapsed_ms=1029.0 pop=34 send=1 send_fail=1 load=0 null=0 drop_pre=17 drop_resync=16 idr=1 qmax=0 in_kb=62.0 out_kb=62.0 popwait_avg=50.447 popwait_max=688.350 send_avg=0.269 send_max=0.269 get_avg=0.000 get_max=0.000 load_avg=0.000 load_max=0.000 loop_avg=50.512 loop_max=688.395
+[pipe-prof] chn=2 elapsed_ms=1010.7 pop=28 send=1 send_fail=1 load=0 null=0 drop_pre=9 drop_resync=18 idr=1 qmax=3 in_kb=92.7 out_kb=92.8 popwait_avg=62.786 popwait_max=750.621 send_avg=0.251 send_max=0.251 get_avg=0.000 get_max=0.000 load_avg=0.000 load_max=0.000 loop_avg=62.908 loop_max=750.727
+[pipe-prof] chn=0 elapsed_ms=1042.0 pop=27 send=0 send_fail=0 load=0 null=0 drop_pre=27 drop_resync=0 idr=0 qmax=0 in_kb=0.0 out_kb=0.0 popwait_avg=66.299 popwait_max=749.296 send_avg=0.000 send_max=0.000 get_avg=0.000 get_max=0.000 load_avg=0.000 load_max=0.000 loop_avg=66.344 loop_max=749.355
+[pipe-prof] chn=3 elapsed_ms=1012.5 pop=28 send=1 send_fail=1 load=0 null=0 drop_pre=0 drop_resync=27 idr=1 qmax=0 in_kb=49.9 out_kb=49.9 popwait_avg=70.652 popwait_max=968.332 send_avg=0.460 send_max=0.460 get_avg=0.000 get_max=0.000 load_avg=0.000 load_max=0.000 loop_avg=70.794 loop_max=969.712
+debug  : cedarc <H264DecVuiParameters:341>: nFrameRate=25
+debug  : cedarc <H264DecodePictureScanType:2779>: here3:hCtx->bProgressice=1
+
+[dec-fail] chn=2 sendRet=-1 q=0 nal=5 pkt=88388 out=88424 idr=1 first_mb=0 primed=0 sps=20 pps=4 extra=1
+[dec-fail-hist] chn=2 idx=0 q=3 nal=5 pkt=94965 out=95001 idr=1 first_mb=0 primed=0 sps=20 pps=4 extra=1
+[dec-fail-hist] chn=2 idx=1 q=0 nal=5 pkt=88388 out=88424 idr=1 first_mb=0 primed=0 sps=20 pps=4 extra=1
+debug  : cedarc <H264DecVuiParameters:341>: nFrameRate=25
+debug  : cedarc <H264DecodePictureScanType:2779>: here3:hCtx->bProgressice=1
+
+[vdec-prof] chn=1 bypass=0 elapsed_ms=1002.8 decode=2 fail=2 decode_avg=0.258 decode_max=0.281 cb=0 cb_avg=0.000 cb_max=0.000 copy_avg=0.000 copy_max=0.000 sync_avg=0.000 sync_max=0.000
+[dec-fail] chn=1 sendRet=-1 q=0 nal=5 pkt=59828 out=59864 idr=1 first_mb=0 primed=0 sps=20 pps=4 extra=1
+[dec-fail-hist] chn=1 idx=0 q=0 nal=5 pkt=63495 out=63531 idr=1 first_mb=0 primed=0 sps=20 pps=4 extra=1
+[dec-fail-hist] chn=1 idx=1 q=0 nal=5 pkt=59828 out=59864 idr=1 first_mb=0 primed=0 sps=20 pps=4 extra=1
+debug  : cedarc <AvcSbmFrameCheckBitStreamType:325>: result: bStreamWithStartCode[1], with[1], whitout[0]
+[vdec-fail] chn=0 ret=-6 streak=1 total=1 nal=7 frameType=U inputLen=67609 retained=0 retainedBytes=0 head=00 00 00 01
+[dec-resync-arm] chn=0 sendRet=-1 q=0 nal=5 pkt=67573 out=67609 idr=1 first_mb=0 primed=0 sps=20 pps=4 extra=1
+[dec-fail] chn=0 sendRet=-1 q=0 nal=5 pkt=67573 out=67609 idr=1 first_mb=0 primed=0 sps=20 pps=4 extra=1
+[dec-fail-hist] chn=0 idx=0 q=0 nal=5 pkt=67573 out=67609 idr=1 first_mb=0 primed=0 sps=20 pps=4 extra=1
+[vdec-prof] chn=3 bypass=0 elapsed_ms=1646.8 decode=2 fail=2 decode_avg=0.259 decode_max=0.357 cb=0 cb_avg=0.000 cb_max=0.000 copy_avg=0.000 copy_max=0.000 sync_avg=0.000 sync_max=0.000
+[dec-fail] chn=3 sendRet=-1 q=0 nal=5 pkt=55150 out=55184 idr=1 first_mb=0 primed=0 sps=17 pps=5 extra=1
+[dec-fail-hist] chn=3 idx=0 q=0 nal=5 pkt=51060 out=51094 idr=1 first_mb=0 primed=0 sps=17 pps=5 extra=1
+[dec-fail-hist] chn=3 idx=1 q=0 nal=5 pkt=55150 out=55184 idr=1 first_mb=0 primed=0 sps=17 pps=5 extra=1
+[pipe-prof] chn=1 elapsed_ms=1031.1 pop=25 send=1 send_fail=1 load=0 null=0 drop_pre=0 drop_resync=24 idr=1 qmax=0 in_kb=58.4 out_kb=58.5 popwait_avg=41.163 popwait_max=277.996 send_avg=0.340 send_max=0.340 get_avg=0.000 get_max=0.000 load_avg=0.000 load_max=0.000 loop_avg=41.238 loop_max=279.024
+[pipe-prof] chn=2 elapsed_ms=1009.2 pop=25 send=1 send_fail=1 load=0 null=0 drop_pre=0 drop_resync=24 idr=1 qmax=0 in_kb=86.3 out_kb=86.4 popwait_avg=40.226 popwait_max=248.163 send_avg=0.390 send_max=0.390 get_avg=0.000 get_max=0.000 load_avg=0.000 load_max=0.000 loop_avg=40.363 loop_max=249.545
+[pipe-prof] chn=0 elapsed_ms=1003.0 pop=25 send=1 send_fail=1 load=0 null=0 drop_pre=7 drop_resync=17 idr=1 qmax=0 in_kb=66.0 out_kb=66.0 popwait_avg=40.021 popwait_max=357.164 send_avg=0.253 send_max=0.253 get_avg=0.000 get_max=0.000 load_avg=0.000 load_max=0.000 loop_avg=40.116 loop_max=358.231
+[pipe-prof] chn=3 elapsed_ms=1021.9 pop=26 send=1 send_fail=1 load=0 null=0 drop_pre=0 drop_resync=25 idr=1 qmax=0 in_kb=53.9 out_kb=53.9 popwait_avg=39.176 popwait_max=131.002 send_avg=0.284 send_max=0.284 get_avg=0.000 get_max=0.000 load_avg=0.000 load_max=0.000 loop_avg=39.299 loop_max=131.121
+debug  : cedarc <VeSetEnableAfbcFlag:1771>: **** VeSetEnableAfbcFlag: 0
+debug  : fbm.c <FbmCreateBuffer:148>: FbmCreate, total fbm number: 6, decoder needed: 2,  nWidth=1920, nHeight=1088 nAlignStride = 0
+debug  : fbm.c <FbmCreateBuffer:252>: ** call allocate pic buf, i = 0, maxNum = 6
+debug  : fbm.c <FbmAllocatePictureBuffer:1454>: pPicture->bEnableAfbcFlag = 0
+debug  : fbm.c <FbmCreateBuffer:252>: ** call allocate pic buf, i = 1, maxNum = 6
+debug  : fbm.c <FbmAllocatePictureBuffer:1454>: pPicture->bEnableAfbcFlag = 0
+debug  : fbm.c <FbmCreateBuffer:252>: ** call allocate pic buf, i = 2, maxNum = 6
+debug  : fbm.c <FbmAllocatePictureBuffer:1454>: pPicture->bEnableAfbcFlag = 0
+debug  : fbm.c <FbmCreateBuffer:252>: ** call allocate pic buf, i = 3, maxNum = 6
+debug  : fbm.c <FbmAllocatePictureBuffer:1454>: pPicture->bEnableAfbcFlag = 0
+debug  : fbm.c <FbmCreateBuffer:252>: ** call allocate pic buf, i = 4, maxNum = 6
+debug  : fbm.c <FbmAllocatePictureBuffer:1454>: pPicture->bEnableAfbcFlag = 0
+debug  : fbm.c <FbmCreateBuffer:252>: ** call allocate pic buf, i = 5, maxNum = 6
+debug  : fbm.c <FbmAllocatePictureBuffer:1454>: pPicture->bEnableAfbcFlag = 0
+debug  : fbm.c <FbmCreateBuffer:405>: *** finish fbmCreateBuffer
+[vdec-recover] chn=1 streak=2 total=2 frameType=U inputLen=52520
+[dec-resync-release] chn=1 dropped=48 idr_size=52484
+[render-prof] elapsed_ms=2608.1 draws=1 draw_avg=1.272 draw_max=1.272 swap_avg=0.533 swap_max=0.533 finish_avg=8.497 finish_max=8.497 total_avg=2608.119 total_max=2608.119
+debug  : cedarc <VeSetEnableAfbcFlag:1771>: **** VeSetEnableAfbcFlag: 0
+debug  : fbm.c <FbmCreateBuffer:148>: FbmCreate, total fbm number: 6, decoder needed: 2,  nWidth=1920, nHeight=1088 nAlignStride = 0
+debug  : fbm.c <FbmCreateBuffer:252>: ** call allocate pic buf, i = 0, maxNum = 6
+[vdec-prof] chn=1 bypass=0 elapsed_ms=1031.2 decode=1 fail=0 decode_avg=19.641 decode_max=19.641 cb=2 cb_avg=6.661 cb_max=7.310 copy_avg=6.203 copy_max=6.688 sync_avg=0.451 sync_max=0.613
+debug  : fbm.c <FbmAllocatePictureBuffer:1454>: pPicture->bEnableAfbcFlag = 0
+debug  : fbm.c <FbmCreateBuffer:252>: ** call allocate pic buf, i = 1, maxNum = 6
+debug  : fbm.c <FbmAllocatePictureBuffer:1454>: pPicture->bEnableAfbcFlag = 0
+debug  : fbm.c <FbmCreateBuffer:252>: ** call allocate pic buf, i = 2, maxNum = 6
+debug  : fbm.c <FbmAllocatePictureBuffer:1454>: pPicture->bEnableAfbcFlag = 0
+debug  : fbm.c <FbmCreateBuffer:252>: ** call allocate pic buf, i = 3, maxNum = 6
+debug  : fbm.c <FbmAllocatePictureBuffer:1454>: pPicture->bEnableAfbcFlag = 0
+debug  : fbm.c <FbmCreateBuffer:252>: ** call allocate pic buf, i = 4, maxNum = 6
+debug  : fbm.c <FbmAllocatePictureBuffer:1454>: pPicture->bEnableAfbcFlag = 0
+debug  : fbm.c <FbmCreateBuffer:252>: ** call allocate pic buf, i = 5, maxNum = 6
+debug  : fbm.c <FbmAllocatePictureBuffer:1454>: pPicture->bEnableAfbcFlag = 0
+debug  : fbm.c <FbmCreateBuffer:405>: *** finish fbmCreateBuffer
+[vdec-prof] chn=2 bypass=0 elapsed_ms=2049.0 decode=2 fail=2 decode_avg=0.298 decode_max=0.381 cb=1 cb_avg=9.172 cb_max=9.172 copy_avg=8.568 copy_max=8.568 sync_avg=0.597 sync_max=0.597
+[vdec-recover] chn=2 streak=2 total=2 frameType=U inputLen=101454
+[dec-resync-release] chn=2 dropped=48 idr_size=101418
+[pipe-prof] chn=1 elapsed_ms=1028.6 pop=25 send=17 send_fail=0 load=17 null=0 drop_pre=0 drop_resync=8 idr=1 qmax=4 in_kb=100.0 out_kb=100.0 popwait_avg=23.841 popwait_max=217.082 send_avg=25.251 send_max=28.473 get_avg=0.001 get_max=0.002 load_avg=0.014 load_max=0.061 loop_avg=41.137 loop_max=237.447
+[pipe-prof] chn=2 elapsed_ms=1020.6 pop=23 send=17 send_fail=0 load=17 null=0 drop_pre=0 drop_resync=6 idr=1 qmax=5 in_kb=209.8 out_kb=209.9 popwait_avg=25.655 popwait_max=311.708 send_avg=24.730 send_max=27.208 get_avg=0.001 get_max=0.002 load_avg=0.274 load_max=1.660 loop_avg=44.367 loop_max=341.369
+[pipe-prof] chn=0 elapsed_ms=1024.6 pop=26 send=0 send_fail=0 load=0 null=0 drop_pre=0 drop_resync=26 idr=0 qmax=0 in_kb=0.0 out_kb=0.0 popwait_avg=39.340 popwait_max=91.085 send_avg=0.000 send_max=0.000 get_avg=0.000 get_max=0.000 load_avg=0.000 load_max=0.000 loop_avg=39.402 loop_max=91.129
+[pipe-prof] chn=3 elapsed_ms=1037.1 pop=26 send=0 send_fail=0 load=0 null=0 drop_pre=0 drop_resync=26 idr=0 qmax=0 in_kb=0.0 out_kb=0.0 popwait_avg=39.760 popwait_max=112.917 send_avg=0.000 send_max=0.000 get_avg=0.000 get_max=0.000 load_avg=0.000 load_max=0.000 loop_avg=39.880 loop_max=113.016
+debug  : cedarc <H264DecodePictureScanType:2779>: here3:hCtx->bProgressice=1
+
+[vdec-prof] chn=3 bypass=0 elapsed_ms=1621.0 decode=1 fail=1 decode_avg=0.297 decode_max=0.297 cb=0 cb_avg=0.000 cb_max=0.000 copy_avg=0.000 copy_max=0.000 sync_avg=0.000 sync_max=0.000
+[dec-fail] chn=3 sendRet=-1 q=0 nal=5 pkt=52362 out=52396 idr=1 first_mb=0 primed=0 sps=17 pps=5 extra=1
+[dec-fail-hist] chn=3 idx=0 q=0 nal=5 pkt=51060 out=51094 idr=1 first_mb=0 primed=0 sps=17 pps=5 extra=1
+[dec-fail-hist] chn=3 idx=1 q=0 nal=5 pkt=55150 out=55184 idr=1 first_mb=0 primed=0 sps=17 pps=5 extra=1
+[dec-fail-hist] chn=3 idx=2 q=0 nal=5 pkt=52362 out=52396 idr=1 first_mb=0 primed=0 sps=17 pps=5 extra=1
+[vdec-prof] chn=0 bypass=0 elapsed_ms=1939.0 decode=2 fail=2 decode_avg=0.199 decode_max=0.221 cb=0 cb_avg=0.000 cb_max=0.000 copy_avg=0.000 copy_max=0.000 sync_avg=0.000 sync_max=0.000
+[dec-fail] chn=0 sendRet=-1 q=0 nal=5 pkt=64225 out=64261 idr=1 first_mb=0 primed=0 sps=20 pps=4 extra=1
+[dec-fail-hist] chn=0 idx=0 q=0 nal=5 pkt=67573 out=67609 idr=1 first_mb=0 primed=0 sps=20 pps=4 extra=1
+[dec-fail-hist] chn=0 idx=1 q=0 nal=5 pkt=64225 out=64261 idr=1 first_mb=0 primed=0 sps=20 pps=4 extra=1
+[render-prof] elapsed_ms=1104.3 draws=49 draw_avg=1.153 draw_max=2.523 swap_avg=0.460 swap_max=1.653 finish_avg=10.572 finish_max=12.307 total_avg=22.531 total_max=315.959
+[vdec-prof] chn=1 bypass=0 elapsed_ms=1037.6 decode=24 fail=0 decode_avg=22.634 decode_max=28.433 cb=24 cb_avg=8.545 cb_max=11.654 copy_avg=8.182 copy_max=11.292 sync_avg=0.353 sync_max=0.586
+[vdec-prof] chn=2 bypass=0 elapsed_ms=1026.1 decode=26 fail=0 decode_avg=21.689 decode_max=27.008 cb=26 cb_avg=9.350 cb_max=15.664 copy_avg=8.969 copy_max=15.341 sync_avg=0.372 sync_max=0.753
+[pipe-prof] chn=1 elapsed_ms=1007.1 pop=24 send=24 send_fail=0 load=24 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=3 in_kb=124.9 out_kb=125.0 popwait_avg=19.545 popwait_max=317.891 send_avg=22.246 send_max=27.904 get_avg=0.001 get_max=0.003 load_avg=0.017 load_max=0.049 loop_avg=41.952 loop_max=338.477
+[pipe-prof] chn=2 elapsed_ms=1006.8 pop=24 send=24 send_fail=0 load=24 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=3 in_kb=231.2 out_kb=231.3 popwait_avg=18.821 popwait_max=301.568 send_avg=21.877 send_max=32.093 get_avg=0.001 get_max=0.002 load_avg=0.919 load_max=1.872 loop_avg=41.943 loop_max=317.412
+[pipe-prof] chn=0 elapsed_ms=1032.6 pop=26 send=1 send_fail=1 load=0 null=0 drop_pre=0 drop_resync=25 idr=1 qmax=0 in_kb=62.7 out_kb=62.8 popwait_avg=39.609 popwait_max=305.891 send_avg=0.303 send_max=0.303 get_avg=0.000 get_max=0.000 load_avg=0.000 load_max=0.000 loop_avg=39.705 loop_max=306.946
+[pipe-prof] chn=3 elapsed_ms=1002.1 pop=25 send=1 send_fail=1 load=0 null=0 drop_pre=0 drop_resync=24 idr=1 qmax=0 in_kb=51.1 out_kb=51.2 popwait_avg=39.935 popwait_max=194.873 send_avg=0.358 send_max=0.358 get_avg=0.000 get_max=0.000 load_avg=0.000 load_max=0.000 loop_avg=40.074 loop_max=195.898
+[render-prof] elapsed_ms=1019.5 draws=54 draw_avg=0.992 draw_max=1.709 swap_avg=0.384 swap_max=0.647 finish_avg=10.838 finish_max=12.542 total_avg=18.870 total_max=253.090
+[vdec-prof] chn=1 bypass=0 elapsed_ms=1017.1 decode=25 fail=0 decode_avg=23.800 decode_max=27.109 cb=25 cb_avg=9.921 cb_max=11.952 copy_avg=9.531 copy_max=11.617 sync_avg=0.377 sync_max=0.597
+[vdec-prof] chn=2 bypass=0 elapsed_ms=1017.3 decode=29 fail=0 decode_avg=21.983 decode_max=31.952 cb=29 cb_avg=8.889 cb_max=12.436 copy_avg=8.482 copy_max=11.850 sync_avg=0.395 sync_max=0.803
+debug  : cedarc <VeSetEnableAfbcFlag:1771>: **** VeSetEnableAfbcFlag: 0
+debug  : fbm.c <FbmCreateBuffer:148>: FbmCreate, total fbm number: 6, decoder needed: 2,  nWidth=1920, nHeight=1088 nAlignStride = 0
+debug  : fbm.c <FbmCreateBuffer:252>: ** call allocate pic buf, i = 0, maxNum = 6
+debug  : fbm.c <FbmAllocatePictureBuffer:1454>: pPicture->bEnableAfbcFlag = 0
+debug  : fbm.c <FbmCreateBuffer:252>: ** call allocate pic buf, i = 1, maxNum = 6
+debug  : fbm.c <FbmAllocatePictureBuffer:1454>: pPicture->bEnableAfbcFlag = 0
+debug  : fbm.c <FbmCreateBuffer:252>: ** call allocate pic buf, i = 2, maxNum = 6
+debug  : fbm.c <FbmAllocatePictureBuffer:1454>: pPicture->bEnableAfbcFlag = 0
+debug  : fbm.c <FbmCreateBuffer:252>: ** call allocate pic buf, i = 3, maxNum = 6
+debug  : fbm.c <FbmAllocatePictureBuffer:1454>: pPicture->bEnableAfbcFlag = 0
+debug  : fbm.c <FbmCreateBuffer:252>: ** call allocate pic buf, i = 4, maxNum = 6
+debug  : fbm.c <FbmAllocatePictureBuffer:1454>: pPicture->bEnableAfbcFlag = 0
+debug  : fbm.c <FbmCreateBuffer:252>: ** call allocate pic buf, i = 5, maxNum = 6
+debug  : fbm.c <FbmAllocatePictureBuffer:1454>: pPicture->bEnableAfbcFlag = 0
+debug  : fbm.c <FbmCreateBuffer:405>: *** finish fbmCreateBuffer
+[vdec-prof] chn=3 bypass=0 elapsed_ms=1560.0 decode=0 fail=0 decode_avg=0.000 decode_max=0.000 cb=1 cb_avg=12.568 cb_max=12.568 copy_avg=12.113 copy_max=12.113 sync_avg=0.440 sync_max=0.440
+[vdec-recover] chn=3 streak=3 total=3 frameType=U inputLen=53707
+[dec-resync-release] chn=3 dropped=117 idr_size=53673
+[pipe-prof] chn=2 elapsed_ms=1014.4 pop=27 send=27 send_fail=0 load=27 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=2 in_kb=266.6 out_kb=266.7 popwait_avg=14.091 popwait_max=242.325 send_avg=22.200 send_max=35.375 get_avg=0.001 get_max=0.002 load_avg=1.002 load_max=2.160 loop_avg=37.560 loop_max=256.840
+[pipe-prof] chn=1 elapsed_ms=1037.2 pop=26 send=26 send_fail=0 load=26 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=6 in_kb=140.5 out_kb=140.6 popwait_avg=15.546 popwait_max=316.994 send_avg=24.149 send_max=42.271 get_avg=0.001 get_max=0.002 load_avg=0.034 load_max=0.477 loop_avg=39.881 loop_max=348.450
+[pipe-prof] chn=0 elapsed_ms=1034.0 pop=26 send=0 send_fail=0 load=0 null=0 drop_pre=0 drop_resync=26 idr=0 qmax=0 in_kb=0.0 out_kb=0.0 popwait_avg=39.705 popwait_max=112.083 send_avg=0.000 send_max=0.000 get_avg=0.000 get_max=0.000 load_avg=0.000 load_max=0.000 loop_avg=39.759 loop_max=112.109
+[pipe-prof] chn=3 elapsed_ms=1015.1 pop=23 send=8 send_fail=0 load=8 null=0 drop_pre=0 drop_resync=15 idr=1 qmax=2 in_kb=83.1 out_kb=83.1 popwait_avg=31.367 popwait_max=119.539 send_avg=36.196 send_max=42.326 get_avg=0.001 get_max=0.003 load_avg=0.019 load_max=0.073 loop_avg=44.127 loop_max=155.254
+debug  : cedarc <H264DecVuiParameters:341>: nFrameRate=25
+debug  : cedarc <H264DecodePictureScanType:2779>: here3:hCtx->bProgressice=1
+
+[vdec-prof] chn=0 bypass=0 elapsed_ms=1978.4 decode=1 fail=1 decode_avg=0.312 decode_max=0.312 cb=0 cb_avg=0.000 cb_max=0.000 copy_avg=0.000 copy_max=0.000 sync_avg=0.000 sync_max=0.000
+[dec-fail] chn=0 sendRet=-1 q=0 nal=5 pkt=64512 out=64548 idr=1 first_mb=0 primed=0 sps=20 pps=4 extra=1
+[dec-fail-hist] chn=0 idx=0 q=0 nal=5 pkt=67573 out=67609 idr=1 first_mb=0 primed=0 sps=20 pps=4 extra=1
+[dec-fail-hist] chn=0 idx=1 q=0 nal=5 pkt=64225 out=64261 idr=1 first_mb=0 primed=0 sps=20 pps=4 extra=1
+[dec-fail-hist] chn=0 idx=2 q=0 nal=5 pkt=64512 out=64548 idr=1 first_mb=0 primed=0 sps=20 pps=4 extra=1
+[render-prof] elapsed_ms=1012.6 draws=61 draw_avg=1.139 draw_max=2.002 swap_avg=0.467 swap_max=0.852 finish_avg=10.912 finish_max=12.822 total_avg=16.592 total_max=63.826
+[vdec-prof] chn=2 bypass=0 elapsed_ms=1000.0 decode=22 fail=0 decode_avg=28.527 decode_max=39.194 cb=21 cb_avg=11.683 cb_max=14.214 copy_avg=11.131 copy_max=13.888 sync_avg=0.538 sync_max=1.395
+[vdec-prof] chn=1 bypass=0 elapsed_ms=1040.3 decode=26 fail=0 decode_avg=28.409 decode_max=42.246 cb=26 cb_avg=9.371 cb_max=12.067 copy_avg=8.916 copy_max=11.776 sync_avg=0.445 sync_max=0.971
+[vdec-prof] chn=3 bypass=0 elapsed_ms=1027.4 decode=26 fail=0 decode_avg=29.824 decode_max=44.112 cb=26 cb_avg=9.559 cb_max=21.196 copy_avg=9.185 copy_max=20.821 sync_avg=0.365 sync_max=0.754
+[pipe-prof] chn=2 elapsed_ms=1035.9 pop=19 send=19 send_fail=0 load=19 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=7 in_kb=220.3 out_kb=220.4 popwait_avg=17.685 popwait_max=297.288 send_avg=35.889 send_max=42.875 get_avg=0.001 get_max=0.003 load_avg=0.477 load_max=1.963 loop_avg=54.509 loop_max=316.496
+[pipe-prof] chn=1 elapsed_ms=1039.8 pop=20 send=20 send_fail=0 load=20 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=7 in_kb=111.9 out_kb=112.0 popwait_avg=14.084 popwait_max=281.580 send_avg=37.608 send_max=53.477 get_avg=0.001 get_max=0.003 load_avg=0.012 load_max=0.020 loop_avg=51.972 loop_max=302.839
+[pipe-prof] chn=0 elapsed_ms=1045.2 pop=26 send=1 send_fail=1 load=0 null=0 drop_pre=0 drop_resync=25 idr=1 qmax=0 in_kb=63.0 out_kb=63.0 popwait_avg=40.076 popwait_max=256.271 send_avg=0.369 send_max=0.369 get_avg=0.000 get_max=0.000 load_avg=0.000 load_max=0.000 loop_avg=40.193 loop_max=257.568
+[pipe-prof] chn=3 elapsed_ms=1016.9 pop=25 send=25 send_fail=0 load=25 null=0 drop_pre=0 drop_resync=0 idr=0 qmax=2 in_kb=254.3 out_kb=254.4 popwait_avg=9.400 popwait_max=53.015 send_avg=31.019 send_max=44.302 get_avg=0.001 get_max=0.002 load_avg=0.018 load_max=0.045 loop_avg=40.663 loop_max=75.111
+[render-prof] elapsed_ms=1003.3 draws=73 draw_avg=1.145 draw_max=1.733 swap_avg=0.422 swap_max=0.773 finish_avg=11.666 finish_max=13.520 total_avg=13.736 total_max=16.100
+[vdec-prof] chn=2 bypass=0 elapsed_ms=1002.7 decode=24 fail=0 decode_avg=38.392 decode_max=42.778 cb=25 cb_avg=11.550 cb_max=14.186 copy_avg=11.087 copy_max=13.691 sync_avg=0.452 sync_max=0.880
+[vdec-prof] chn=1 bypass=0 elapsed_ms=1034.4 decode=26 fail=0 decode_avg=39.221 decode_max=53.333 cb=26 cb_avg=11.268 cb_max=12.216 copy_avg=10.814 copy_max=11.880 sync_avg=0.443 sync_max=1.469
+[vdec-prof] chn=3 bypass=0 elapsed_ms=1006.7 decode=23 fail=0 decode_avg=38.506 decode_max=43.866 cb=23 cb_avg=11.146 cb_max=12.891 copy_avg=10.609 copy_max=12.248 sync_avg=0.527 sync_max=1.326
+[pipe-prof] chn=1 elapsed_ms=1010.1 pop=25 send=25 send_fail=0 load=25 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=7 in_kb=123.7 out_kb=123.8 popwait_avg=1.062 popwait_max=26.439 send_avg=39.100 send_max=54.309 get_avg=0.001 get_max=0.002 load_avg=0.018 load_max=0.027 loop_avg=40.393 loop_max=54.478
+[pipe-prof] chn=2 elapsed_ms=1036.8 pop=27 send=27 send_fail=0 load=27 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=7 in_kb=264.9 out_kb=265.1 popwait_avg=0.005 popwait_max=0.013 send_avg=36.792 send_max=52.595 get_avg=0.001 get_max=0.002 load_avg=1.058 load_max=1.988 loop_avg=38.335 loop_max=54.290
+[pipe-prof] chn=0 elapsed_ms=1046.8 pop=26 send=0 send_fail=0 load=0 null=0 drop_pre=0 drop_resync=26 idr=0 qmax=0 in_kb=0.0 out_kb=0.0 popwait_avg=40.182 popwait_max=123.831 send_avg=0.000 send_max=0.000 get_avg=0.000 get_max=0.000 load_avg=0.000 load_max=0.000 loop_avg=40.248 loop_max=123.904
+[pipe-prof] chn=3 elapsed_ms=1036.6 pop=24 send=24 send_fail=0 load=24 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=3 in_kb=233.9 out_kb=234.0 popwait_avg=3.913 popwait_max=80.530 send_avg=38.969 send_max=54.314 get_avg=0.001 get_max=0.002 load_avg=0.015 load_max=0.026 loop_avg=43.180 loop_max=106.596
+[render-prof] elapsed_ms=1008.9 draws=74 draw_avg=1.150 draw_max=1.904 swap_avg=0.458 swap_max=0.911 finish_avg=11.529 finish_max=14.762 total_avg=13.626 total_max=18.314
+[vdec-prof] chn=2 bypass=0 elapsed_ms=1009.0 decode=24 fail=0 decode_avg=36.612 decode_max=53.220 cb=24 cb_avg=11.532 cb_max=13.537 copy_avg=11.043 copy_max=12.897 sync_avg=0.477 sync_max=0.707
+[vdec-prof] chn=1 bypass=0 elapsed_ms=1003.0 decode=24 fail=0 decode_avg=38.943 decode_max=54.646 cb=24 cb_avg=10.802 cb_max=12.870 copy_avg=10.343 copy_max=12.538 sync_avg=0.447 sync_max=0.904
+debug  : cedarc <VeSetEnableAfbcFlag:1771>: **** VeSetEnableAfbcFlag: 0
+debug  : fbm.c <FbmCreateBuffer:148>: FbmCreate, total fbm number: 6, decoder needed: 2,  nWidth=1920, nHeight=1088 nAlignStride = 0
+debug  : fbm.c <FbmCreateBuffer:252>: ** call allocate pic buf, i = 0, maxNum = 6
+debug  : fbm.c <FbmAllocatePictureBuffer:1454>: pPicture->bEnableAfbcFlag = 0
+debug  : fbm.c <FbmCreateBuffer:252>: ** call allocate pic buf, i = 1, maxNum = 6
+debug  : fbm.c <FbmAllocatePictureBuffer:1454>: pPicture->bEnableAfbcFlag = 0
+debug  : fbm.c <FbmCreateBuffer:252>: ** call allocate pic buf, i = 2, maxNum = 6
+debug  : fbm.c <FbmAllocatePictureBuffer:1454>: pPicture->bEnableAfbcFlag = 0
+debug  : fbm.c <FbmCreateBuffer:252>: ** call allocate pic buf, i = 3, maxNum = 6
+debug  : fbm.c <FbmAllocatePictureBuffer:1454>: pPicture->bEnableAfbcFlag = 0
+debug  : fbm.c <FbmCreateBuffer:252>: ** call allocate pic buf, i = 4, maxNum = 6
+debug  : fbm.c <FbmAllocatePictureBuffer:1454>: pPicture->bEnableAfbcFlag = 0
+debug  : fbm.c <FbmCreateBuffer:252>: ** call allocate pic buf, i = 5, maxNum = 6
+debug  : fbm.c <FbmAllocatePictureBuffer:1454>: pPicture->bEnableAfbcFlag = 0
+debug  : fbm.c <FbmCreateBuffer:405>: *** finish fbmCreateBuffer
+[vdec-prof] chn=0 bypass=0 elapsed_ms=2275.8 decode=0 fail=0 decode_avg=0.000 decode_max=0.000 cb=1 cb_avg=12.607 cb_max=12.607 copy_avg=12.115 copy_max=12.115 sync_avg=0.482 sync_max=0.482
+[vdec-recover] chn=0 streak=3 total=3 frameType=U inputLen=66383
+[dec-resync-release] chn=0 dropped=147 idr_size=66347
+[vdec-prof] chn=3 bypass=0 elapsed_ms=1016.2 decode=26 fail=0 decode_avg=38.362 decode_max=59.408 cb=26 cb_avg=11.022 cb_max=13.134 copy_avg=10.429 copy_max=12.284 sync_avg=0.582 sync_max=2.072
+[pipe-prof] chn=1 elapsed_ms=1010.4 pop=22 send=22 send_fail=0 load=22 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=9 in_kb=121.8 out_kb=121.9 popwait_avg=2.496 popwait_max=53.056 send_avg=43.202 send_max=69.847 get_avg=0.001 get_max=0.003 load_avg=0.019 load_max=0.096 loop_avg=45.917 loop_max=80.527
+[pipe-prof] chn=2 elapsed_ms=1031.1 pop=22 send=22 send_fail=0 load=22 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=8 in_kb=244.8 out_kb=245.0 popwait_avg=4.051 popwait_max=89.008 send_avg=41.654 send_max=69.779 get_avg=0.001 get_max=0.002 load_avg=0.801 load_max=1.730 loop_avg=46.857 loop_max=123.048
+[pipe-prof] chn=0 elapsed_ms=1020.4 pop=11 send=9 send_fail=0 load=9 null=0 drop_pre=0 drop_resync=2 idr=1 qmax=7 in_kb=95.1 out_kb=95.2 popwait_avg=52.050 popwait_max=460.144 send_avg=49.431 send_max=57.657 get_avg=0.001 get_max=0.002 load_avg=0.014 load_max=0.028 loop_avg=92.722 loop_max=518.284
+[queue] overflow flush chn=1 depth=10 max=10 incoming_nal=1 incoming_size=3782 isIDR=0 isSpsOrPps=0 isSei=0 pts=257560
+[queue] overflow flush chn=0 depth=10 max=10 incoming_nal=1 incoming_size=1003 isIDR=0 isSpsOrPps=0 isSei=0 pts=257573
+[pipe-prof] chn=3 elapsed_ms=1002.7 pop=25 send=25 send_fail=0 load=25 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=3 in_kb=281.0 out_kb=281.1 popwait_avg=0.070 popwait_max=1.647 send_avg=39.762 send_max=59.627 get_avg=0.001 get_max=0.003 load_avg=0.014 load_max=0.031 loop_avg=40.095 loop_max=61.632
+[queue] resync chn=1 dropped=3 incoming_size=20873 pts=257669
+[queue] overflow flush chn=2 depth=10 max=10 incoming_nal=1 incoming_size=6311 isIDR=0 isSpsOrPps=0 isSei=0 pts=257944
+[render-prof] elapsed_ms=1004.5 draws=74 draw_avg=1.229 draw_max=1.858 swap_avg=0.473 swap_max=0.857 finish_avg=11.348 finish_max=15.100 total_avg=13.566 total_max=20.482
+[vdec-prof] chn=1 bypass=0 elapsed_ms=1007.5 decode=19 fail=0 decode_avg=47.502 decode_max=69.813 cb=19 cb_avg=10.624 cb_max=12.314 copy_avg=10.242 copy_max=11.998 sync_avg=0.372 sync_max=0.585
+[vdec-prof] chn=3 bypass=0 elapsed_ms=1013.7 decode=29 fail=0 decode_avg=29.799 decode_max=54.210 cb=29 cb_avg=8.782 cb_max=12.930 copy_avg=8.420 copy_max=12.546 sync_avg=0.354 sync_max=0.561
+[pipe-prof] chn=1 elapsed_ms=1008.6 pop=24 send=24 send_fail=0 load=24 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=9 in_kb=104.6 out_kb=104.7 popwait_avg=10.573 popwait_max=97.437 send_avg=31.293 send_max=54.656 get_avg=0.001 get_max=0.003 load_avg=0.017 load_max=0.070 loop_avg=42.012 loop_max=132.917
+[pipe-prof] chn=3 elapsed_ms=1070.9 pop=29 send=29 send_fail=0 load=29 null=0 drop_pre=0 drop_resync=0 idr=0 qmax=2 in_kb=266.8 out_kb=267.0 popwait_avg=14.264 popwait_max=115.433 send_avg=22.151 send_max=40.944 get_avg=0.001 get_max=0.002 load_avg=0.323 load_max=1.956 loop_avg=36.916 loop_max=129.736
+[queue] resync chn=2 dropped=17 incoming_size=89066 pts=258853
+[vdec-prof] chn=2 bypass=0 elapsed_ms=1903.4 decode=23 fail=0 decode_avg=42.787 decode_max=69.530 cb=23 cb_avg=11.705 cb_max=14.309 copy_avg=11.254 copy_max=13.775 sync_avg=0.441 sync_max=0.745
+[pipe-prof] chn=2 elapsed_ms=1433.5 pop=13 send=13 send_fail=0 load=13 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=9 in_kb=176.3 out_kb=176.4 popwait_avg=68.687 popwait_max=892.893 send_avg=40.653 send_max=56.837 get_avg=0.001 get_max=0.002 load_avg=0.629 load_max=1.865 loop_avg=110.242 loop_max=923.605
+[render-prof] elapsed_ms=1006.3 draws=54 draw_avg=0.923 draw_max=1.951 swap_avg=0.366 swap_max=1.008 finish_avg=9.928 finish_max=15.698 total_avg=18.627 total_max=118.506
+[queue] resync chn=0 dropped=30 incoming_size=77153 pts=259016
+[vdec-prof] chn=1 bypass=0 elapsed_ms=1009.9 decode=25 fail=0 decode_avg=20.697 decode_max=39.376 cb=25 cb_avg=6.658 cb_max=11.672 copy_avg=6.338 copy_max=11.281 sync_avg=0.311 sync_max=0.607
+[vdec-prof] chn=0 bypass=0 elapsed_ms=1921.2 decode=10 fail=0 decode_avg=49.934 decode_max=57.596 cb=10 cb_avg=10.768 cb_max=15.040 copy_avg=10.306 copy_max=14.610 sync_avg=0.416 sync_max=0.545
+[pipe-prof] chn=0 elapsed_ms=1532.2 pop=2 send=2 send_fail=0 load=2 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=7 in_kb=80.0 out_kb=80.0 popwait_avg=714.956 popwait_max=1429.909 send_avg=50.217 send_max=55.070 get_avg=0.001 get_max=0.002 load_avg=0.007 load_max=0.009 loop_avg=765.973 loop_max=1476.745
+[queue] overflow flush chn=0 depth=10 max=10 incoming_nal=1 incoming_size=2005 isIDR=0 isSpsOrPps=0 isSei=0 pts=259360
+[vdec-prof] chn=3 bypass=0 elapsed_ms=1041.6 decode=22 fail=0 decode_avg=27.016 decode_max=55.614 cb=22 cb_avg=7.167 cb_max=12.182 copy_avg=6.850 copy_max=11.876 sync_avg=0.309 sync_max=0.667
+[pipe-prof] chn=1 elapsed_ms=1030.6 pop=21 send=21 send_fail=0 load=21 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=4 in_kb=108.8 out_kb=108.9 popwait_avg=15.412 popwait_max=104.946 send_avg=33.483 send_max=69.990 get_avg=0.001 get_max=0.002 load_avg=0.016 load_max=0.053 loop_avg=49.069 loop_max=124.336
+[pipe-prof] chn=3 elapsed_ms=1021.7 pop=24 send=24 send_fail=0 load=24 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=3 in_kb=231.0 out_kb=231.1 popwait_avg=6.230 popwait_max=67.566 send_avg=35.995 send_max=55.772 get_avg=0.001 get_max=0.003 load_avg=0.120 load_max=1.713 loop_avg=42.558 loop_max=109.074
+[vdec-prof] chn=2 bypass=0 elapsed_ms=1037.0 decode=24 fail=0 decode_avg=41.908 decode_max=75.927 cb=24 cb_avg=12.110 cb_max=13.822 copy_avg=11.416 copy_max=13.369 sync_avg=0.682 sync_max=2.457
+[pipe-prof] chn=2 elapsed_ms=1035.6 pop=24 send=24 send_fail=0 load=24 null=0 drop_pre=0 drop_resync=0 idr=0 qmax=8 in_kb=169.8 out_kb=169.9 popwait_avg=0.006 popwait_max=0.023 send_avg=42.492 send_max=75.986 get_avg=0.001 get_max=0.002 load_avg=0.417 load_max=1.891 loop_avg=43.136 loop_max=77.806
+[render-prof] elapsed_ms=1000.6 draws=72 draw_avg=1.354 draw_max=2.214 swap_avg=0.530 swap_max=2.925 finish_avg=11.667 finish_max=15.029 total_avg=13.888 total_max=19.647
+[vdec-prof] chn=1 bypass=0 elapsed_ms=1001.0 decode=23 fail=0 decode_avg=43.189 decode_max=69.833 cb=23 cb_avg=11.059 cb_max=13.113 copy_avg=10.626 copy_max=12.644 sync_avg=0.422 sync_max=0.577
+[pipe-prof] chn=1 elapsed_ms=1008.3 pop=25 send=25 send_fail=0 load=25 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=4 in_kb=121.7 out_kb=121.9 popwait_avg=0.005 popwait_max=0.020 send_avg=40.122 send_max=53.979 get_avg=0.001 get_max=0.002 load_avg=0.011 load_max=0.022 loop_avg=40.320 loop_max=54.192
+[vdec-prof] chn=3 bypass=0 elapsed_ms=1033.1 decode=26 fail=0 decode_avg=39.745 decode_max=53.835 cb=26 cb_avg=10.711 cb_max=12.734 copy_avg=10.265 copy_max=12.048 sync_avg=0.435 sync_max=0.693
+[pipe-prof] chn=3 elapsed_ms=1012.5 pop=25 send=25 send_fail=0 load=25 null=0 drop_pre=0 drop_resync=0 idr=0 qmax=3 in_kb=251.3 out_kb=251.4 popwait_avg=0.005 popwait_max=0.019 send_avg=40.242 send_max=53.822 get_avg=0.005 get_max=0.118 load_avg=0.010 load_max=0.022 loop_avg=40.489 loop_max=54.027
+[vdec-prof] chn=2 bypass=0 elapsed_ms=1069.8 decode=26 fail=0 decode_avg=37.143 decode_max=41.497 cb=26 cb_avg=12.412 cb_max=13.449 copy_avg=11.906 copy_max=12.944 sync_avg=0.495 sync_max=1.949
+[pipe-prof] chn=2 elapsed_ms=1069.7 pop=26 send=26 send_fail=0 load=26 null=0 drop_pre=0 drop_resync=0 idr=2 qmax=8 in_kb=355.8 out_kb=356.0 popwait_avg=3.224 popwait_max=83.689 send_avg=37.355 send_max=41.593 get_avg=0.001 get_max=0.003 load_avg=0.199 load_max=1.760 loop_avg=41.137 loop_max=122.823
+[render-prof] elapsed_ms=1013.3 draws=74 draw_avg=1.382 draw_max=2.017 swap_avg=0.554 swap_max=1.172 finish_avg=11.657 finish_max=18.247 total_avg=13.682 total_max=20.090
+[vdec-prof] chn=1 bypass=0 elapsed_ms=1026.7 decode=27 fail=0 decode_avg=37.692 decode_max=53.728 cb=27 cb_avg=10.562 cb_max=12.453 copy_avg=10.154 copy_max=12.166 sync_avg=0.398 sync_max=0.592
+[queue] resync chn=0 dropped=33 incoming_size=117344 pts=261209
+[vdec-prof] chn=0 bypass=0 elapsed_ms=2189.9 decode=7 fail=0 decode_avg=54.420 decode_max=87.754 cb=7 cb_avg=11.594 cb_max=17.610 copy_avg=11.251 copy_max=17.373 sync_avg=0.333 sync_max=0.424
+[pipe-prof] chn=0 elapsed_ms=2189.9 pop=7 send=7 send_fail=0 load=7 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=9 in_kb=144.5 out_kb=144.6 popwait_avg=258.448 popwait_max=1809.111 send_avg=53.955 send_max=87.829 get_avg=0.001 get_max=0.001 load_avg=0.008 load_max=0.012 loop_avg=312.831 loop_max=1852.604
+[pipe-prof] chn=1 elapsed_ms=1004.6 pop=25 send=25 send_fail=0 load=25 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=4 in_kb=131.6 out_kb=131.8 popwait_avg=1.521 popwait_max=37.806 send_avg=38.447 send_max=54.035 get_avg=0.001 get_max=0.003 load_avg=0.011 load_max=0.019 loop_avg=40.174 loop_max=67.241
+[vdec-prof] chn=3 bypass=0 elapsed_ms=1011.6 decode=25 fail=0 decode_avg=38.174 decode_max=53.158 cb=25 cb_avg=11.291 cb_max=13.655 copy_avg=10.895 copy_max=13.248 sync_avg=0.385 sync_max=0.547
+[queue] overflow flush chn=0 depth=10 max=10 incoming_nal=1 incoming_size=2942 isIDR=0 isSpsOrPps=0 isSei=0 pts=261536
+[pipe-prof] chn=3 elapsed_ms=1032.9 pop=25 send=25 send_fail=0 load=25 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=3 in_kb=245.3 out_kb=245.4 popwait_avg=1.602 popwait_max=39.939 send_avg=39.431 send_max=54.223 get_avg=0.001 get_max=0.002 load_avg=0.011 load_max=0.024 loop_avg=41.297 loop_max=79.653
+[vdec-prof] chn=2 bypass=0 elapsed_ms=1013.3 decode=24 fail=0 decode_avg=41.272 decode_max=53.436 cb=24 cb_avg=12.362 cb_max=13.276 copy_avg=11.941 copy_max=12.877 sync_avg=0.409 sync_max=0.632
+[pipe-prof] chn=2 elapsed_ms=1013.4 pop=24 send=24 send_fail=0 load=24 null=0 drop_pre=0 drop_resync=0 idr=0 qmax=9 in_kb=160.0 out_kb=160.1 popwait_avg=0.375 popwait_max=8.900 send_avg=41.468 send_max=53.589 get_avg=0.001 get_max=0.002 load_avg=0.170 load_max=2.186 loop_avg=42.220 loop_max=55.384
+[render-prof] elapsed_ms=1008.3 draws=73 draw_avg=1.449 draw_max=2.315 swap_avg=0.533 swap_max=0.875 finish_avg=11.774 finish_max=16.330 total_avg=13.804 total_max=18.698
+[vdec-prof] chn=1 bypass=0 elapsed_ms=1018.0 decode=23 fail=0 decode_avg=41.952 decode_max=53.899 cb=23 cb_avg=10.573 cb_max=11.994 copy_avg=10.194 copy_max=11.602 sync_avg=0.369 sync_max=0.703
+[queue] overflow flush chn=2 depth=10 max=10 incoming_nal=1 incoming_size=2349 isIDR=0 isSpsOrPps=0 isSei=0 pts=262232
+[pipe-prof] chn=1 elapsed_ms=1023.5 pop=28 send=28 send_fail=0 load=28 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=4 in_kb=130.7 out_kb=130.9 popwait_avg=0.009 popwait_max=0.112 send_avg=36.331 send_max=53.399 get_avg=0.001 get_max=0.002 load_avg=0.011 load_max=0.032 loop_avg=36.540 loop_max=53.650
+[vdec-prof] chn=3 bypass=0 elapsed_ms=1017.3 decode=28 fail=0 decode_avg=36.366 decode_max=53.929 cb=28 cb_avg=11.035 cb_max=13.501 copy_avg=10.625 copy_max=13.178 sync_avg=0.395 sync_max=0.779
+[pipe-prof] chn=3 elapsed_ms=1023.8 pop=29 send=29 send_fail=0 load=29 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=4 in_kb=293.5 out_kb=293.7 popwait_avg=5.362 popwait_max=95.498 send_avg=29.371 send_max=42.502 get_avg=0.001 get_max=0.002 load_avg=0.340 load_max=1.697 loop_avg=35.294 loop_max=107.326
+[queue] resync chn=0 dropped=34 incoming_size=50399 pts=262888
+[vdec-prof] chn=0 bypass=0 elapsed_ms=1667.4 decode=6 fail=0 decode_avg=47.748 decode_max=54.128 cb=6 cb_avg=10.519 cb_max=12.035 copy_avg=10.124 copy_max=11.593 sync_avg=0.385 sync_max=0.503
+[pipe-prof] chn=0 elapsed_ms=1667.5 pop=6 send=6 send_fail=0 load=6 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=9 in_kb=87.9 out_kb=88.0 popwait_avg=231.417 popwait_max=1306.803 send_avg=46.165 send_max=54.172 get_avg=0.001 get_max=0.002 load_avg=0.011 load_max=0.019 loop_avg=277.903 loop_max=1338.906
+[queue] resync chn=2 dropped=9 incoming_size=103972 pts=262972
+[render-prof] elapsed_ms=1004.1 draws=62 draw_avg=1.228 draw_max=1.952 swap_avg=0.462 swap_max=0.810 finish_avg=11.101 finish_max=16.734 total_avg=16.185 total_max=99.165
+[vdec-prof] chn=2 bypass=0 elapsed_ms=1089.8 decode=8 fail=0 decode_avg=37.319 decode_max=41.148 cb=8 cb_avg=12.049 cb_max=13.500 copy_avg=11.687 copy_max=13.157 sync_avg=0.351 sync_max=0.561
+[pipe-prof] chn=2 elapsed_ms=1089.8 pop=8 send=8 send_fail=0 load=8 null=0 drop_pre=0 drop_resync=0 idr=2 qmax=9 in_kb=258.6 out_kb=258.7 popwait_avg=96.757 popwait_max=733.870 send_avg=38.808 send_max=50.269 get_avg=0.001 get_max=0.002 load_avg=0.012 load_max=0.016 loop_avg=136.216 loop_max=763.059
+[vdec-prof] chn=1 bypass=0 elapsed_ms=1009.3 decode=26 fail=0 decode_avg=29.520 decode_max=49.809 cb=26 cb_avg=9.898 cb_max=12.502 copy_avg=9.484 copy_max=12.177 sync_avg=0.397 sync_max=0.630
+[queue] overflow flush chn=2 depth=10 max=10 incoming_nal=1 incoming_size=2875 isIDR=0 isSpsOrPps=0 isSei=0 pts=263400
+[pipe-prof] chn=1 elapsed_ms=1012.4 pop=20 send=20 send_fail=0 load=20 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=6 in_kb=116.9 out_kb=117.0 popwait_avg=11.076 popwait_max=221.446 send_avg=39.346 send_max=67.878 get_avg=0.001 get_max=0.002 load_avg=0.014 load_max=0.028 loop_avg=50.609 loop_max=243.370
+[vdec-prof] chn=3 bypass=0 elapsed_ms=1027.2 decode=23 fail=0 decode_avg=32.837 decode_max=59.389 cb=23 cb_avg=9.261 cb_max=13.555 copy_avg=8.901 copy_max=13.250 sync_avg=0.352 sync_max=0.822
+^C[pipe-prof] chn=2 elapsed_ms=670.9 pop=7 send=7 send_fail=0 load=7 null=0 drop_pre=0 drop_resync=0 idr=0 qmax=10 in_kb=43.9 out_kb=43.9 popwait_avg=0.005 popwait_max=0.008 send_avg=46.471 send_max=66.383 get_avg=0.001 get_max=0.002 load_avg=0.441 load_max=1.588 loop_avg=95.831 loop_max=338.773
+[pipe-prof] chn=2 elapsed_ms=0.2 pop=0 send=0 send_fail=0 load=0 null=0 drop_pre=0 drop_resync=0 idr=0 qmax=0 in_kb=0.0 out_kb=0.0 popwait_avg=0.000 popwait_max=0.000 send_avg=0.000 send_max=0.000 get_avg=0.000 get_max=0.000 load_avg=0.000 load_max=0.000 loop_avg=0.000 loop_max=0.000
+[pipe-prof] chn=3 elapsed_ms=964.6 pop=22 send=22 send_fail=0 load=22 null=0 drop_pre=0 drop_resync=0 idr=0 qmax=3 in_kb=227.4 out_kb=227.4 popwait_avg=3.962 popwait_max=31.298 send_avg=39.388 send_max=59.710 get_avg=0.001 get_max=0.002 load_avg=0.264 load_max=1.796 loop_avg=43.836 loop_max=59.956
+[pipe-prof] chn=1 elapsed_ms=285.7 pop=7 send=7 send_fail=0 load=7 null=0 drop_pre=0 drop_resync=0 idr=0 qmax=7 in_kb=22.3 out_kb=22.3 popwait_avg=0.004 popwait_max=0.006 send_avg=40.582 send_max=49.673 get_avg=0.001 get_max=0.002 load_avg=0.014 load_max=0.026 loop_avg=40.744 loop_max=49.779
+[pipe-prof] chn=0 elapsed_ms=873.9 pop=19 send=19 send_fail=0 load=19 null=0 drop_pre=0 drop_resync=0 idr=0 qmax=9 in_kb=85.6 out_kb=85.6 popwait_avg=0.154 popwait_max=2.854 send_avg=45.657 send_max=74.114 get_avg=0.001 get_max=0.002 load_avg=0.011 load_max=0.022 loop_avg=45.992 loop_max=74.278
+
+
+
+
+########## bypass on
 PLAY started
 secceed to setupTexture!
-[vdec-fail] chn=3 ret=-6 streak=1 total=1 nal=7 frameType=U inputLen=42637 retained=0 retainedBytes=0 head=00 00 00 01
-[dec-resync-arm] chn=3 sendRet=-1 q=0 nal=5 pkt=42603 out=42637 idr=1 first_mb=0 primed=0 sps=17 pps=5 extra=1
-[dec-fail] chn=3 sendRet=-1 q=0 nal=5 pkt=42603 out=42637 idr=1 first_mb=0 primed=0 sps=17 pps=5 extra=1
-[dec-fail-hist] chn=3 idx=0 q=0 nal=5 pkt=42603 out=42637 idr=1 first_mb=0 primed=0 sps=17 pps=5 extra=1
+[vdec-fail] chn=2 ret=-6 streak=1 total=1 nal=7 frameType=U inputLen=105710 retained=0 retainedBytes=0 head=00 00 00 01
+[dec-resync-arm] chn=2 sendRet=-1 q=3 nal=5 pkt=105674 out=105710 idr=1 first_mb=0 primed=0 sps=20 pps=4 extra=1
+[dec-fail] chn=2 sendRet=-1 q=3 nal=5 pkt=105674 out=105710 idr=1 first_mb=0 primed=0 sps=20 pps=4 extra=1
+[dec-fail-hist] chn=2 idx=0 q=3 nal=5 pkt=105674 out=105710 idr=1 first_mb=0 primed=0 sps=20 pps=4 extra=1
 debug  : cedarc <AvcSbmFrameCheckBitStreamType:325>: result: bStreamWithStartCode[1], with[1], whitout[0]
-[vdec-fail] chn=0 ret=-6 streak=1 total=1 nal=7 frameType=U inputLen=58699 retained=0 retainedBytes=0 head=00 00 00 01
-[dec-resync-arm] chn=0 sendRet=-1 q=1 nal=5 pkt=58663 out=58699 idr=1 first_mb=0 primed=0 sps=20 pps=4 extra=1
-[dec-fail] chn=0 sendRet=-1 q=1 nal=5 pkt=58663 out=58699 idr=1 first_mb=0 primed=0 sps=20 pps=4 extra=1
-[dec-fail-hist] chn=0 idx=0 q=1 nal=5 pkt=58663 out=58699 idr=1 first_mb=0 primed=0 sps=20 pps=4 extra=1
-debug  : cedarc <AvcSbmFrameCheckBitStreamType:325>: result: bStreamWithStartCode[1], with[1], whitout[0]
-[vdec-fail] chn=2 ret=-6 streak=1 total=1 nal=7 frameType=U inputLen=97647 retained=0 retainedBytes=0 head=00 00 00 01
-[dec-resync-arm] chn=2 sendRet=-1 q=0 nal=5 pkt=97611 out=97647 idr=1 first_mb=0 primed=0 sps=20 pps=4 extra=1
-[dec-fail] chn=2 sendRet=-1 q=0 nal=5 pkt=97611 out=97647 idr=1 first_mb=0 primed=0 sps=20 pps=4 extra=1
-[dec-fail-hist] chn=2 idx=0 q=0 nal=5 pkt=97611 out=97647 idr=1 first_mb=0 primed=0 sps=20 pps=4 extra=1
+[vdec-fail] chn=1 ret=-6 streak=1 total=1 nal=7 frameType=U inputLen=62694 retained=0 retainedBytes=0 head=00 00 00 01
+[dec-resync-arm] chn=1 sendRet=-1 q=1 nal=5 pkt=62658 out=62694 idr=1 first_mb=0 primed=0 sps=20 pps=4 extra=1
+[dec-fail] chn=1 sendRet=-1 q=1 nal=5 pkt=62658 out=62694 idr=1 first_mb=0 primed=0 sps=20 pps=4 extra=1
+[dec-fail-hist] chn=1 idx=0 q=1 nal=5 pkt=62658 out=62694 idr=1 first_mb=0 primed=0 sps=20 pps=4 extra=1
 debug  : cedarc <AvcSbmFrameCheckBitStreamType:325>: result: bStreamWithStartCode[1], with[1], whitout[0]
 debug  : cedarc <AvcSbmFrameCheckBitStreamType:325>: result: bStreamWithStartCode[1], with[1], whitout[0]
-[vdec-fail] chn=1 ret=-6 streak=1 total=1 nal=7 frameType=U inputLen=77972 retained=0 retainedBytes=0 head=00 00 00 01
-[dec-resync-arm] chn=1 sendRet=-1 q=2 nal=5 pkt=77936 out=77972 idr=1 first_mb=0 primed=0 sps=20 pps=4 extra=1
-[dec-fail] chn=1 sendRet=-1 q=2 nal=5 pkt=77936 out=77972 idr=1 first_mb=0 primed=0 sps=20 pps=4 extra=1
-[dec-fail-hist] chn=1 idx=0 q=2 nal=5 pkt=77936 out=77972 idr=1 first_mb=0 primed=0 sps=20 pps=4 extra=1
-[dec-fail] chn=0 sendRet=-1 q=0 nal=5 pkt=62506 out=62542 idr=1 first_mb=0 primed=0 sps=20 pps=4 extra=1
-[dec-fail-hist] chn=0 idx=0 q=1 nal=5 pkt=58663 out=58699 idr=1 first_mb=0 primed=0 sps=20 pps=4 extra=1
-[dec-fail-hist] chn=0 idx=1 q=0 nal=5 pkt=62506 out=62542 idr=1 first_mb=0 primed=0 sps=20 pps=4 extra=1
-[dec-fail] chn=3 sendRet=-1 q=0 nal=5 pkt=44871 out=44905 idr=1 first_mb=0 primed=0 sps=17 pps=5 extra=1
-[dec-fail-hist] chn=3 idx=0 q=0 nal=5 pkt=42603 out=42637 idr=1 first_mb=0 primed=0 sps=17 pps=5 extra=1
-[dec-fail-hist] chn=3 idx=1 q=0 nal=5 pkt=44871 out=44905 idr=1 first_mb=0 primed=0 sps=17 pps=5 extra=1
+[vdec-fail] chn=3 ret=-6 streak=1 total=1 nal=7 frameType=U inputLen=59267 retained=0 retainedBytes=0 head=00 00 00 01
+[dec-resync-arm] chn=3 sendRet=-1 q=1 nal=5 pkt=59233 out=59267 idr=1 first_mb=0 primed=0 sps=17 pps=5 extra=1
+[dec-fail] chn=3 sendRet=-1 q=1 nal=5 pkt=59233 out=59267 idr=1 first_mb=0 primed=0 sps=17 pps=5 extra=1
+[dec-fail-hist] chn=3 idx=0 q=1 nal=5 pkt=59233 out=59267 idr=1 first_mb=0 primed=0 sps=17 pps=5 extra=1
+[pipe-prof] chn=0 elapsed_ms=1024.4 pop=34 send=0 send_fail=0 load=0 null=0 drop_pre=34 drop_resync=0 idr=0 qmax=0 in_kb=0.0 out_kb=0.0 popwait_avg=49.632 popwait_max=664.832 send_avg=0.000 send_max=0.000 get_avg=0.000 get_max=0.000 load_avg=0.000 load_max=0.000 loop_avg=49.691 loop_max=665.130
+[pipe-prof] chn=2 elapsed_ms=1042.1 pop=34 send=1 send_fail=1 load=0 null=0 drop_pre=18 drop_resync=15 idr=1 qmax=3 in_kb=103.2 out_kb=103.2 popwait_avg=40.325 popwait_max=333.712 send_avg=0.531 send_max=0.531 get_avg=0.000 get_max=0.000 load_avg=0.000 load_max=0.000 loop_avg=40.494 loop_max=334.702
+[pipe-prof] chn=1 elapsed_ms=1005.0 pop=27 send=1 send_fail=1 load=0 null=0 drop_pre=18 drop_resync=8 idr=1 qmax=1 in_kb=61.2 out_kb=61.2 popwait_avg=63.346 popwait_max=707.515 send_avg=0.342 send_max=0.342 get_avg=0.000 get_max=0.000 load_avg=0.000 load_max=0.000 loop_avg=63.426 loop_max=707.552
+[vdec-fail] chn=0 ret=-6 streak=1 total=1 nal=7 frameType=U inputLen=72127 retained=0 retainedBytes=0 head=00 00 00 01
+[dec-resync-arm] chn=0 sendRet=-1 q=2 nal=5 pkt=72091 out=72127 idr=1 first_mb=0 primed=0 sps=20 pps=4 extra=1
+[dec-fail] chn=0 sendRet=-1 q=2 nal=5 pkt=72091 out=72127 idr=1 first_mb=0 primed=0 sps=20 pps=4 extra=1
+[dec-fail-hist] chn=0 idx=0 q=2 nal=5 pkt=72091 out=72127 idr=1 first_mb=0 primed=0 sps=20 pps=4 extra=1
+debug  : cedarc <AvcSbmFrameCheckBitStreamType:325>: result: bStreamWithStartCode[1], with[1], whitout[0]
 debug  : cedarc <H264DecVuiParameters:341>: nFrameRate=25
 debug  : cedarc <H264DecodePictureScanType:2779>: here3:hCtx->bProgressice=1
 
-[dec-fail] chn=1 sendRet=-1 q=1 nal=5 pkt=77568 out=77604 idr=1 first_mb=0 primed=0 sps=20 pps=4 extra=1
-[dec-fail-hist] chn=1 idx=0 q=2 nal=5 pkt=77936 out=77972 idr=1 first_mb=0 primed=0 sps=20 pps=4 extra=1
-[dec-fail-hist] chn=1 idx=1 q=1 nal=5 pkt=77568 out=77604 idr=1 first_mb=0 primed=0 sps=20 pps=4 extra=1
-[dec-fail] chn=2 sendRet=-1 q=0 nal=5 pkt=95151 out=95187 idr=1 first_mb=0 primed=0 sps=20 pps=4 extra=1
-[dec-fail-hist] chn=2 idx=0 q=0 nal=5 pkt=97611 out=97647 idr=1 first_mb=0 primed=0 sps=20 pps=4 extra=1
-[dec-fail-hist] chn=2 idx=1 q=0 nal=5 pkt=95151 out=95187 idr=1 first_mb=0 primed=0 sps=20 pps=4 extra=1
+[vdec-prof] chn=2 bypass=1 elapsed_ms=1120.4 decode=2 fail=2 decode_avg=0.416 decode_max=0.434 cb=0 cb_avg=0.000 cb_max=0.000 copy_avg=0.000 copy_max=0.000 sync_avg=0.000 sync_max=0.000
+[vdec-probe] chn=2 bypass copy/Ion enabled via RTSPPULL_BYPASS_VDEC_COPY
+[dec-fail] chn=2 sendRet=-1 q=0 nal=5 pkt=111287 out=111323 idr=1 first_mb=0 primed=0 sps=20 pps=4 extra=1
+[dec-fail-hist] chn=2 idx=0 q=3 nal=5 pkt=105674 out=105710 idr=1 first_mb=0 primed=0 sps=20 pps=4 extra=1
+[dec-fail-hist] chn=2 idx=1 q=0 nal=5 pkt=111287 out=111323 idr=1 first_mb=0 primed=0 sps=20 pps=4 extra=1
+[pipe-prof] chn=3 elapsed_ms=1016.1 pop=28 send=1 send_fail=1 load=0 null=0 drop_pre=0 drop_resync=27 idr=1 qmax=1 in_kb=57.8 out_kb=57.9 popwait_avg=81.886 popwait_max=1279.313 send_avg=0.278 send_max=0.278 get_avg=0.000 get_max=0.000 load_avg=0.000 load_max=0.000 loop_avg=82.014 loop_max=1280.353
+[vdec-prof] chn=1 bypass=1 elapsed_ms=1100.7 decode=2 fail=2 decode_avg=0.207 decode_max=0.242 cb=0 cb_avg=0.000 cb_max=0.000 copy_avg=0.000 copy_max=0.000 sync_avg=0.000 sync_max=0.000
+[vdec-probe] chn=1 bypass copy/Ion enabled via RTSPPULL_BYPASS_VDEC_COPY
+[dec-fail] chn=1 sendRet=-1 q=0 nal=5 pkt=62156 out=62192 idr=1 first_mb=0 primed=0 sps=20 pps=4 extra=1
+[dec-fail-hist] chn=1 idx=0 q=1 nal=5 pkt=62658 out=62694 idr=1 first_mb=0 primed=0 sps=20 pps=4 extra=1
+[dec-fail-hist] chn=1 idx=1 q=0 nal=5 pkt=62156 out=62192 idr=1 first_mb=0 primed=0 sps=20 pps=4 extra=1
+[pipe-prof] chn=0 elapsed_ms=1024.2 pop=22 send=1 send_fail=1 load=0 null=0 drop_pre=9 drop_resync=12 idr=1 qmax=2 in_kb=70.4 out_kb=70.4 popwait_avg=46.446 popwait_max=236.345 send_avg=0.283 send_max=0.283 get_avg=0.000 get_max=0.000 load_avg=0.000 load_max=0.000 loop_avg=46.549 loop_max=237.497
+[pipe-prof] chn=1 elapsed_ms=1035.2 pop=23 send=1 send_fail=1 load=0 null=0 drop_pre=0 drop_resync=22 idr=1 qmax=0 in_kb=60.7 out_kb=60.7 popwait_avg=44.931 popwait_max=216.041 send_avg=0.265 send_max=0.265 get_avg=0.000 get_max=0.000 load_avg=0.000 load_max=0.000 loop_avg=45.008 loop_max=217.016
+[pipe-prof] chn=2 elapsed_ms=1060.4 pop=22 send=1 send_fail=1 load=0 null=0 drop_pre=0 drop_resync=21 idr=1 qmax=0 in_kb=108.7 out_kb=108.7 popwait_avg=48.037 popwait_max=342.927 send_avg=0.468 send_max=0.468 get_avg=0.000 get_max=0.000 load_avg=0.000 load_max=0.000 loop_avg=48.194 loop_max=344.744
+[vdec-prof] chn=3 bypass=1 elapsed_ms=1556.8 decode=2 fail=2 decode_avg=0.204 decode_max=0.244 cb=0 cb_avg=0.000 cb_max=0.000 copy_avg=0.000 copy_max=0.000 sync_avg=0.000 sync_max=0.000
+[vdec-probe] chn=3 bypass copy/Ion enabled via RTSPPULL_BYPASS_VDEC_COPY
+[dec-fail] chn=3 sendRet=-1 q=0 nal=5 pkt=57715 out=57749 idr=1 first_mb=0 primed=0 sps=17 pps=5 extra=1
+[dec-fail-hist] chn=3 idx=0 q=1 nal=5 pkt=59233 out=59267 idr=1 first_mb=0 primed=0 sps=17 pps=5 extra=1
+[dec-fail-hist] chn=3 idx=1 q=0 nal=5 pkt=57715 out=57749 idr=1 first_mb=0 primed=0 sps=17 pps=5 extra=1
+debug  : cedarc <VeSetEnableAfbcFlag:1771>: **** VeSetEnableAfbcFlag: 0
+debug  : fbm.c <FbmCreateBuffer:148>: FbmCreate, total fbm number: 6, decoder needed: 2,  nWidth=1920, nHeight=1088 nAlignStride = 0
+debug  : fbm.c <FbmCreateBuffer:252>: ** call allocate pic buf, i = 0, maxNum = 6
+debug  : fbm.c <FbmAllocatePictureBuffer:1454>: pPicture->bEnableAfbcFlag = 0
+debug  : fbm.c <FbmCreateBuffer:252>: ** call allocate pic buf, i = 1, maxNum = 6
+debug  : fbm.c <FbmAllocatePictureBuffer:1454>: pPicture->bEnableAfbcFlag = 0
+debug  : fbm.c <FbmCreateBuffer:252>: ** call allocate pic buf, i = 2, maxNum = 6
+debug  : fbm.c <FbmAllocatePictureBuffer:1454>: pPicture->bEnableAfbcFlag = 0
+debug  : fbm.c <FbmCreateBuffer:252>: ** call allocate pic buf, i = 3, maxNum = 6
+debug  : fbm.c <FbmAllocatePictureBuffer:1454>: pPicture->bEnableAfbcFlag = 0
+debug  : fbm.c <FbmCreateBuffer:252>: ** call allocate pic buf, i = 4, maxNum = 6
+debug  : fbm.c <FbmAllocatePictureBuffer:1454>: pPicture->bEnableAfbcFlag = 0
+debug  : fbm.c <FbmCreateBuffer:252>: ** call allocate pic buf, i = 5, maxNum = 6
+debug  : fbm.c <FbmAllocatePictureBuffer:1454>: pPicture->bEnableAfbcFlag = 0
+debug  : fbm.c <FbmCreateBuffer:405>: *** finish fbmCreateBuffer
+[vdec-copy-bypass] chn=2 callbacks=1 inputLen=2088960 pts=37644712
+[vdec-recover] chn=2 streak=2 total=2 frameType=U inputLen=101705
+[dec-resync-release] chn=2 dropped=48 idr_size=101669
+[vdec-prof] chn=2 bypass=1 elapsed_ms=1011.2 decode=5 fail=0 decode_avg=7.915 decode_max=13.583 cb=6 cb_avg=0.000 cb_max=0.001 copy_avg=0.000 copy_max=0.000 sync_avg=0.000 sync_max=0.000
+[vdec-probe] chn=2 bypass copy/Ion enabled via RTSPPULL_BYPASS_VDEC_COPY
+[vdec-copy-bypass] chn=2 callbacks=0 inputLen=2088960 pts=39740185
+[vdec-copy-bypass] chn=2 callbacks=1 inputLen=2088960 pts=39749176
 debug  : cedarc <H264DecVuiParameters:341>: nFrameRate=25
 debug  : cedarc <H264DecodePictureScanType:2779>: here3:hCtx->bProgressice=1
 
-[dec-fail] chn=0 sendRet=-1 q=0 nal=5 pkt=59730 out=59766 idr=1 first_mb=0 primed=0 sps=20 pps=4 extra=1
-[dec-fail-hist] chn=0 idx=0 q=1 nal=5 pkt=58663 out=58699 idr=1 first_mb=0 primed=0 sps=20 pps=4 extra=1
-[dec-fail-hist] chn=0 idx=1 q=0 nal=5 pkt=62506 out=62542 idr=1 first_mb=0 primed=0 sps=20 pps=4 extra=1
-[dec-fail-hist] chn=0 idx=2 q=0 nal=5 pkt=59730 out=59766 idr=1 first_mb=0 primed=0 sps=20 pps=4 extra=1
-debug  : cedarc <H264DecodePictureScanType:2779>: here3:hCtx->bProgressice=1
-
-[dec-fail] chn=3 sendRet=-1 q=0 nal=5 pkt=44643 out=44677 idr=1 first_mb=0 primed=0 sps=17 pps=5 extra=1
-[dec-fail-hist] chn=3 idx=0 q=0 nal=5 pkt=42603 out=42637 idr=1 first_mb=0 primed=0 sps=17 pps=5 extra=1
-[dec-fail-hist] chn=3 idx=1 q=0 nal=5 pkt=44871 out=44905 idr=1 first_mb=0 primed=0 sps=17 pps=5 extra=1
-[dec-fail-hist] chn=3 idx=2 q=0 nal=5 pkt=44643 out=44677 idr=1 first_mb=0 primed=0 sps=17 pps=5 extra=1
+[dec-fail] chn=1 sendRet=-1 q=0 nal=5 pkt=75092 out=75128 idr=1 first_mb=0 primed=0 sps=20 pps=4 extra=1
+[dec-fail-hist] chn=1 idx=0 q=1 nal=5 pkt=62658 out=62694 idr=1 first_mb=0 primed=0 sps=20 pps=4 extra=1
+[dec-fail-hist] chn=1 idx=1 q=0 nal=5 pkt=62156 out=62192 idr=1 first_mb=0 primed=0 sps=20 pps=4 extra=1
+[dec-fail-hist] chn=1 idx=2 q=0 nal=5 pkt=75092 out=75128 idr=1 first_mb=0 primed=0 sps=20 pps=4 extra=1
+[pipe-prof] chn=3 elapsed_ms=1006.9 pop=27 send=1 send_fail=1 load=0 null=0 drop_pre=0 drop_resync=26 idr=1 qmax=0 in_kb=56.4 out_kb=56.4 popwait_avg=37.160 popwait_max=126.990 send_avg=0.301 send_max=0.301 get_avg=0.000 get_max=0.000 load_avg=0.000 load_max=0.000 loop_avg=37.285 loop_max=128.009
+[pipe-prof] chn=0 elapsed_ms=1025.8 pop=29 send=0 send_fail=0 load=0 null=0 drop_pre=0 drop_resync=29 idr=0 qmax=0 in_kb=0.0 out_kb=0.0 popwait_avg=35.330 popwait_max=104.016 send_avg=0.000 send_max=0.000 get_avg=0.000 get_max=0.000 load_avg=0.000 load_max=0.000 loop_avg=35.367 loop_max=104.099
+[pipe-prof] chn=1 elapsed_ms=1003.8 pop=28 send=1 send_fail=1 load=0 null=0 drop_pre=0 drop_resync=27 idr=1 qmax=0 in_kb=73.3 out_kb=73.4 popwait_avg=35.766 popwait_max=166.230 send_avg=0.352 send_max=0.352 get_avg=0.000 get_max=0.000 load_avg=0.000 load_max=0.000 loop_avg=35.845 loop_max=167.575
+[pipe-prof] chn=2 elapsed_ms=1009.4 pop=30 send=18 send_fail=0 load=0 null=0 drop_pre=0 drop_resync=12 idr=1 qmax=1 in_kb=197.6 out_kb=197.7 popwait_avg=28.904 popwait_max=284.146 send_avg=7.709 send_max=13.605 get_avg=0.001 get_max=0.002 load_avg=0.000 load_max=0.000 loop_avg=33.644 loop_max=298.931
+[vdec-prof] chn=0 bypass=1 elapsed_ms=2101.8 decode=2 fail=2 decode_avg=0.235 decode_max=0.292 cb=0 cb_avg=0.000 cb_max=0.000 copy_avg=0.000 copy_max=0.000 sync_avg=0.000 sync_max=0.000
+[vdec-probe] chn=0 bypass copy/Ion enabled via RTSPPULL_BYPASS_VDEC_COPY
+[dec-fail] chn=0 sendRet=-1 q=0 nal=5 pkt=125834 out=125870 idr=1 first_mb=0 primed=0 sps=20 pps=4 extra=1
+[dec-fail-hist] chn=0 idx=0 q=2 nal=5 pkt=72091 out=72127 idr=1 first_mb=0 primed=0 sps=20 pps=4 extra=1
+[dec-fail-hist] chn=0 idx=1 q=0 nal=5 pkt=125834 out=125870 idr=1 first_mb=0 primed=0 sps=20 pps=4 extra=1
+[pipe-prof] chn=3 elapsed_ms=1028.1 pop=24 send=0 send_fail=0 load=0 null=0 drop_pre=0 drop_resync=24 idr=0 qmax=0 in_kb=0.0 out_kb=0.0 popwait_avg=42.719 popwait_max=124.022 send_avg=0.000 send_max=0.000 get_avg=0.000 get_max=0.000 load_avg=0.000 load_max=0.000 loop_avg=42.829 loop_max=124.118
 debug  : cedarc <VeSetEnableAfbcFlag:1771>: **** VeSetEnableAfbcFlag: 0
 debug  : fbm.c <FbmCreateBuffer:148>: FbmCreate, total fbm number: 6, decoder needed: 2,  nWidth=1920, nHeight=1088 nAlignStride = 0
 debug  : fbm.c <FbmCreateBuffer:252>: ** call allocate pic buf, i = 0, maxNum = 6
@@ -63,16 +348,100 @@ debug  : fbm.c <FbmAllocatePictureBuffer:1454>: pPicture->bEnableAfbcFlag = 0
 debug  : fbm.c <FbmCreateBuffer:252>: ** call allocate pic buf, i = 5, maxNum = 6
 debug  : fbm.c <FbmAllocatePictureBuffer:1454>: pPicture->bEnableAfbcFlag = 0
 debug  : fbm.c <FbmCreateBuffer:405>: *** finish fbmCreateBuffer
-[vdec-recover] chn=1 streak=2 total=2 frameType=U inputLen=84323
-[dec-resync-release] chn=1 dropped=48 idr_size=84287
-I==D==R
+[vdec-prof] chn=1 bypass=1 elapsed_ms=2059.9 decode=1 fail=1 decode_avg=0.342 decode_max=0.342 cb=1 cb_avg=0.001 cb_max=0.001 copy_avg=0.000 copy_max=0.000 sync_avg=0.000 sync_max=0.000
+[vdec-probe] chn=1 bypass copy/Ion enabled via RTSPPULL_BYPASS_VDEC_COPY
+[vdec-copy-bypass] chn=1 callbacks=0 inputLen=2088960 pts=37914996
+[vdec-recover] chn=1 streak=3 total=3 frameType=U inputLen=76828
+[dec-resync-release] chn=1 dropped=72 idr_size=76792
+[vdec-copy-bypass] chn=1 callbacks=1 inputLen=2088960 pts=39015798
+[vdec-prof] chn=2 bypass=1 elapsed_ms=1331.5 decode=20 fail=0 decode_avg=7.596 decode_max=7.838 cb=20 cb_avg=0.001 cb_max=0.001 copy_avg=0.000 copy_max=0.000 sync_avg=0.000 sync_max=0.000
+[vdec-probe] chn=2 bypass copy/Ion enabled via RTSPPULL_BYPASS_VDEC_COPY
+[vdec-copy-bypass] chn=2 callbacks=0 inputLen=2088960 pts=40387019
+[pipe-prof] chn=1 elapsed_ms=1001.5 pop=22 send=7 send_fail=0 load=0 null=0 drop_pre=0 drop_resync=15 idr=1 qmax=1 in_kb=89.1 out_kb=89.1 popwait_avg=42.628 popwait_max=239.680 send_avg=8.862 send_max=15.814 get_avg=0.000 get_max=0.001 load_avg=0.000 load_max=0.000 loop_avg=45.519 loop_max=253.960
+[vdec-copy-bypass] chn=2 callbacks=1 inputLen=2088960 pts=40421024
+[pipe-prof] chn=0 elapsed_ms=1036.2 pop=25 send=1 send_fail=1 load=0 null=0 drop_pre=0 drop_resync=24 idr=1 qmax=0 in_kb=122.9 out_kb=122.9 popwait_avg=41.320 popwait_max=335.236 send_avg=0.431 send_max=0.431 get_avg=0.000 get_max=0.000 load_avg=0.000 load_max=0.000 loop_avg=41.443 loop_max=337.167
+debug  : cedarc <H264DecodePictureScanType:2779>: here3:hCtx->bProgressice=1
+
+[vdec-prof] chn=3 bypass=1 elapsed_ms=1634.0 decode=1 fail=1 decode_avg=0.234 decode_max=0.234 cb=0 cb_avg=0.000 cb_max=0.000 copy_avg=0.000 copy_max=0.000 sync_avg=0.000 sync_max=0.000
+[vdec-probe] chn=3 bypass copy/Ion enabled via RTSPPULL_BYPASS_VDEC_COPY
+[dec-fail] chn=3 sendRet=-1 q=1 nal=5 pkt=58661 out=58695 idr=1 first_mb=0 primed=0 sps=17 pps=5 extra=1
+[dec-fail-hist] chn=3 idx=0 q=1 nal=5 pkt=59233 out=59267 idr=1 first_mb=0 primed=0 sps=17 pps=5 extra=1
+[dec-fail-hist] chn=3 idx=1 q=0 nal=5 pkt=57715 out=57749 idr=1 first_mb=0 primed=0 sps=17 pps=5 extra=1
+[dec-fail-hist] chn=3 idx=2 q=1 nal=5 pkt=58661 out=58695 idr=1 first_mb=0 primed=0 sps=17 pps=5 extra=1
+[pipe-prof] chn=2 elapsed_ms=1066.6 pop=10 send=10 send_fail=0 load=0 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=0 in_kb=190.9 out_kb=191.0 popwait_avg=97.263 popwait_max=660.813 send_avg=9.095 send_max=16.887 get_avg=0.001 get_max=0.002 load_avg=0.000 load_max=0.000 loop_avg=106.645 loop_max=679.597
+[pipe-prof] chn=3 elapsed_ms=1046.0 pop=27 send=1 send_fail=1 load=0 null=0 drop_pre=0 drop_resync=26 idr=1 qmax=1 in_kb=57.3 out_kb=57.3 popwait_avg=38.605 popwait_max=108.368 send_avg=0.300 send_max=0.300 get_avg=0.000 get_max=0.000 load_avg=0.000 load_max=0.000 loop_avg=38.734 loop_max=109.441
+[vdec-prof] chn=1 bypass=1 elapsed_ms=1027.9 decode=33 fail=0 decode_avg=9.278 decode_max=15.796 cb=33 cb_avg=0.000 cb_max=0.001 copy_avg=0.000 copy_max=0.000 sync_avg=0.000 sync_max=0.000
+[vdec-probe] chn=1 bypass copy/Ion enabled via RTSPPULL_BYPASS_VDEC_COPY
+[vdec-copy-bypass] chn=1 callbacks=0 inputLen=2088960 pts=41994099
+[vdec-prof] chn=2 bypass=1 elapsed_ms=1021.1 decode=41 fail=0 decode_avg=9.873 decode_max=16.874 cb=41 cb_avg=0.000 cb_max=0.001 copy_avg=0.000 copy_max=0.000 sync_avg=0.000 sync_max=0.000
+[vdec-probe] chn=2 bypass copy/Ion enabled via RTSPPULL_BYPASS_VDEC_COPY
+[vdec-copy-bypass] chn=2 callbacks=0 inputLen=2088960 pts=42020102
+[vdec-copy-bypass] chn=1 callbacks=1 inputLen=2088960 pts=42018906
+[pipe-prof] chn=1 elapsed_ms=1006.8 pop=28 send=28 send_fail=0 load=0 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=1 in_kb=141.1 out_kb=141.2 popwait_avg=26.307 popwait_max=179.265 send_avg=9.552 send_max=14.723 get_avg=0.000 get_max=0.001 load_avg=0.000 load_max=0.000 loop_avg=35.953 loop_max=194.602
+[vdec-copy-bypass] chn=2 callbacks=1 inputLen=2088960 pts=42087975
+[pipe-prof] chn=0 elapsed_ms=1042.9 pop=27 send=0 send_fail=0 load=0 null=0 drop_pre=0 drop_resync=27 idr=0 qmax=0 in_kb=0.0 out_kb=0.0 popwait_avg=38.580 popwait_max=92.088 send_avg=0.000 send_max=0.000 get_avg=0.000 get_max=0.000 load_avg=0.000 load_max=0.000 loop_avg=38.619 loop_max=92.128
+[pipe-prof] chn=2 elapsed_ms=1009.2 pop=42 send=42 send_fail=0 load=0 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=3 in_kb=347.2 out_kb=347.4 popwait_avg=13.960 popwait_max=164.859 send_avg=9.945 send_max=15.665 get_avg=0.001 get_max=0.001 load_avg=0.000 load_max=0.000 loop_avg=24.026 loop_max=173.166
+debug  : cedarc <VeSetEnableAfbcFlag:1771>: **** VeSetEnableAfbcFlag: 0
+debug  : fbm.c <FbmCreateBuffer:148>: FbmCreate, total fbm number: 6, decoder needed: 2,  nWidth=1920, nHeight=1088 nAlignStride = 0
+debug  : fbm.c <FbmCreateBuffer:252>: ** call allocate pic buf, i = 0, maxNum = 6
+debug  : fbm.c <FbmAllocatePictureBuffer:1454>: pPicture->bEnableAfbcFlag = 0
+debug  : fbm.c <FbmCreateBuffer:252>: ** call allocate pic buf, i = 1, maxNum = 6
+debug  : fbm.c <FbmAllocatePictureBuffer:1454>: pPicture->bEnableAfbcFlag = 0
+debug  : fbm.c <FbmCreateBuffer:252>: ** call allocate pic buf, i = 2, maxNum = 6
+debug  : fbm.c <FbmAllocatePictureBuffer:1454>: pPicture->bEnableAfbcFlag = 0
+debug  : fbm.c <FbmCreateBuffer:252>: ** call allocate pic buf, i = 3, maxNum = 6
+debug  : fbm.c <FbmAllocatePictureBuffer:1454>: pPicture->bEnableAfbcFlag = 0
+debug  : fbm.c <FbmCreateBuffer:252>: ** call allocate pic buf, i = 4, maxNum = 6
+debug  : fbm.c <FbmAllocatePictureBuffer:1454>: pPicture->bEnableAfbcFlag = 0
+debug  : fbm.c <FbmCreateBuffer:252>: ** call allocate pic buf, i = 5, maxNum = 6
+debug  : fbm.c <FbmAllocatePictureBuffer:1454>: pPicture->bEnableAfbcFlag = 0
+debug  : fbm.c <FbmCreateBuffer:405>: *** finish fbmCreateBuffer
+[vdec-prof] chn=3 bypass=1 elapsed_ms=1645.8 decode=0 fail=0 decode_avg=0.000 decode_max=0.000 cb=1 cb_avg=0.001 cb_max=0.001 copy_avg=0.000 copy_max=0.000 sync_avg=0.000 sync_max=0.000
+[vdec-probe] chn=3 bypass copy/Ion enabled via RTSPPULL_BYPASS_VDEC_COPY
+[vdec-copy-bypass] chn=3 callbacks=0 inputLen=2088960 pts=37989788
+[vdec-recover] chn=3 streak=3 total=3 frameType=U inputLen=60387
+[dec-resync-release] chn=3 dropped=117 idr_size=60353
+[vdec-copy-bypass] chn=3 callbacks=1 inputLen=2088960 pts=39546716
+[pipe-prof] chn=3 elapsed_ms=1001.8 pop=24 send=10 send_fail=0 load=0 null=0 drop_pre=0 drop_resync=14 idr=1 qmax=1 in_kb=104.8 out_kb=104.8 popwait_avg=37.594 popwait_max=147.947 send_avg=9.632 send_max=21.167 get_avg=0.000 get_max=0.001 load_avg=0.000 load_max=0.000 loop_avg=41.734 loop_max=169.804
 debug  : cedarc <H264DecVuiParameters:341>: nFrameRate=25
 debug  : cedarc <H264DecodePictureScanType:2779>: here3:hCtx->bProgressice=1
 
-[dec-fail] chn=2 sendRet=-1 q=0 nal=5 pkt=109584 out=109620 idr=1 first_mb=0 primed=0 sps=20 pps=4 extra=1
-[dec-fail-hist] chn=2 idx=0 q=0 nal=5 pkt=97611 out=97647 idr=1 first_mb=0 primed=0 sps=20 pps=4 extra=1
-[dec-fail-hist] chn=2 idx=1 q=0 nal=5 pkt=95151 out=95187 idr=1 first_mb=0 primed=0 sps=20 pps=4 extra=1
-[dec-fail-hist] chn=2 idx=2 q=0 nal=5 pkt=109584 out=109620 idr=1 first_mb=0 primed=0 sps=20 pps=4 extra=1
+[vdec-prof] chn=0 bypass=1 elapsed_ms=2329.0 decode=1 fail=1 decode_avg=7.197 decode_max=7.197 cb=0 cb_avg=0.000 cb_max=0.000 copy_avg=0.000 copy_max=0.000 sync_avg=0.000 sync_max=0.000
+[vdec-probe] chn=0 bypass copy/Ion enabled via RTSPPULL_BYPASS_VDEC_COPY
+[dec-fail] chn=0 sendRet=-1 q=0 nal=5 pkt=128111 out=128147 idr=1 first_mb=0 primed=0 sps=20 pps=4 extra=1
+[dec-fail-hist] chn=0 idx=0 q=2 nal=5 pkt=72091 out=72127 idr=1 first_mb=0 primed=0 sps=20 pps=4 extra=1
+[dec-fail-hist] chn=0 idx=1 q=0 nal=5 pkt=125834 out=125870 idr=1 first_mb=0 primed=0 sps=20 pps=4 extra=1
+[dec-fail-hist] chn=0 idx=2 q=0 nal=5 pkt=128111 out=128147 idr=1 first_mb=0 primed=0 sps=20 pps=4 extra=1
+[vdec-prof] chn=1 bypass=1 elapsed_ms=1004.0 decode=18 fail=0 decode_avg=8.696 decode_max=13.925 cb=18 cb_avg=0.001 cb_max=0.001 copy_avg=0.000 copy_max=0.000 sync_avg=0.000 sync_max=0.000
+[vdec-probe] chn=1 bypass copy/Ion enabled via RTSPPULL_BYPASS_VDEC_COPY
+[vdec-copy-bypass] chn=1 callbacks=0 inputLen=2088960 pts=42750964
+[vdec-copy-bypass] chn=1 callbacks=1 inputLen=2088960 pts=42805007
+[vdec-prof] chn=2 bypass=1 elapsed_ms=1002.1 decode=22 fail=0 decode_avg=9.601 decode_max=15.443 cb=22 cb_avg=0.000 cb_max=0.001 copy_avg=0.000 copy_max=0.000 sync_avg=0.000 sync_max=0.000
+[vdec-probe] chn=2 bypass copy/Ion enabled via RTSPPULL_BYPASS_VDEC_COPY
+[vdec-copy-bypass] chn=2 callbacks=0 inputLen=2088960 pts=43048047
+[vdec-copy-bypass] chn=2 callbacks=1 inputLen=2088960 pts=43108349
+[pipe-prof] chn=1 elapsed_ms=1020.9 pop=20 send=20 send_fail=0 load=0 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=1 in_kb=121.6 out_kb=121.7 popwait_avg=41.683 popwait_max=276.776 send_avg=9.254 send_max=23.923 get_avg=0.000 get_max=0.001 load_avg=0.000 load_max=0.000 loop_avg=51.041 loop_max=286.246
+[pipe-prof] chn=0 elapsed_ms=1001.4 pop=15 send=1 send_fail=1 load=0 null=0 drop_pre=0 drop_resync=14 idr=1 qmax=0 in_kb=125.1 out_kb=125.1 popwait_avg=66.126 popwait_max=656.371 send_avg=7.248 send_max=7.248 get_avg=0.000 get_max=0.000 load_avg=0.000 load_max=0.000 loop_avg=66.745 loop_max=665.109
+[pipe-prof] chn=2 elapsed_ms=1000.7 pop=24 send=24 send_fail=0 load=0 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=2 in_kb=253.3 out_kb=253.4 popwait_avg=30.066 popwait_max=393.890 send_avg=11.466 send_max=23.946 get_avg=0.001 get_max=0.001 load_avg=0.000 load_max=0.000 loop_avg=41.693 loop_max=407.192
+[vdec-prof] chn=3 bypass=1 elapsed_ms=1019.1 decode=29 fail=0 decode_avg=12.891 decode_max=23.660 cb=29 cb_avg=0.000 cb_max=0.001 copy_avg=0.000 copy_max=0.000 sync_avg=0.000 sync_max=0.000
+[vdec-probe] chn=3 bypass copy/Ion enabled via RTSPPULL_BYPASS_VDEC_COPY
+[vdec-copy-bypass] chn=3 callbacks=0 inputLen=2088960 pts=43757439
+[vdec-copy-bypass] chn=3 callbacks=1 inputLen=2088960 pts=43781450
+[pipe-prof] chn=3 elapsed_ms=1002.2 pop=26 send=26 send_fail=0 load=0 null=0 drop_pre=0 drop_resync=0 idr=0 qmax=0 in_kb=264.4 out_kb=264.5 popwait_avg=23.594 popwait_max=70.160 send_avg=14.784 send_max=23.855 get_avg=0.000 get_max=0.001 load_avg=0.000 load_max=0.000 loop_avg=38.538 loop_max=79.085
+[vdec-prof] chn=1 bypass=1 elapsed_ms=1033.4 decode=33 fail=0 decode_avg=13.640 decode_max=23.901 cb=33 cb_avg=0.000 cb_max=0.002 copy_avg=0.000 copy_max=0.000 sync_avg=0.000 sync_max=0.000
+[vdec-probe] chn=1 bypass copy/Ion enabled via RTSPPULL_BYPASS_VDEC_COPY
+[vdec-copy-bypass] chn=1 callbacks=0 inputLen=2088960 pts=44046566
+[vdec-prof] chn=2 bypass=1 elapsed_ms=1024.9 decode=29 fail=0 decode_avg=13.630 decode_max=24.035 cb=29 cb_avg=0.000 cb_max=0.001 copy_avg=0.000 copy_max=0.000 sync_avg=0.000 sync_max=0.000
+[vdec-probe] chn=2 bypass copy/Ion enabled via RTSPPULL_BYPASS_VDEC_COPY
+[vdec-copy-bypass] chn=2 callbacks=0 inputLen=2088960 pts=44083948
+[vdec-copy-bypass] chn=2 callbacks=1 inputLen=2088960 pts=44116999
+[vdec-copy-bypass] chn=1 callbacks=1 inputLen=2088960 pts=44062184
+[pipe-prof] chn=1 elapsed_ms=1048.5 pop=31 send=31 send_fail=0 load=0 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=3 in_kb=137.9 out_kb=138.0 popwait_avg=19.867 popwait_max=159.061 send_avg=13.865 send_max=23.921 get_avg=0.001 get_max=0.001 load_avg=0.000 load_max=0.000 loop_avg=33.817 loop_max=173.875
+[pipe-prof] chn=0 elapsed_ms=1021.5 pop=36 send=0 send_fail=0 load=0 null=0 drop_pre=0 drop_resync=36 idr=0 qmax=0 in_kb=0.0 out_kb=0.0 popwait_avg=28.335 popwait_max=79.099 send_avg=0.000 send_max=0.000 get_avg=0.000 get_max=0.000 load_avg=0.000 load_max=0.000 loop_avg=28.370 loop_max=79.134
+[pipe-prof] chn=2 elapsed_ms=1018.2 pop=26 send=26 send_fail=0 load=0 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=0 in_kb=257.9 out_kb=258.1 popwait_avg=26.728 popwait_max=222.453 send_avg=12.277 send_max=24.069 get_avg=0.001 get_max=0.002 load_avg=0.000 load_max=0.000 loop_avg=39.158 loop_max=231.631
+[vdec-prof] chn=3 bypass=1 elapsed_ms=1000.7 decode=24 fail=0 decode_avg=13.803 decode_max=23.489 cb=24 cb_avg=0.001 cb_max=0.001 copy_avg=0.000 copy_max=0.000 sync_avg=0.000 sync_max=0.000
+[vdec-probe] chn=3 bypass copy/Ion enabled via RTSPPULL_BYPASS_VDEC_COPY
+[vdec-copy-bypass] chn=3 callbacks=0 inputLen=2088960 pts=44739114
 debug  : cedarc <VeSetEnableAfbcFlag:1771>: **** VeSetEnableAfbcFlag: 0
 debug  : fbm.c <FbmCreateBuffer:148>: FbmCreate, total fbm number: 6, decoder needed: 2,  nWidth=1920, nHeight=1088 nAlignStride = 0
 debug  : fbm.c <FbmCreateBuffer:252>: ** call allocate pic buf, i = 0, maxNum = 6
@@ -88,124 +457,130 @@ debug  : fbm.c <FbmAllocatePictureBuffer:1454>: pPicture->bEnableAfbcFlag = 0
 debug  : fbm.c <FbmCreateBuffer:252>: ** call allocate pic buf, i = 5, maxNum = 6
 debug  : fbm.c <FbmAllocatePictureBuffer:1454>: pPicture->bEnableAfbcFlag = 0
 debug  : fbm.c <FbmCreateBuffer:405>: *** finish fbmCreateBuffer
-[vdec-recover] chn=0 streak=3 total=3 frameType=U inputLen=58300
-[dec-resync-release] chn=0 dropped=59 idr_size=58264
-I==D==R
-debug  : cedarc <VeSetEnableAfbcFlag:1771>: **** VeSetEnableAfbcFlag: 0
-debug  : fbm.c <FbmCreateBuffer:148>: FbmCreate, total fbm number: 6, decoder needed: 2,  nWidth=1920, nHeight=1088 nAlignStride = 0
-debug  : fbm.c <FbmCreateBuffer:252>: ** call allocate pic buf, i = 0, maxNum = 6
-debug  : fbm.c <FbmAllocatePictureBuffer:1454>: pPicture->bEnableAfbcFlag = 0
-debug  : fbm.c <FbmCreateBuffer:252>: ** call allocate pic buf, i = 1, maxNum = 6
-debug  : fbm.c <FbmAllocatePictureBuffer:1454>: pPicture->bEnableAfbcFlag = 0
-debug  : fbm.c <FbmCreateBuffer:252>: ** call allocate pic buf, i = 2, maxNum = 6
-debug  : fbm.c <FbmAllocatePictureBuffer:1454>: pPicture->bEnableAfbcFlag = 0
-debug  : fbm.c <FbmCreateBuffer:252>: ** call allocate pic buf, i = 3, maxNum = 6
-debug  : fbm.c <FbmAllocatePictureBuffer:1454>: pPicture->bEnableAfbcFlag = 0
-debug  : fbm.c <FbmCreateBuffer:252>: ** call allocate pic buf, i = 4, maxNum = 6
-debug  : fbm.c <FbmAllocatePictureBuffer:1454>: pPicture->bEnableAfbcFlag = 0
-debug  : fbm.c <FbmCreateBuffer:252>: ** call allocate pic buf, i = 5, maxNum = 6
-debug  : fbm.c <FbmAllocatePictureBuffer:1454>: pPicture->bEnableAfbcFlag = 0
-debug  : fbm.c <FbmCreateBuffer:405>: *** finish fbmCreateBuffer
-[vdec-recover] chn=3 streak=3 total=3 frameType=U inputLen=46845
-[dec-resync-release] chn=3 dropped=72 idr_size=46811
-I==D==R
-debug  : cedarc <VeSetEnableAfbcFlag:1771>: **** VeSetEnableAfbcFlag: 0
-debug  : fbm.c <FbmCreateBuffer:148>: FbmCreate, total fbm number: 6, decoder needed: 2,  nWidth=1920, nHeight=1088 nAlignStride = 0
-debug  : fbm.c <FbmCreateBuffer:252>: ** call allocate pic buf, i = 0, maxNum = 6
-debug  : fbm.c <FbmAllocatePictureBuffer:1454>: pPicture->bEnableAfbcFlag = 0
-debug  : fbm.c <FbmCreateBuffer:252>: ** call allocate pic buf, i = 1, maxNum = 6
-debug  : fbm.c <FbmAllocatePictureBuffer:1454>: pPicture->bEnableAfbcFlag = 0
-debug  : fbm.c <FbmCreateBuffer:252>: ** call allocate pic buf, i = 2, maxNum = 6
-debug  : fbm.c <FbmAllocatePictureBuffer:1454>: pPicture->bEnableAfbcFlag = 0
-debug  : fbm.c <FbmCreateBuffer:252>: ** call allocate pic buf, i = 3, maxNum = 6
-I==D==R
-debug  : fbm.c <FbmAllocatePictureBuffer:1454>: pPicture->bEnableAfbcFlag = 0
-debug  : fbm.c <FbmCreateBuffer:252>: ** call allocate pic buf, i = 4, maxNum = 6
-debug  : fbm.c <FbmAllocatePictureBuffer:1454>: pPicture->bEnableAfbcFlag = 0
-debug  : fbm.c <FbmCreateBuffer:252>: ** call allocate pic buf, i = 5, maxNum = 6
-debug  : fbm.c <FbmAllocatePictureBuffer:1454>: pPicture->bEnableAfbcFlag = 0
-debug  : fbm.c <FbmCreateBuffer:405>: *** finish fbmCreateBuffer
-[vdec-recover] chn=2 streak=3 total=3 frameType=U inputLen=104821
-[dec-resync-release] chn=2 dropped=72 idr_size=104785
-I==D==R
-[queue] overflow flush chn=2 depth=8 max=8 incoming_nal=1 incoming_size=5475 isIDR=0 isSpsOrPps=0 isSei=0 pts=32540
-I==D==R
-I==D==R
-[queue] resync chn=2 dropped=14 incoming_size=105797 pts=33372
-I==D==R
-I==D==R
-[queue] overflow flush chn=1 depth=8 max=8 incoming_nal=1 incoming_size=1160 isIDR=0 isSpsOrPps=0 isSei=0 pts=33574
-I==D==R
-I==D==R
-I==D==R
-[queue] resync chn=1 dropped=14 incoming_size=80131 pts=34523
-I==D==R
-[queue] overflow flush chn=1 depth=8 max=8 incoming_nal=1 incoming_size=2071 isIDR=0 isSpsOrPps=0 isSei=0 pts=34614
-I==D==R
-[queue] overflow flush chn=2 depth=8 max=8 incoming_nal=1 incoming_size=4900 isIDR=0 isSpsOrPps=0 isSei=0 pts=34815
-I==D==R
-[queue] resync chn=2 dropped=7 incoming_size=102627 pts=35359
-I==D==R
-[queue] resync chn=1 dropped=15 incoming_size=78864 pts=35443
-I==D==R
-[queue] overflow flush chn=1 depth=8 max=8 incoming_nal=1 incoming_size=1173 isIDR=0 isSpsOrPps=0 isSei=0 pts=35678
-I==D==R
-I==D==R
-[queue] resync chn=1 dropped=12 incoming_size=66335 pts=36444
-I==D==R
-I==D==R
-I==D==R
-[queue] overflow flush chn=1 depth=8 max=8 incoming_nal=1 incoming_size=946 isIDR=0 isSpsOrPps=0 isSei=0 pts=36848
-[queue] overflow flush chn=2 depth=8 max=8 incoming_nal=1 incoming_size=2936 isIDR=0 isSpsOrPps=0 isSei=0 pts=36889
-I==D==R
-[queue] resync chn=2 dropped=7 incoming_size=18492 pts=37131
-I==D==R
-[queue] resync chn=1 dropped=9 incoming_size=36972 pts=37223
-I==D==R
-I==D==R
-I==D==R
-I==D==R
-[queue] overflow flush chn=1 depth=8 max=8 incoming_nal=1 incoming_size=2972 isIDR=0 isSpsOrPps=0 isSei=0 pts=38458
-[queue] overflow flush chn=0 depth=8 max=8 incoming_nal=1 incoming_size=1376 isIDR=0 isSpsOrPps=0 isSei=0 pts=38750
-I==D==R
-[queue] resync chn=1 dropped=18 incoming_size=33510 pts=39247
-I==D==R
-I==D==R
-[queue] resync chn=0 dropped=21 incoming_size=51752 pts=39680
-I==D==R
-I==D==R
-I==D==R
-I==D==R
-[queue] overflow flush chn=0 depth=8 max=8 incoming_nal=1 incoming_size=6264 isIDR=0 isSpsOrPps=0 isSei=0 pts=40588
-[queue] overflow flush chn=2 depth=8 max=8 incoming_nal=1 incoming_size=5574 isIDR=0 isSpsOrPps=0 isSei=0 pts=40665
-[queue] resync chn=0 dropped=1 incoming_size=52356 pts=40768
-I==D==R
-I==D==R
-[queue] resync chn=2 dropped=12 incoming_size=87733 pts=41326
-I==D==R
-I==D==R
-[queue] overflow flush chn=1 depth=8 max=8 incoming_nal=1 incoming_size=2367 isIDR=0 isSpsOrPps=0 isSei=0 pts=41626
-[queue] overflow flush chn=2 depth=8 max=8 incoming_nal=1 incoming_size=13312 isIDR=0 isSpsOrPps=0 isSei=0 pts=41825
-I==D==R
-I==D==R
-[queue] resync chn=2 dropped=7 incoming_size=99160 pts=42340
-I==D==R
-[queue] resync chn=1 dropped=13 incoming_size=77530 pts=42379
-I==D==R
-[queue] overflow flush chn=2 depth=8 max=8 incoming_nal=1 incoming_size=2714 isIDR=0 isSpsOrPps=0 isSei=0 pts=42568
-I==D==R
-I==D==R
-[queue] resync chn=2 dropped=13 incoming_size=94830 pts=43396
-I==D==R
-I==D==R
-[queue] overflow flush chn=2 depth=8 max=8 incoming_nal=1 incoming_size=4177 isIDR=0 isSpsOrPps=0 isSei=0 pts=43778
-[queue] overflow flush chn=1 depth=8 max=8 incoming_nal=1 incoming_size=1904 isIDR=0 isSpsOrPps=0 isSei=0 pts=43808
-I==D==R
-I==D==R
-[queue] resync chn=1 dropped=8 incoming_size=82750 pts=44318
-I==D==R
-[queue] resync chn=2 dropped=9 incoming_size=102776 pts=44402
-I==D==R
-[queue] overflow flush chn=2 depth=8 max=8 incoming_nal=1 incoming_size=6714 isIDR=0 isSpsOrPps=0 isSei=0 pts=44537
-I==D==R
-I==D==R
+[vdec-prof] chn=0 bypass=1 elapsed_ms=1794.6 decode=0 fail=0 decode_avg=0.000 decode_max=0.000 cb=1 cb_avg=0.000 cb_max=0.000 copy_avg=0.000 copy_max=0.000 sync_avg=0.000 sync_max=0.000
+[vdec-probe] chn=0 bypass copy/Ion enabled via RTSPPULL_BYPASS_VDEC_COPY
+[vdec-copy-bypass] chn=0 callbacks=0 inputLen=2088960 pts=38658076
+[vdec-recover] chn=0 streak=3 total=3 frameType=U inputLen=139060
+[dec-resync-release] chn=0 dropped=147 idr_size=139024
+[vdec-copy-bypass] chn=0 callbacks=1 inputLen=2088960 pts=40759803
+[vdec-copy-bypass] chn=3 callbacks=1 inputLen=2088960 pts=44748029
+[pipe-prof] chn=3 elapsed_ms=1022.1 pop=24 send=24 send_fail=0 load=0 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=0 in_kb=233.0 out_kb=233.2 popwait_avg=24.970 popwait_max=118.810 send_avg=17.459 send_max=42.605 get_avg=0.000 get_max=0.001 load_avg=0.000 load_max=0.000 loop_avg=42.581 loop_max=134.531
+[vdec-prof] chn=2 bypass=1 elapsed_ms=1025.5 decode=22 fail=0 decode_avg=14.018 decode_max=45.581 cb=22 cb_avg=0.000 cb_max=0.001 copy_avg=0.000 copy_max=0.000 sync_avg=0.000 sync_max=0.000
+[vdec-probe] chn=2 bypass copy/Ion enabled via RTSPPULL_BYPASS_VDEC_COPY
+[vdec-copy-bypass] chn=2 callbacks=0 inputLen=2088960 pts=45128235
+[vdec-prof] chn=1 bypass=1 elapsed_ms=1049.1 decode=16 fail=0 decode_avg=12.436 decode_max=23.759 cb=16 cb_avg=0.001 cb_max=0.001 copy_avg=0.000 copy_max=0.000 sync_avg=0.000 sync_max=0.000
+[vdec-probe] chn=1 bypass copy/Ion enabled via RTSPPULL_BYPASS_VDEC_COPY
+[vdec-copy-bypass] chn=1 callbacks=0 inputLen=2088960 pts=44702050
+[vdec-copy-bypass] chn=2 callbacks=1 inputLen=2088960 pts=45143105
+[vdec-copy-bypass] chn=1 callbacks=1 inputLen=2088960 pts=44756990
+[pipe-prof] chn=1 elapsed_ms=1019.3 pop=17 send=17 send_fail=0 load=0 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=6 in_kb=101.2 out_kb=101.3 popwait_avg=46.007 popwait_max=324.853 send_avg=13.842 send_max=26.294 get_avg=0.000 get_max=0.001 load_avg=0.000 load_max=0.000 loop_avg=59.952 loop_max=352.096
+[pipe-prof] chn=0 elapsed_ms=1033.1 pop=24 send=19 send_fail=0 load=0 null=0 drop_pre=0 drop_resync=5 idr=1 qmax=4 in_kb=186.6 out_kb=186.7 popwait_avg=30.841 popwait_max=448.574 send_avg=15.254 send_max=31.975 get_avg=0.000 get_max=0.001 load_avg=0.000 load_max=0.000 loop_avg=43.043 loop_max=463.835
+[pipe-prof] chn=2 elapsed_ms=1022.8 pop=24 send=24 send_fail=0 load=0 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=1 in_kb=258.2 out_kb=258.3 popwait_avg=26.197 popwait_max=441.167 send_avg=16.254 send_max=45.656 get_avg=0.000 get_max=0.001 load_avg=0.000 load_max=0.000 loop_avg=42.613 loop_max=450.684
+[vdec-prof] chn=3 bypass=1 elapsed_ms=1025.7 decode=25 fail=0 decode_avg=25.472 decode_max=97.253 cb=25 cb_avg=0.000 cb_max=0.001 copy_avg=0.000 copy_max=0.000 sync_avg=0.000 sync_max=0.000
+[vdec-probe] chn=3 bypass copy/Ion enabled via RTSPPULL_BYPASS_VDEC_COPY
+[vdec-copy-bypass] chn=3 callbacks=0 inputLen=2088960 pts=45738472
+[vdec-copy-bypass] chn=3 callbacks=1 inputLen=2088960 pts=45758096
+[vdec-prof] chn=0 bypass=1 elapsed_ms=1011.5 decode=33 fail=0 decode_avg=18.701 decode_max=84.990 cb=33 cb_avg=0.000 cb_max=0.001 copy_avg=0.000 copy_max=0.000 sync_avg=0.000 sync_max=0.000
+[vdec-probe] chn=0 bypass copy/Ion enabled via RTSPPULL_BYPASS_VDEC_COPY
+[vdec-copy-bypass] chn=0 callbacks=0 inputLen=2088960 pts=45729363
+[vdec-copy-bypass] chn=0 callbacks=1 inputLen=2088960 pts=45826248
+[pipe-prof] chn=3 elapsed_ms=1068.3 pop=26 send=26 send_fail=0 load=0 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=1 in_kb=278.9 out_kb=279.1 popwait_avg=15.012 popwait_max=98.225 send_avg=25.912 send_max=97.427 get_avg=0.001 get_max=0.001 load_avg=0.000 load_max=0.000 loop_avg=41.082 loop_max=107.373
+[vdec-prof] chn=2 bypass=1 elapsed_ms=1006.7 decode=26 fail=0 decode_avg=20.362 decode_max=97.650 cb=26 cb_avg=0.001 cb_max=0.001 copy_avg=0.000 copy_max=0.000 sync_avg=0.000 sync_max=0.000
+[vdec-probe] chn=2 bypass copy/Ion enabled via RTSPPULL_BYPASS_VDEC_COPY
+[vdec-copy-bypass] chn=2 callbacks=0 inputLen=2088960 pts=46045035
+[vdec-copy-bypass] chn=2 callbacks=1 inputLen=2088960 pts=46063018
+[vdec-prof] chn=1 bypass=1 elapsed_ms=1029.9 decode=35 fail=0 decode_avg=14.129 decode_max=31.230 cb=35 cb_avg=0.000 cb_max=0.001 copy_avg=0.000 copy_max=0.000 sync_avg=0.000 sync_max=0.000
+[vdec-probe] chn=1 bypass copy/Ion enabled via RTSPPULL_BYPASS_VDEC_COPY
+[vdec-copy-bypass] chn=1 callbacks=0 inputLen=2088960 pts=46148028
+[vdec-copy-bypass] chn=1 callbacks=1 inputLen=2088960 pts=46156439
+[pipe-prof] chn=1 elapsed_ms=1037.6 pop=34 send=34 send_fail=0 load=0 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=8 in_kb=152.5 out_kb=152.7 popwait_avg=15.504 popwait_max=238.206 send_avg=14.929 send_max=45.992 get_avg=0.000 get_max=0.001 load_avg=0.000 load_max=0.000 loop_avg=30.513 loop_max=268.137
+[pipe-prof] chn=0 elapsed_ms=1038.2 pop=27 send=27 send_fail=0 load=0 null=0 drop_pre=0 drop_resync=0 idr=0 qmax=1 in_kb=79.7 out_kb=79.8 popwait_avg=15.905 popwait_max=86.872 send_avg=22.477 send_max=85.860 get_avg=0.001 get_max=0.001 load_avg=0.000 load_max=0.000 loop_avg=38.447 loop_max=120.916
+[pipe-prof] chn=2 elapsed_ms=1024.4 pop=25 send=25 send_fail=0 load=0 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=1 in_kb=266.3 out_kb=266.4 popwait_avg=15.864 popwait_max=163.693 send_avg=24.944 send_max=97.682 get_avg=0.001 get_max=0.001 load_avg=0.000 load_max=0.000 loop_avg=40.969 loop_max=175.405
+[vdec-prof] chn=3 bypass=1 elapsed_ms=1005.4 decode=26 fail=0 decode_avg=22.287 decode_max=87.301 cb=26 cb_avg=0.000 cb_max=0.001 copy_avg=0.000 copy_max=0.000 sync_avg=0.000 sync_max=0.000
+[vdec-probe] chn=3 bypass copy/Ion enabled via RTSPPULL_BYPASS_VDEC_COPY
+[vdec-copy-bypass] chn=3 callbacks=0 inputLen=2088960 pts=46768155
+[vdec-prof] chn=0 bypass=1 elapsed_ms=1013.8 decode=26 fail=0 decode_avg=17.646 decode_max=85.849 cb=26 cb_avg=0.001 cb_max=0.001 copy_avg=0.000 copy_max=0.000 sync_avg=0.000 sync_max=0.000
+[vdec-probe] chn=0 bypass copy/Ion enabled via RTSPPULL_BYPASS_VDEC_COPY
+[vdec-copy-bypass] chn=0 callbacks=0 inputLen=2088960 pts=46804106
+[vdec-copy-bypass] chn=3 callbacks=1 inputLen=2088960 pts=46804087
+[vdec-copy-bypass] chn=0 callbacks=1 inputLen=2088960 pts=46825154
+[pipe-prof] chn=3 elapsed_ms=1025.6 pop=27 send=27 send_fail=0 load=0 null=0 drop_pre=0 drop_resync=0 idr=0 qmax=1 in_kb=255.6 out_kb=255.7 popwait_avg=18.140 popwait_max=87.526 send_avg=19.684 send_max=46.028 get_avg=0.000 get_max=0.001 load_avg=0.000 load_max=0.000 loop_avg=37.980 loop_max=96.006
+[vdec-prof] chn=2 bypass=1 elapsed_ms=1025.8 decode=23 fail=0 decode_avg=22.696 decode_max=92.891 cb=23 cb_avg=0.000 cb_max=0.001 copy_avg=0.000 copy_max=0.000 sync_avg=0.000 sync_max=0.000
+[vdec-probe] chn=2 bypass copy/Ion enabled via RTSPPULL_BYPASS_VDEC_COPY
+[vdec-copy-bypass] chn=2 callbacks=0 inputLen=2088960 pts=47123316
+[vdec-prof] chn=1 bypass=1 elapsed_ms=1002.6 decode=20 fail=0 decode_avg=18.095 decode_max=45.965 cb=20 cb_avg=0.001 cb_max=0.002 copy_avg=0.000 copy_max=0.000 sync_avg=0.000 sync_max=0.000
+[vdec-probe] chn=1 bypass copy/Ion enabled via RTSPPULL_BYPASS_VDEC_COPY
+[vdec-copy-bypass] chn=1 callbacks=0 inputLen=2088960 pts=47115914
+[vdec-copy-bypass] chn=2 callbacks=1 inputLen=2088960 pts=47154760
+[vdec-copy-bypass] chn=1 callbacks=1 inputLen=2088960 pts=47147288
+[pipe-prof] chn=1 elapsed_ms=1026.3 pop=21 send=21 send_fail=0 load=0 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=5 in_kb=110.3 out_kb=110.4 popwait_avg=30.311 popwait_max=250.567 send_avg=18.460 send_max=38.667 get_avg=0.001 get_max=0.001 load_avg=0.000 load_max=0.000 loop_avg=48.869 loop_max=271.936
+[pipe-prof] chn=2 elapsed_ms=1002.5 pop=23 send=23 send_fail=0 load=0 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=4 in_kb=246.0 out_kb=246.2 popwait_avg=24.334 popwait_max=327.412 send_avg=19.092 send_max=38.389 get_avg=0.001 get_max=0.002 load_avg=0.000 load_max=0.000 loop_avg=43.582 loop_max=336.242
+[pipe-prof] chn=0 elapsed_ms=1049.2 pop=26 send=26 send_fail=0 load=0 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=1 in_kb=165.8 out_kb=165.9 popwait_avg=25.017 popwait_max=146.332 send_avg=15.229 send_max=31.341 get_avg=0.000 get_max=0.001 load_avg=0.000 load_max=0.000 loop_avg=40.350 loop_max=160.384
+[vdec-prof] chn=3 bypass=1 elapsed_ms=1029.9 decode=26 fail=0 decode_avg=18.876 decode_max=38.334 cb=26 cb_avg=0.001 cb_max=0.001 copy_avg=0.000 copy_max=0.000 sync_avg=0.000 sync_max=0.000
+[vdec-probe] chn=3 bypass copy/Ion enabled via RTSPPULL_BYPASS_VDEC_COPY
+[vdec-copy-bypass] chn=3 callbacks=0 inputLen=2088960 pts=47750293
+[vdec-copy-bypass] chn=3 callbacks=1 inputLen=2088960 pts=47784009
+[vdec-prof] chn=0 bypass=1 elapsed_ms=1046.6 decode=27 fail=0 decode_avg=16.951 decode_max=31.282 cb=27 cb_avg=0.001 cb_max=0.001 copy_avg=0.000 copy_max=0.000 sync_avg=0.000 sync_max=0.000
+[vdec-probe] chn=0 bypass copy/Ion enabled via RTSPPULL_BYPASS_VDEC_COPY
+[vdec-copy-bypass] chn=0 callbacks=0 inputLen=2088960 pts=47785934
+[vdec-copy-bypass] chn=0 callbacks=1 inputLen=2088960 pts=47847180
+[pipe-prof] chn=3 elapsed_ms=1019.1 pop=27 send=27 send_fail=0 load=0 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=1 in_kb=267.1 out_kb=267.2 popwait_avg=18.348 popwait_max=109.896 send_avg=19.224 send_max=38.476 get_avg=0.000 get_max=0.001 load_avg=0.000 load_max=0.000 loop_avg=37.739 loop_max=119.011
+[vdec-prof] chn=1 bypass=1 elapsed_ms=1011.5 decode=31 fail=0 decode_avg=20.107 decode_max=38.621 cb=31 cb_avg=0.000 cb_max=0.001 copy_avg=0.000 copy_max=0.000 sync_avg=0.000 sync_max=0.000
+[vdec-probe] chn=1 bypass copy/Ion enabled via RTSPPULL_BYPASS_VDEC_COPY
+[vdec-copy-bypass] chn=1 callbacks=0 inputLen=2088960 pts=48124030
+[vdec-prof] chn=2 bypass=1 elapsed_ms=1034.5 decode=31 fail=0 decode_avg=19.715 decode_max=38.289 cb=31 cb_avg=0.000 cb_max=0.001 copy_avg=0.000 copy_max=0.000 sync_avg=0.000 sync_max=0.000
+[vdec-probe] chn=2 bypass copy/Ion enabled via RTSPPULL_BYPASS_VDEC_COPY
+[vdec-copy-bypass] chn=2 callbacks=0 inputLen=2088960 pts=48160190
+[vdec-copy-bypass] chn=1 callbacks=1 inputLen=2088960 pts=48132267
+[vdec-copy-bypass] chn=2 callbacks=1 inputLen=2088960 pts=48184989
+[pipe-prof] chn=1 elapsed_ms=1014.3 pop=31 send=31 send_fail=0 load=0 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=5 in_kb=150.2 out_kb=150.4 popwait_avg=14.506 popwait_max=182.956 send_avg=18.122 send_max=31.301 get_avg=0.000 get_max=0.001 load_avg=0.000 load_max=0.000 loop_avg=32.715 loop_max=198.790
+[pipe-prof] chn=2 elapsed_ms=1034.9 pop=30 send=30 send_fail=0 load=0 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=3 in_kb=249.6 out_kb=249.7 popwait_avg=16.355 popwait_max=163.139 send_avg=18.005 send_max=31.121 get_avg=0.001 get_max=0.001 load_avg=0.000 load_max=0.000 loop_avg=34.494 loop_max=179.026
+[pipe-prof] chn=0 elapsed_ms=1031.7 pop=26 send=26 send_fail=0 load=0 null=0 drop_pre=0 drop_resync=0 idr=0 qmax=0 in_kb=98.6 out_kb=98.7 popwait_avg=22.197 popwait_max=74.611 send_avg=17.402 send_max=37.542 get_avg=0.001 get_max=0.002 load_avg=0.000 load_max=0.000 loop_avg=39.678 loop_max=98.496
+[vdec-prof] chn=3 bypass=1 elapsed_ms=1046.4 decode=25 fail=0 decode_avg=17.986 decode_max=36.838 cb=25 cb_avg=0.001 cb_max=0.001 copy_avg=0.000 copy_max=0.000 sync_avg=0.000 sync_max=0.000
+[vdec-probe] chn=3 bypass copy/Ion enabled via RTSPPULL_BYPASS_VDEC_COPY
+[vdec-copy-bypass] chn=3 callbacks=0 inputLen=2088960 pts=48769341
+[vdec-copy-bypass] chn=3 callbacks=1 inputLen=2088960 pts=48792505
+[vdec-prof] chn=0 bypass=1 elapsed_ms=1037.5 decode=25 fail=0 decode_avg=15.403 decode_max=39.545 cb=25 cb_avg=0.000 cb_max=0.001 copy_avg=0.000 copy_max=0.000 sync_avg=0.000 sync_max=0.000
+[vdec-probe] chn=0 bypass copy/Ion enabled via RTSPPULL_BYPASS_VDEC_COPY
+[vdec-copy-bypass] chn=0 callbacks=0 inputLen=2088960 pts=48797308
+[vdec-copy-bypass] chn=0 callbacks=1 inputLen=2088960 pts=48883023
+[pipe-prof] chn=3 elapsed_ms=1012.7 pop=24 send=24 send_fail=0 load=0 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=1 in_kb=265.4 out_kb=265.5 popwait_avg=21.015 popwait_max=91.348 send_avg=20.965 send_max=48.443 get_avg=0.000 get_max=0.002 load_avg=0.000 load_max=0.000 loop_avg=42.189 loop_max=99.950
+[vdec-prof] chn=2 bypass=1 elapsed_ms=1004.5 decode=24 fail=0 decode_avg=15.673 decode_max=40.329 cb=24 cb_avg=0.000 cb_max=0.001 copy_avg=0.000 copy_max=0.000 sync_avg=0.000 sync_max=0.000
+[vdec-probe] chn=2 bypass copy/Ion enabled via RTSPPULL_BYPASS_VDEC_COPY
+[vdec-copy-bypass] chn=2 callbacks=0 inputLen=2088960 pts=49162392
+[vdec-prof] chn=1 bypass=1 elapsed_ms=1027.5 decode=25 fail=0 decode_avg=15.564 decode_max=38.992 cb=25 cb_avg=0.000 cb_max=0.001 copy_avg=0.000 copy_max=0.000 sync_avg=0.000 sync_max=0.000
+[vdec-probe] chn=1 bypass copy/Ion enabled via RTSPPULL_BYPASS_VDEC_COPY
+[vdec-copy-bypass] chn=1 callbacks=0 inputLen=2088960 pts=49161970
+[vdec-copy-bypass] chn=2 callbacks=1 inputLen=2088960 pts=49191485
+[vdec-copy-bypass] chn=1 callbacks=1 inputLen=2088960 pts=49172462
+[pipe-prof] chn=1 elapsed_ms=1017.1 pop=25 send=25 send_fail=0 load=0 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=1 in_kb=114.6 out_kb=114.7 popwait_avg=22.909 popwait_max=121.274 send_avg=17.685 send_max=39.004 get_avg=0.000 get_max=0.002 load_avg=0.000 load_max=0.000 loop_avg=40.680 loop_max=136.585
+[pipe-prof] chn=2 elapsed_ms=1004.6 pop=25 send=25 send_fail=0 load=0 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=1 in_kb=257.0 out_kb=257.1 popwait_avg=22.271 popwait_max=279.579 send_avg=17.746 send_max=40.461 get_avg=0.000 get_max=0.001 load_avg=0.000 load_max=0.000 loop_avg=40.178 loop_max=304.003
+[pipe-prof] chn=0 elapsed_ms=1007.1 pop=25 send=25 send_fail=0 load=0 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=1 in_kb=142.7 out_kb=142.8 popwait_avg=19.905 popwait_max=182.686 send_avg=20.277 send_max=48.421 get_avg=0.000 get_max=0.001 load_avg=0.000 load_max=0.000 loop_avg=40.277 loop_max=191.083
+[vdec-prof] chn=3 bypass=1 elapsed_ms=1002.6 decode=26 fail=0 decode_avg=20.594 decode_max=48.313 cb=26 cb_avg=0.002 cb_max=0.031 copy_avg=0.000 copy_max=0.000 sync_avg=0.000 sync_max=0.000
+[vdec-probe] chn=3 bypass copy/Ion enabled via RTSPPULL_BYPASS_VDEC_COPY
+[vdec-copy-bypass] chn=3 callbacks=0 inputLen=2088960 pts=49781378
+[vdec-prof] chn=0 bypass=1 elapsed_ms=1002.8 decode=26 fail=0 decode_avg=20.066 decode_max=48.402 cb=26 cb_avg=0.000 cb_max=0.001 copy_avg=0.000 copy_max=0.000 sync_avg=0.000 sync_max=0.000
+[vdec-probe] chn=0 bypass copy/Ion enabled via RTSPPULL_BYPASS_VDEC_COPY
+[vdec-copy-bypass] chn=0 callbacks=0 inputLen=2088960 pts=49836152
+[vdec-copy-bypass] chn=3 callbacks=1 inputLen=2088960 pts=49827031
+[vdec-copy-bypass] chn=0 callbacks=1 inputLen=2088960 pts=49930165
+[pipe-prof] chn=3 elapsed_ms=1008.1 pop=26 send=26 send_fail=0 load=0 null=0 drop_pre=0 drop_resync=0 idr=0 qmax=1 in_kb=236.3 out_kb=236.4 popwait_avg=18.895 popwait_max=74.355 send_avg=19.706 send_max=31.661 get_avg=0.000 get_max=0.001 load_avg=0.000 load_max=0.000 loop_avg=38.764 loop_max=83.031
+[vdec-prof] chn=2 bypass=1 elapsed_ms=1008.2 decode=26 fail=0 decode_avg=18.603 decode_max=30.880 cb=26 cb_avg=0.000 cb_max=0.001 copy_avg=0.000 copy_max=0.000 sync_avg=0.000 sync_max=0.000
+[vdec-probe] chn=2 bypass copy/Ion enabled via RTSPPULL_BYPASS_VDEC_COPY
+[vdec-copy-bypass] chn=2 callbacks=0 inputLen=2088960 pts=50168301
+[vdec-prof] chn=1 bypass=1 elapsed_ms=1008.3 decode=26 fail=0 decode_avg=18.069 decode_max=31.183 cb=26 cb_avg=0.000 cb_max=0.001 copy_avg=0.000 copy_max=0.000 sync_avg=0.000 sync_max=0.000
+[vdec-probe] chn=1 bypass copy/Ion enabled via RTSPPULL_BYPASS_VDEC_COPY
+[vdec-copy-bypass] chn=1 callbacks=0 inputLen=2088960 pts=50167928
+[vdec-copy-bypass] chn=2 callbacks=1 inputLen=2088960 pts=50197866
+[vdec-copy-bypass] chn=1 callbacks=1 inputLen=2088960 pts=50197398
+[pipe-prof] chn=1 elapsed_ms=1022.4 pop=26 send=26 send_fail=0 load=0 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=3 in_kb=138.7 out_kb=138.8 popwait_avg=22.960 popwait_max=198.870 send_avg=16.252 send_max=31.181 get_avg=0.001 get_max=0.001 load_avg=0.000 load_max=0.000 loop_avg=39.316 loop_max=221.971
+[pipe-prof] chn=2 elapsed_ms=1037.1 pop=26 send=26 send_fail=0 load=0 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=1 in_kb=267.0 out_kb=267.2 popwait_avg=22.347 popwait_max=177.270 send_avg=17.379 send_max=30.971 get_avg=0.001 get_max=0.001 load_avg=0.000 load_max=0.000 loop_avg=39.883 loop_max=185.924
+[pipe-prof] chn=0 elapsed_ms=1006.0 pop=25 send=25 send_fail=0 load=0 null=0 drop_pre=0 drop_resync=0 idr=0 qmax=0 in_kb=97.2 out_kb=97.3 popwait_avg=23.695 popwait_max=86.607 send_avg=16.464 send_max=31.267 get_avg=0.000 get_max=0.001 load_avg=0.000 load_max=0.000 loop_avg=40.237 loop_max=101.518
+^C[pipe-prof] chn=1 elapsed_ms=329.5 pop=6 send=6 send_fail=0 load=0 null=0 drop_pre=0 drop_resync=0 idr=0 qmax=0 in_kb=15.1 out_kb=15.1 popwait_avg=42.677 popwait_max=101.918 send_avg=11.396 send_max=16.929 get_avg=0.001 get_max=0.001 load_avg=0.000 load_max=0.000 loop_avg=54.902 loop_max=110.176
+[pipe-prof] chn=1 elapsed_ms=0.1 pop=0 send=0 send_fail=0 load=0 null=0 drop_pre=0 drop_resync=0 idr=0 qmax=0 in_kb=0.0 out_kb=0.0 popwait_avg=0.000 popwait_max=0.000 send_avg=0.000 send_max=0.000 get_avg=0.000 get_max=0.000 load_avg=0.000 load_max=0.000 loop_avg=0.000 loop_max=0.000
+[pipe-prof] chn=2 elapsed_ms=299.3 pop=2 send=2 send_fail=0 load=0 null=0 drop_pre=0 drop_resync=0 idr=0 qmax=0 in_kb=16.6 out_kb=16.6 popwait_avg=24.576 popwait_max=39.804 send_avg=14.751 send_max=21.780 get_avg=0.001 get_max=0.001 load_avg=0.000 load_max=0.000 loop_avg=149.583 loop_max=220.272
+[pipe-prof] chn=2 elapsed_ms=0.2 pop=0 send=0 send_fail=0 load=0 null=0 drop_pre=0 drop_resync=0 idr=0 qmax=0 in_kb=0.0 out_kb=0.0 popwait_avg=0.000 popwait_max=0.000 send_avg=0.000 send_max=0.000 get_avg=0.000 get_max=0.000 load_avg=0.000 load_max=0.000 loop_avg=0.000 loop_max=0.000
+[pipe-prof] chn=3 elapsed_ms=431.5 pop=9 send=9 send_fail=0 load=0 null=0 drop_pre=0 drop_resync=0 idr=0 qmax=0 in_kb=87.9 out_kb=87.9 popwait_avg=35.199 popwait_max=110.377 send_avg=8.462 send_max=9.081 get_avg=0.000 get_max=0.001 load_avg=0.000 load_max=0.000 loop_avg=47.924 loop_max=118.991
+[pipe-prof] chn=3 elapsed_ms=0.1 pop=0 send=0 send_fail=0 load=0 null=0 drop_pre=0 drop_resync=0 idr=0 qmax=0 in_kb=0.0 out_kb=0.0 popwait_avg=0.000 popwait_max=0.000 send_avg=0.000 send_max=0.000 get_avg=0.000 get_max=0.000 load_avg=0.000 load_max=0.000 loop_avg=0.000 loop_max=0.000
+[pipe-prof] chn=0 elapsed_ms=299.1 pop=2 send=2 send_fail=0 load=0 null=0 drop_pre=0 drop_resync=0 idr=0 qmax=0 in_kb=12.4 out_kb=12.4 popwait_avg=17.442 popwait_max=28.636 send_avg=9.901 send_max=10.748 get_avg=0.000 get_max=0.000 load_avg=0.000 load_max=0.000 loop_avg=149.513 loop_max=244.076
+[pipe-prof] chn=0 elapsed_ms=0.1 pop=0 send=0 send_fail=0 load=0 null=0 drop_pre=0 drop_resync=0 idr=0 qmax=0 in_kb=0.0 out_kb=0.0 popwait_avg=0.000 popwait_max=0.000 send_avg=0.000 send_max=0.000 get_avg=0.000 get_max=0.000 load_avg=0.000 load_max=0.000 loop_avg=0.000 loop_max=0.000

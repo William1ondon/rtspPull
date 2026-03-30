@@ -24,6 +24,22 @@ using namespace awvideodecoder;
 namespace {
 constexpr size_t kRetainedInputSafetyCount = 256;
 constexpr size_t kRetainedInputMaxBytes = 128 * 1024 * 1024;
+
+static uint64_t monotonicTimeUs()
+{
+    struct timespec ts;
+    clock_gettime(CLOCK_MONOTONIC, &ts);
+    return static_cast<uint64_t>(ts.tv_sec) * 1000000ULL + static_cast<uint64_t>(ts.tv_nsec) / 1000ULL;
+}
+
+static void accumulatePerfDuration(uint64_t elapsedUs, uint64_t& totalUs, uint64_t& maxUs)
+{
+    totalUs += elapsedUs;
+    if (elapsedUs > maxUs)
+    {
+        maxUs = elapsedUs;
+    }
+}
 }
 
 static bool findStartCode(const uint8_t* data, size_t len, size_t* scLen)
@@ -238,6 +254,25 @@ t507_vdec_node::t507_vdec_node(int chn)
     m_retainedInputBytes = 0;
     m_decodeFailStreak = 0;
     m_decodeFailCount = 0;
+    m_perfWindowStartUs = 0;
+    m_perfDecodeCalls = 0;
+    m_perfDecodeFails = 0;
+    m_perfDecodeUsTotal = 0;
+    m_perfDecodeUsMax = 0;
+    m_perfCallbackCalls = 0;
+    m_perfCallbackUsTotal = 0;
+    m_perfCallbackUsMax = 0;
+    m_perfCopyUsTotal = 0;
+    m_perfCopyUsMax = 0;
+    m_perfSyncUsTotal = 0;
+    m_perfSyncUsMax = 0;
+    const char* bypassEnv = getenv("RTSPPULL_BYPASS_VDEC_COPY");
+    m_bypassCopyProbe = (bypassEnv != nullptr && bypassEnv[0] != '\0' && strcmp(bypassEnv, "0") != 0);
+    m_bypassCopyFrameCount = 0;
+    if (m_bypassCopyProbe)
+    {
+        printf("[vdec-probe] chn=%d bypass copy/Ion enabled via RTSPPULL_BYPASS_VDEC_COPY\n", m_chn);
+    }
 
     for (int i = 0; i < T507_PLAYBACK_BUF_NUM; i++)
     {
@@ -292,6 +327,21 @@ int t507_vdec_node::create()
 
     m_bCreated = true;
     m_decodeFailStreak = 0;
+    {
+        std::lock_guard<std::mutex> perfLock(m_perfMutex);
+        m_perfWindowStartUs = 0;
+        m_perfDecodeCalls = 0;
+        m_perfDecodeFails = 0;
+        m_perfDecodeUsTotal = 0;
+        m_perfDecodeUsMax = 0;
+        m_perfCallbackCalls = 0;
+        m_perfCallbackUsTotal = 0;
+        m_perfCallbackUsMax = 0;
+        m_perfCopyUsTotal = 0;
+        m_perfCopyUsMax = 0;
+        m_perfSyncUsTotal = 0;
+        m_perfSyncUsMax = 0;
+    }
     return 0;
 }
 
@@ -315,6 +365,66 @@ int t507_vdec_node::destroy()
     }
 
     return 0;
+}
+
+void t507_vdec_node::maybeLogPerfWindowLocked(uint64_t nowUs, bool force)
+{
+    if (m_perfWindowStartUs == 0)
+    {
+        m_perfWindowStartUs = nowUs;
+    }
+
+    const uint64_t elapsedUs = nowUs - m_perfWindowStartUs;
+    if (!force && elapsedUs < 1000000ULL)
+    {
+        return;
+    }
+
+    const double elapsedMs = static_cast<double>(elapsedUs) / 1000.0;
+    const double decodeAvgMs = m_perfDecodeCalls > 0 ? static_cast<double>(m_perfDecodeUsTotal) / static_cast<double>(m_perfDecodeCalls) / 1000.0 : 0.0;
+    const double decodeMaxMs = static_cast<double>(m_perfDecodeUsMax) / 1000.0;
+    const double cbAvgMs = m_perfCallbackCalls > 0 ? static_cast<double>(m_perfCallbackUsTotal) / static_cast<double>(m_perfCallbackCalls) / 1000.0 : 0.0;
+    const double cbMaxMs = static_cast<double>(m_perfCallbackUsMax) / 1000.0;
+    const double copyAvgMs = m_perfCallbackCalls > 0 ? static_cast<double>(m_perfCopyUsTotal) / static_cast<double>(m_perfCallbackCalls) / 1000.0 : 0.0;
+    const double copyMaxMs = static_cast<double>(m_perfCopyUsMax) / 1000.0;
+    const double syncAvgMs = m_perfCallbackCalls > 0 ? static_cast<double>(m_perfSyncUsTotal) / static_cast<double>(m_perfCallbackCalls) / 1000.0 : 0.0;
+    const double syncMaxMs = static_cast<double>(m_perfSyncUsMax) / 1000.0;
+
+    printf("[vdec-prof] chn=%d bypass=%d elapsed_ms=%.1f decode=%lu fail=%lu decode_avg=%.3f decode_max=%.3f cb=%lu cb_avg=%.3f cb_max=%.3f copy_avg=%.3f copy_max=%.3f sync_avg=%.3f sync_max=%.3f\n",
+           m_chn,
+           m_bypassCopyProbe ? 1 : 0,
+           elapsedMs,
+           m_perfDecodeCalls,
+           m_perfDecodeFails,
+           decodeAvgMs,
+           decodeMaxMs,
+           m_perfCallbackCalls,
+           cbAvgMs,
+           cbMaxMs,
+           copyAvgMs,
+           copyMaxMs,
+           syncAvgMs,
+           syncMaxMs);
+
+    m_perfWindowStartUs = nowUs;
+    m_perfDecodeCalls = 0;
+    m_perfDecodeFails = 0;
+    m_perfDecodeUsTotal = 0;
+    m_perfDecodeUsMax = 0;
+    m_perfCallbackCalls = 0;
+    m_perfCallbackUsTotal = 0;
+    m_perfCallbackUsMax = 0;
+    m_perfCopyUsTotal = 0;
+    m_perfCopyUsMax = 0;
+    m_perfSyncUsTotal = 0;
+    m_perfSyncUsMax = 0;
+    const char* bypassEnv = getenv("RTSPPULL_BYPASS_VDEC_COPY");
+    m_bypassCopyProbe = (bypassEnv != nullptr && bypassEnv[0] != '\0' && strcmp(bypassEnv, "0") != 0);
+    m_bypassCopyFrameCount = 0;
+    if (m_bypassCopyProbe)
+    {
+        printf("[vdec-probe] chn=%d bypass copy/Ion enabled via RTSPPULL_BYPASS_VDEC_COPY\n", m_chn);
+    }
 }
 
 int t507_vdec_node::sendFrame(media_frame *frame)
@@ -371,7 +481,20 @@ int t507_vdec_node::sendFrame(media_frame *frame)
         }
     }
 
+    const uint64_t decodeStartUs = monotonicTimeUs();
     ret = m_decoder->decode(&pkt);
+    const uint64_t decodeEndUs = monotonicTimeUs();
+    const uint64_t decodeElapsedUs = decodeEndUs - decodeStartUs;
+    {
+        std::lock_guard<std::mutex> perfLock(m_perfMutex);
+        ++m_perfDecodeCalls;
+        accumulatePerfDuration(decodeElapsedUs, m_perfDecodeUsTotal, m_perfDecodeUsMax);
+        if (ret < 0)
+        {
+            ++m_perfDecodeFails;
+        }
+        maybeLogPerfWindowLocked(decodeEndUs);
+    }
     if (ret < 0)
     {
         ++m_decodeFailStreak;
@@ -456,6 +579,30 @@ int t507_vdec_node::decoderDataReady(awvideodecoder::AVPacket *packet)
     frame_shell frame;
     // ion_mem mem;
     static int bufIndex[MAX_CAM_NUM] = {0};
+    const uint64_t cbStartUs = monotonicTimeUs();
+    uint64_t copyElapsedUs = 0;
+    uint64_t syncElapsedUs = 0;
+
+    if (m_bypassCopyProbe)
+    {
+        ++m_bypassCopyFrameCount;
+        const uint64_t cbEndUs = monotonicTimeUs();
+        {
+            std::lock_guard<std::mutex> perfLock(m_perfMutex);
+            ++m_perfCallbackCalls;
+            accumulatePerfDuration(cbEndUs - cbStartUs, m_perfCallbackUsTotal, m_perfCallbackUsMax);
+            maybeLogPerfWindowLocked(cbEndUs);
+        }
+        if (m_bypassCopyFrameCount == 1 || (m_bypassCopyFrameCount % 60) == 0)
+        {
+            printf("[vdec-copy-bypass] chn=%d callbacks=%lu inputLen=%u pts=%lld\n",
+                   m_chn,
+                   m_bypassCopyFrameCount,
+                   packet != nullptr ? packet->dataLen0 : 0,
+                   packet != nullptr ? packet->pts : 0);
+        }
+        return 0;
+    }
 
     my_buffer::getInstance()->getVideobuffer(m_chn, T507_PREVIEW_BUF_NUM + bufIndex[m_chn], &mem);
 
@@ -463,17 +610,25 @@ int t507_vdec_node::decoderDataReady(awvideodecoder::AVPacket *packet)
 
     if (ALIGN_16B(m_height) == 1088)
     {
+        const uint64_t copyStartUs = monotonicTimeUs();
         memcpy((void *)mem.virt, packet->pAddrVir0, 1920 * 1080);                                 // Y
         memcpy((void *)mem.virt + 1920 * 1080, packet->pAddrVir0 + 1920 * 1088, 1920 * 1080 / 2); // Y
+        copyElapsedUs = monotonicTimeUs() - copyStartUs;
+        const uint64_t syncStartUs = monotonicTimeUs();
         IonDmaSync(mem.dmafd);
+        syncElapsedUs = monotonicTimeUs() - syncStartUs;
     }
     else if (ALIGN_16B(m_height) == 720)
     {
+        const uint64_t copyStartUs = monotonicTimeUs();
         for (int i = 0; i < 720; i++)
             memcpy((void *)mem.virt + i * 1920, packet->pAddrVir0 + i * 1280, 1280); // Y
         for (int i = 0; i < 720 / 2; i++)
             memcpy((void *)mem.virt + 1920 * 1080 + i * 1920, packet->pAddrVir0 + 1280 * 720 + i * 1280, 1280); // Y
+        copyElapsedUs = monotonicTimeUs() - copyStartUs;
+        const uint64_t syncStartUs = monotonicTimeUs();
         IonDmaSync(mem.dmafd);                                                                                  // 增加720p的ion同步，否则会出现动态画面撕裂
+        syncElapsedUs = monotonicTimeUs() - syncStartUs;
     }
     // 高一定要对齐 否则回放视频会有一道绿边
 
@@ -495,6 +650,16 @@ int t507_vdec_node::decoderDataReady(awvideodecoder::AVPacket *packet)
             m_retainedInputBytes -= m_retainedInputs.front()->size();
             m_retainedInputs.pop_front();
         }
+    }
+
+    const uint64_t cbEndUs = monotonicTimeUs();
+    {
+        std::lock_guard<std::mutex> perfLock(m_perfMutex);
+        ++m_perfCallbackCalls;
+        accumulatePerfDuration(cbEndUs - cbStartUs, m_perfCallbackUsTotal, m_perfCallbackUsMax);
+        accumulatePerfDuration(copyElapsedUs, m_perfCopyUsTotal, m_perfCopyUsMax);
+        accumulatePerfDuration(syncElapsedUs, m_perfSyncUsTotal, m_perfSyncUsMax);
+        maybeLogPerfWindowLocked(cbEndUs);
     }
 
     return 0;

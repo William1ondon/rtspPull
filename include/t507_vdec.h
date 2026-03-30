@@ -5,6 +5,7 @@
 #include "my_log.h"
 #include "media_frame.h"
 #include "DmaIon.h"
+#include <cstdint>
 #include <deque>
 #include <list>
 #include <memory>
@@ -41,6 +42,21 @@ private:
     size_t m_retainedInputBytes;
     unsigned int m_decodeFailStreak;
     unsigned long m_decodeFailCount;
+    std::mutex m_perfMutex;
+    uint64_t m_perfWindowStartUs;
+    unsigned long m_perfDecodeCalls;
+    unsigned long m_perfDecodeFails;
+    uint64_t m_perfDecodeUsTotal;
+    uint64_t m_perfDecodeUsMax;
+    unsigned long m_perfCallbackCalls;
+    uint64_t m_perfCallbackUsTotal;
+    uint64_t m_perfCallbackUsMax;
+    uint64_t m_perfCopyUsTotal;
+    uint64_t m_perfCopyUsMax;
+    uint64_t m_perfSyncUsTotal;
+    uint64_t m_perfSyncUsMax;
+    bool m_bypassCopyProbe;
+    unsigned long m_bypassCopyFrameCount;
 
 public:
     // t507_vdec_node(int chn, const MEDIA_VDEC_ATTR *attr);
@@ -81,4 +97,5 @@ public:
 
 private:
     char *getFrameTypeName(FrameType t);
+    void maybeLogPerfWindowLocked(uint64_t nowUs, bool force = false);
 };

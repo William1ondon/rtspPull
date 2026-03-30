@@ -1,4 +1,4 @@
-#include <unistd.h>
+﻿#include <unistd.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
@@ -12,6 +12,7 @@
 #include <signal.h>
 #include <pthread.h>
 #include <sys/syscall.h>
+#include <time.h>
 
 #include <algorithm>
 #include <array>
@@ -49,6 +50,103 @@ static std::array<rtspPuller*, DISP_CHN_NUM> g_pullers{};
 static std::array<DecodeThreadContext, DISP_CHN_NUM> g_decodeCtx{};
 
 static const uint8_t START_CODE[4] = {0x00, 0x00, 0x00, 0x01};
+
+static uint64_t monotonicTimeUs()
+{
+    struct timespec ts;
+    clock_gettime(CLOCK_MONOTONIC, &ts);
+    return static_cast<uint64_t>(ts.tv_sec) * 1000000ULL + static_cast<uint64_t>(ts.tv_nsec) / 1000ULL;
+}
+
+static void accumulatePerfDuration(uint64_t elapsedUs, uint64_t& totalUs, uint64_t& maxUs)
+{
+    totalUs += elapsedUs;
+    if (elapsedUs > maxUs)
+    {
+        maxUs = elapsedUs;
+    }
+}
+
+struct PipePerfWindow
+{
+    uint64_t windowStartUs{0};
+    size_t popCount{0};
+    size_t sendCount{0};
+    size_t sendFailCount{0};
+    size_t loadCount{0};
+    size_t nullFrameCount{0};
+    size_t preIdrDropCount{0};
+    size_t resyncDropCount{0};
+    size_t idrCount{0};
+    size_t queueDepthMax{0};
+    size_t inputBytes{0};
+    size_t outputBytes{0};
+    uint64_t popWaitUsTotal{0};
+    uint64_t popWaitUsMax{0};
+    uint64_t sendUsTotal{0};
+    uint64_t sendUsMax{0};
+    uint64_t getFrameUsTotal{0};
+    uint64_t getFrameUsMax{0};
+    uint64_t loadUsTotal{0};
+    uint64_t loadUsMax{0};
+    uint64_t loopUsTotal{0};
+    uint64_t loopUsMax{0};
+};
+
+static void maybePrintPipePerf(int chn, PipePerfWindow& perf, bool force = false)
+{
+    const uint64_t nowUs = monotonicTimeUs();
+    if (perf.windowStartUs == 0)
+    {
+        perf.windowStartUs = nowUs;
+    }
+
+    const uint64_t elapsedUs = nowUs - perf.windowStartUs;
+    if (!force && elapsedUs < 1000000ULL)
+    {
+        return;
+    }
+
+    const double elapsedMs = static_cast<double>(elapsedUs) / 1000.0;
+    const double popWaitAvgMs = perf.popCount > 0 ? static_cast<double>(perf.popWaitUsTotal) / static_cast<double>(perf.popCount) / 1000.0 : 0.0;
+    const double popWaitMaxMs = static_cast<double>(perf.popWaitUsMax) / 1000.0;
+    const double sendAvgMs = perf.sendCount > 0 ? static_cast<double>(perf.sendUsTotal) / static_cast<double>(perf.sendCount) / 1000.0 : 0.0;
+    const double sendMaxMs = static_cast<double>(perf.sendUsMax) / 1000.0;
+    const double getAvgMs = perf.sendCount > 0 ? static_cast<double>(perf.getFrameUsTotal) / static_cast<double>(perf.sendCount) / 1000.0 : 0.0;
+    const double getMaxMs = static_cast<double>(perf.getFrameUsMax) / 1000.0;
+    const double loadAvgMs = perf.loadCount > 0 ? static_cast<double>(perf.loadUsTotal) / static_cast<double>(perf.loadCount) / 1000.0 : 0.0;
+    const double loadMaxMs = static_cast<double>(perf.loadUsMax) / 1000.0;
+    const double loopAvgMs = perf.popCount > 0 ? static_cast<double>(perf.loopUsTotal) / static_cast<double>(perf.popCount) / 1000.0 : 0.0;
+    const double loopMaxMs = static_cast<double>(perf.loopUsMax) / 1000.0;
+
+    printf("[pipe-prof] chn=%d elapsed_ms=%.1f pop=%zu send=%zu send_fail=%zu load=%zu null=%zu drop_pre=%zu drop_resync=%zu idr=%zu qmax=%zu in_kb=%.1f out_kb=%.1f popwait_avg=%.3f popwait_max=%.3f send_avg=%.3f send_max=%.3f get_avg=%.3f get_max=%.3f load_avg=%.3f load_max=%.3f loop_avg=%.3f loop_max=%.3f\n",
+           chn,
+           elapsedMs,
+           perf.popCount,
+           perf.sendCount,
+           perf.sendFailCount,
+           perf.loadCount,
+           perf.nullFrameCount,
+           perf.preIdrDropCount,
+           perf.resyncDropCount,
+           perf.idrCount,
+           perf.queueDepthMax,
+           static_cast<double>(perf.inputBytes) / 1024.0,
+           static_cast<double>(perf.outputBytes) / 1024.0,
+           popWaitAvgMs,
+           popWaitMaxMs,
+           sendAvgMs,
+           sendMaxMs,
+           getAvgMs,
+           getMaxMs,
+           loadAvgMs,
+           loadMaxMs,
+           loopAvgMs,
+           loopMaxMs);
+
+    perf = PipePerfWindow{};
+    perf.windowStartUs = nowUs;
+}
 
 static void removeDumpFile(const std::string& filename)
 {
@@ -265,17 +363,29 @@ static void* listen_body(void* arg)
     size_t decoderResyncDropped = 0;
     std::deque<std::string> recentDecHistory;
     constexpr size_t kRecentDecHistoryMax = 8;
+    PipePerfWindow pipePerf;
 
     while (!bThreadShouldStop)
     {
+        const uint64_t loopStartUs = monotonicTimeUs();
+        auto finishLoop = [&](bool forceLog = false) {
+            accumulatePerfDuration(monotonicTimeUs() - loopStartUs, pipePerf.loopUsTotal, pipePerf.loopUsMax);
+            maybePrintPipePerf(chn_num, pipePerf, forceLog);
+        };
+
+        const uint64_t popWaitStartUs = monotonicTimeUs();
         if (!ctx->h264Queue->pop(pkt))
         {
+            finishLoop(true);
             break;
         }
+        ++pipePerf.popCount;
+        accumulatePerfDuration(monotonicTimeUs() - popWaitStartUs, pipePerf.popWaitUsTotal, pipePerf.popWaitUsMax);
 
         if (pkt.data == nullptr || pkt.size == 0)
         {
             delete[] pkt.data;
+            finishLoop();
             continue;
         }
 
@@ -286,6 +396,7 @@ static void* listen_body(void* arg)
         {
             sps.assign(pkt.data, pkt.data + pkt.size);
             delete[] pkt.data;
+            finishLoop();
             continue;
         }
 
@@ -293,6 +404,7 @@ static void* listen_body(void* arg)
         {
             pps.assign(pkt.data, pkt.data + pkt.size);
             delete[] pkt.data;
+            finishLoop();
             continue;
         }
 
@@ -300,6 +412,7 @@ static void* listen_body(void* arg)
         if (nalType != 1 && nalType != 5)
         {
             delete[] pkt.data;
+            finishLoop();
             continue;
         }
 
@@ -315,12 +428,19 @@ static void* listen_body(void* arg)
             if (decoderNeedResync)
             {
                 ++decoderResyncDropped;
+                ++pipePerf.resyncDropCount;
+            }
+            else
+            {
+                ++pipePerf.preIdrDropCount;
             }
             delete[] pkt.data;
+            finishLoop();
             continue;
         }
 
         const size_t queueDepthBeforeSend = ctx->h264Queue->depth();
+        pipePerf.queueDepthMax = std::max(pipePerf.queueDepthMax, queueDepthBeforeSend);
         size_t outSize = 4 + pkt.size;
         bool needExtra = false;
 
@@ -387,10 +507,21 @@ static void* listen_body(void* arg)
         //        pkt.isIDR ? 1 : 0,
         //        firstMbInSlice);
 
+        pipePerf.inputBytes += pkt.size;
+        pipePerf.outputBytes += outSize;
+        if (pkt.isIDR)
+        {
+            ++pipePerf.idrCount;
+        }
+
+        const uint64_t sendStartUs = monotonicTimeUs();
         int sendRet = ctx->vdecNode->sendFrame(&fs);
+        ++pipePerf.sendCount;
+        accumulatePerfDuration(monotonicTimeUs() - sendStartUs, pipePerf.sendUsTotal, pipePerf.sendUsMax);
 
         if (sendRet != 0)
         {
+            ++pipePerf.sendFailCount;
             if (!decoderNeedResync)
             {
                 printf("[dec-resync-arm] chn=%d sendRet=%d %s\n", chn_num, sendRet, decHistoryBuf);
@@ -411,6 +542,7 @@ static void* listen_body(void* arg)
             //        pkt.size,
             //        pkt.isIDR ? 1 : 0,
             //        firstMbInSlice);
+            finishLoop();
             continue;
         }
 
@@ -429,9 +561,13 @@ static void* listen_body(void* arg)
 
         ctx->vdecNode->retainInputBuffer(decodeBuf);
 
+        const uint64_t getFrameStartUs = monotonicTimeUs();
         media_frame* tempFrame = ctx->vdecNode->getFrame();
+        accumulatePerfDuration(monotonicTimeUs() - getFrameStartUs, pipePerf.getFrameUsTotal, pipePerf.getFrameUsMax);
         if (tempFrame == nullptr)
         {
+            ++pipePerf.nullFrameCount;
+            finishLoop();
             continue;
         }
 
@@ -439,13 +575,19 @@ static void* listen_body(void* arg)
         tempFrame->lockPacket(0, &virAddr, NULL);
         if (virAddr != nullptr)
         {
+            const uint64_t loadStartUs = monotonicTimeUs();
             CT507Graphics::getInstance()->load_texture(virAddr, IMAGEWIDTH, IMAGEHEIGHT, chn_num);
+            accumulatePerfDuration(monotonicTimeUs() - loadStartUs, pipePerf.loadUsTotal, pipePerf.loadUsMax);
+            ++pipePerf.loadCount;
         }
 
-        if(pkt.isIDR)
-            printf("I==D==R\n");
+        // if(pkt.isIDR)
+        //     printf("I==D==R\n");
+
+        finishLoop();
     }
 
+    maybePrintPipePerf(chn_num, pipePerf, true);
     return nullptr;
 }
 
