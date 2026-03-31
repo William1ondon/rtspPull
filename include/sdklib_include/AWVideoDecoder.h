@@ -1,4 +1,4 @@
-#ifndef AW_VIDEO_DECORDER_H
+﻿#ifndef AW_VIDEO_DECORDER_H
 #define AW_VIDEO_DECORDER_H
 
 /************************************************************
@@ -138,6 +138,7 @@ typedef struct AV_Packet_t_
 
     unsigned int   dataLen0;    //output:YUV -> Y buf length | input:decode length
     unsigned int   dataLen1;    //output:YUV -> C buf length
+    unsigned char* handler;     //opaque picture handle for requestPicture/releasePicture path
 } AVPacket;
 
 class AWVideoDecoderDataCallback
@@ -183,7 +184,19 @@ public:
     virtual ~AWVideoDecoder() {};
 };
 
+// Inferred from vendor implementation (newDecode.cpp). We keep these methods
+// in an extension interface so the original AWVideoDecoder vtable order stays
+// untouched for existing call sites.
+class AWVideoDecoderAsyncPicture : public AWVideoDecoder
+{
+public:
+    virtual int decodeAsync(const void* inputBuf, unsigned int inputLen) = 0;
+    virtual int requestPicture(AVPacket* picBuf) = 0;
+    virtual int releasePicture(AVPacket* picBuf) = 0;
+};
+
 }
 
 #endif
+
 

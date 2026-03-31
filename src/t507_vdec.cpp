@@ -1,4 +1,4 @@
-#include <stdio.h>
+Ôªø#include <stdio.h>
 #include <stdint.h>
 #include <unistd.h>
 #include <stdlib.h>
@@ -60,11 +60,11 @@ static bool findStartCode(const uint8_t* data, size_t len, size_t* scLen)
 
 unsigned int Ue(unsigned char *pBuff, unsigned int nLen, unsigned int &nStartBit)
 {
-    // º∆À„0bitµƒ∏ˆ ˝
+    // ËÆ°ÁÆó0bitÁöÑ‰∏™Êï∞
     unsigned int nZeroNum = 0;
     while (nStartBit < nLen * 8)
     {
-        if (pBuff[nStartBit / 8] & (0x80 >> (nStartBit % 8))) //&:∞¥Œª”Î£¨%»°”‡
+        if (pBuff[nStartBit / 8] & (0x80 >> (nStartBit % 8))) //&:Êåâ‰Ωç‰∏éÔºå%Âèñ‰Ωô
         {
             break;
         }
@@ -73,7 +73,7 @@ unsigned int Ue(unsigned char *pBuff, unsigned int nLen, unsigned int &nStartBit
     }
     nStartBit++;
 
-    // º∆À„Ω·π˚
+    // ËÆ°ÁÆóÁªìÊûú
     unsigned long dwRet = 0;
     for (unsigned int i = 0; i < nZeroNum; i++)
     {
@@ -91,7 +91,7 @@ int Se(unsigned char *pBuff, unsigned int nLen, unsigned int &nStartBit)
 {
     int UeVal = Ue(pBuff, nLen, nStartBit);
     double k = UeVal;
-    int nValue = ceil(k / 2); // ceil∫Ø ˝£∫ceil∫Ø ˝µƒ◊˜”√ ««Û≤ª–°”⁄∏¯∂® µ ˝µƒ◊Ó–°’˚ ˝°£ceil(2)=ceil(1.2)=cei(1.5)=2.00
+    int nValue = ceil(k / 2); // ceilÂáΩÊï∞ÔºöceilÂáΩÊï∞ÁöÑ‰ΩúÁî®ÊòØÊ±Ç‰∏çÂ∞è‰∫éÁªôÂÆöÂÆûÊï∞ÁöÑÊúÄÂ∞èÊï¥Êï∞„ÄÇceil(2)=ceil(1.2)=cei(1.5)=2.00
     if (UeVal % 2 == 0)
         nValue = -nValue;
     return nValue;
@@ -112,7 +112,7 @@ unsigned long u(unsigned int BitCount, unsigned char *buf, unsigned int &nStartB
     return dwRet;
 }
 
-// Ωˆ”√”⁄«¯∑÷ I/P/B£¨Ω‚Œˆ slice_type
+// ‰ªÖÁî®‰∫éÂå∫ÂàÜ I/P/BÔºåËß£Êûê slice_type
 static FrameType parseH264FrameType(const uint8_t* data, size_t len)
 {
     size_t scLen = 0;
@@ -123,9 +123,9 @@ static FrameType parseH264FrameType(const uint8_t* data, size_t len)
     uint8_t nalType = nalHdr & 0x1f;
     if (nalType == 5) return FRAME_I; // IDR
 
-    if (nalType != 1) return FRAME_UNKNOWN; // ∑« slice
+    if (nalType != 1) return FRAME_UNKNOWN; // Èùû slice
 
-    // …˙≥… RBSP£®»•µÙ emulation_prevention_three_byte£©
+    // ÁîüÊàê RBSPÔºàÂéªÊéâ emulation_prevention_three_byteÔºâ
     const uint8_t* p = data + scLen + 1;
     size_t payloadLen = len - scLen - 1;
     std::vector<uint8_t> rbsp;
@@ -239,6 +239,7 @@ t507_vdec_node::t507_vdec_node(int chn)
     m_bCreated = false;
 
     m_decoder = nullptr;
+    m_asyncDecoder = nullptr;
 
     m_bOutEn = true;
 
@@ -249,6 +250,7 @@ t507_vdec_node::t507_vdec_node(int chn)
     m_height = IMAGEHEIGHT;
 
     m_count = 0;
+    m_lastSubmittedPts = 0;
 
     m_curFrame = 0;
     m_retainedInputBytes = 0;
@@ -276,7 +278,7 @@ t507_vdec_node::t507_vdec_node(int chn)
 
     for (int i = 0; i < T507_PLAYBACK_BUF_NUM; i++)
     {
-        /* ≥ı ºªØ÷° ˝◊È “™”√’‚–©÷°»•◊∞‘ÿv4l2 ˝æ› */
+        /* ÂàùÂßãÂåñÂ∏ßÊï∞ÁªÑ Ë¶ÅÁî®Ëøô‰∫õÂ∏ßÂéªË£ÖËΩΩv4l2Êï∞ÊçÆ */
         m_frame[i] = new frame_shell();
     }
 
@@ -319,11 +321,14 @@ int t507_vdec_node::create()
     // if (ret < 0)
     {
         logError("Decoder init fail:%d \n", ret);
-        // system("reboot -f");//≤ª÷™µ¿‘≠“Ú£¨÷ªƒ‹÷ÿ∆Ù
+        // system("reboot -f");//‰∏çÁü•ÈÅìÂéüÂõ†ÔºåÂè™ËÉΩÈáçÂêØ
         return -1;
     }
     else
         logInfo("decoder init success. \n");
+
+    m_asyncDecoder = reinterpret_cast<AWVideoDecoderAsyncPicture*>(m_decoder);
+    printf("[vdec-async] chn=%d requestPicture path enabled\n", m_chn);
 
     m_bCreated = true;
     m_decodeFailStreak = 0;
@@ -350,10 +355,11 @@ int t507_vdec_node::destroy()
     if (m_decoder != NULL)
     {
         m_bCreated = false;
-        usleep(100 * 1000); // —” ± «»√ÀÕπ˝»•µƒΩ‚¬Î ”∆µ÷°Ω‚ÕÍ
+        usleep(100 * 1000); // Âª∂Êó∂ÊòØËÆ©ÈÄÅËøáÂéªÁöÑËß£Á†ÅËßÜÈ¢ëÂ∏ßËß£ÂÆå
         AWVideoDecoder::destroy(m_decoder);
 
         m_decoder = NULL;
+        m_asyncDecoder = NULL;
     }
     else
         logWarn("vdec had been destoryed already. \n");
@@ -460,7 +466,7 @@ int t507_vdec_node::sendFrame(media_frame *frame)
     pkt.dataLen0 = frame->getPacketSize(0);
     pkt.id = (++m_count);
     pkt.pts = (long long)time.tv_sec * 1000000 + time.tv_nsec / 1000;
-
+    m_lastSubmittedPts = pkt.pts;
     FrameType ft = parseH264FrameType(pkt.pAddrVir0, pkt.dataLen0);
     // logDebug("addrVir0 = %#x,  nalLen=%d,  m_decoder=%#x\n", pkt.pAddrVir0, pkt.dataLen0, m_decoder);
     // logDebug("get %s frame\n",getFrameTypeName(ft));
@@ -482,7 +488,7 @@ int t507_vdec_node::sendFrame(media_frame *frame)
     }
 
     const uint64_t decodeStartUs = monotonicTimeUs();
-    ret = m_decoder->decode(&pkt);
+    ret = (m_asyncDecoder != nullptr) ? m_asyncDecoder->decodeAsync(pkt.pAddrVir0, pkt.dataLen0) : m_decoder->decode(&pkt);
     const uint64_t decodeEndUs = monotonicTimeUs();
     const uint64_t decodeElapsedUs = decodeEndUs - decodeStartUs;
     {
@@ -569,10 +575,130 @@ void t507_vdec_node::retainInputBuffer(const std::shared_ptr<std::vector<uint8_t
 
 media_frame *t507_vdec_node::getFrame()
 {
+    if (m_asyncDecoder == nullptr)
+    {
+        return m_frame[m_curFrame];
+    }
+
+    AVPacket latestPacket;
+    memset(&latestPacket, 0, sizeof(AVPacket));
+    bool havePicture = false;
+    unsigned int drainedPictures = 0;
+
+    while (true)
+    {
+        AVPacket pic;
+        memset(&pic, 0, sizeof(AVPacket));
+        if (m_asyncDecoder->requestPicture(&pic) != 0)
+        {
+            break;
+        }
+
+        if (havePicture)
+        {
+            m_asyncDecoder->releasePicture(&latestPacket);
+            ++drainedPictures;
+        }
+
+        latestPacket = pic;
+        havePicture = true;
+    }
+
+    if (!havePicture || latestPacket.pAddrVir0 == nullptr)
+    {
+        return nullptr;
+    }
+
+    const uint64_t cbStartUs = monotonicTimeUs();
+    uint64_t copyElapsedUs = 0;
+    uint64_t syncElapsedUs = 0;
+
+    if (m_bypassCopyProbe)
+    {
+        ++m_bypassCopyFrameCount;
+        m_asyncDecoder->releasePicture(&latestPacket);
+        const uint64_t cbEndUs = monotonicTimeUs();
+        {
+            std::lock_guard<std::mutex> perfLock(m_perfMutex);
+            ++m_perfCallbackCalls;
+            accumulatePerfDuration(cbEndUs - cbStartUs, m_perfCallbackUsTotal, m_perfCallbackUsMax);
+            maybeLogPerfWindowLocked(cbEndUs);
+        }
+        if (m_bypassCopyFrameCount == 1 || (m_bypassCopyFrameCount % 60) == 0)
+        {
+            printf("[vdec-copy-bypass] chn=%d callbacks=%lu drained=%u pts=%lld\n",
+                   m_chn,
+                   m_bypassCopyFrameCount,
+                   drainedPictures,
+                   latestPacket.pts);
+        }
+        return nullptr;
+    }
+
+    static int bufIndex[MAX_CAM_NUM] = {0};
+    my_buffer::getInstance()->getVideobuffer(m_chn, T507_PREVIEW_BUF_NUM + bufIndex[m_chn], &mem);
+
+    if (ALIGN_16B(m_height) == 1088)
+    {
+        const uint64_t copyStartUs = monotonicTimeUs();
+        memcpy((void *)mem.virt, latestPacket.pAddrVir0, 1920 * 1080);
+        memcpy((void *)mem.virt + 1920 * 1080, latestPacket.pAddrVir0 + 1920 * 1088, 1920 * 1080 / 2);
+        copyElapsedUs = monotonicTimeUs() - copyStartUs;
+        const uint64_t syncStartUs = monotonicTimeUs();
+        IonDmaSync(mem.dmafd);
+        syncElapsedUs = monotonicTimeUs() - syncStartUs;
+    }
+    else if (ALIGN_16B(m_height) == 720)
+    {
+        const uint64_t copyStartUs = monotonicTimeUs();
+        for (int i = 0; i < 720; i++)
+            memcpy((void *)mem.virt + i * 1920, latestPacket.pAddrVir0 + i * 1280, 1280);
+        for (int i = 0; i < 720 / 2; i++)
+            memcpy((void *)mem.virt + 1920 * 1080 + i * 1920, latestPacket.pAddrVir0 + 1280 * 720 + i * 1280, 1280);
+        copyElapsedUs = monotonicTimeUs() - copyStartUs;
+        const uint64_t syncStartUs = monotonicTimeUs();
+        IonDmaSync(mem.dmafd);
+        syncElapsedUs = monotonicTimeUs() - syncStartUs;
+    }
+
+    const long long framePts = latestPacket.pts != 0 ? latestPacket.pts : m_lastSubmittedPts;
+    m_frame[bufIndex[m_chn]]->refill(MEDIA_PT_YUV_420SP_NV21, (void *)mem.virt, mem.phy, m_width, m_height, framePts, false);
+
+    m_curFrame = bufIndex[m_chn];
+    bufIndex[m_chn]++;
+    if (bufIndex[m_chn] == T507_PLAYBACK_BUF_NUM)
+        bufIndex[m_chn] = 0;
+
+    m_asyncDecoder->releasePicture(&latestPacket);
+
+    {
+        std::lock_guard<std::mutex> lock(m_retainedInputsMutex);
+        if (m_retainedInputs.size() > kRetainedInputSafetyCount)
+        {
+            m_retainedInputBytes -= m_retainedInputs.front()->size();
+            m_retainedInputs.pop_front();
+        }
+    }
+
+    const uint64_t cbEndUs = monotonicTimeUs();
+    {
+        std::lock_guard<std::mutex> perfLock(m_perfMutex);
+        ++m_perfCallbackCalls;
+        accumulatePerfDuration(cbEndUs - cbStartUs, m_perfCallbackUsTotal, m_perfCallbackUsMax);
+        accumulatePerfDuration(copyElapsedUs, m_perfCopyUsTotal, m_perfCopyUsMax);
+        accumulatePerfDuration(syncElapsedUs, m_perfSyncUsTotal, m_perfSyncUsMax);
+        maybeLogPerfWindowLocked(cbEndUs);
+    }
+
+    if (drainedPictures > 0)
+    {
+        printf("[vdec-drain] chn=%d dropped=%u kept_pts=%lld\n", m_chn, drainedPictures, framePts);
+    }
+
     return m_frame[m_curFrame];
 }
 
-// 1920x1080Ω‚¬Î∫Ûµ√µΩµƒYUV µº ¥Û–°1920x1088
+// 1920x1080Ëß£Á†ÅÂêéÂæóÂà∞ÁöÑYUVÂÆûÈôÖÂ§ßÂ∞è1920x1088
 int t507_vdec_node::decoderDataReady(awvideodecoder::AVPacket *packet)
 {
     int ret = 0;
@@ -627,10 +753,10 @@ int t507_vdec_node::decoderDataReady(awvideodecoder::AVPacket *packet)
             memcpy((void *)mem.virt + 1920 * 1080 + i * 1920, packet->pAddrVir0 + 1280 * 720 + i * 1280, 1280); // Y
         copyElapsedUs = monotonicTimeUs() - copyStartUs;
         const uint64_t syncStartUs = monotonicTimeUs();
-        IonDmaSync(mem.dmafd);                                                                                  // ‘ˆº”720pµƒionÕ¨≤Ω£¨∑Ò‘Úª·≥ˆœ÷∂ØÃ¨ª≠√ÊÀ∫¡—
+        IonDmaSync(mem.dmafd);                                                                                  // Â¢ûÂä†720pÁöÑionÂêåÊ≠•ÔºåÂê¶Âàô‰ºöÂá∫Áé∞Âä®ÊÄÅÁîªÈù¢ÊíïË£Ç
         syncElapsedUs = monotonicTimeUs() - syncStartUs;
     }
-    // ∏ﬂ“ª∂®“™∂‘∆Î ∑Ò‘Úªÿ∑≈ ”∆µª·”–“ªµ¿¬Ã±ﬂ
+    // È´ò‰∏ÄÂÆöË¶ÅÂØπÈΩê Âê¶ÂàôÂõûÊîæËßÜÈ¢ë‰ºöÊúâ‰∏ÄÈÅìÁªøËæπ
 
     // frame.refill(MEDIA_PT_YUV_420SP_NV21, (void *)mem.virt,mem.phy, m_width, m_height, packet->pts, false);
     m_frame[bufIndex[m_chn]]->refill(MEDIA_PT_YUV_420SP_NV21, (void *)mem.virt, mem.phy, m_width, m_height, packet->pts, false);
@@ -664,3 +790,5 @@ int t507_vdec_node::decoderDataReady(awvideodecoder::AVPacket *packet)
 
     return 0;
 }
+
+
