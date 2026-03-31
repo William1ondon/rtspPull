@@ -266,6 +266,14 @@ t507_vdec_node::t507_vdec_node(int chn)
     m_perfCopyUsMax = 0;
     m_perfSyncUsTotal = 0;
     m_perfSyncUsMax = 0;
+    m_perfCallbackInsideDecodeCalls = 0;
+    m_perfCallbackOutsideDecodeCalls = 0;
+    m_perfDecodeOnlyUsTotal = 0;
+    m_perfDecodeOnlyUsMax = 0;
+    m_perfDecodeNestedCallbackUsTotal = 0;
+    m_perfDecodeNestedCallbackUsMax = 0;
+    m_decodeTimingActive = false;
+    m_decodeTimingCallbackUs = 0;
     const char* bypassEnv = getenv("RTSPPULL_BYPASS_VDEC_COPY");
     m_bypassCopyProbe = (bypassEnv != nullptr && bypassEnv[0] != '\0' && strcmp(bypassEnv, "0") != 0);
     m_bypassCopyFrameCount = 0;
@@ -341,6 +349,14 @@ int t507_vdec_node::create()
         m_perfCopyUsMax = 0;
         m_perfSyncUsTotal = 0;
         m_perfSyncUsMax = 0;
+        m_perfCallbackInsideDecodeCalls = 0;
+        m_perfCallbackOutsideDecodeCalls = 0;
+        m_perfDecodeOnlyUsTotal = 0;
+        m_perfDecodeOnlyUsMax = 0;
+        m_perfDecodeNestedCallbackUsTotal = 0;
+        m_perfDecodeNestedCallbackUsMax = 0;
+        m_decodeTimingActive = false;
+        m_decodeTimingCallbackUs = 0;
     }
     return 0;
 }
@@ -383,6 +399,10 @@ void t507_vdec_node::maybeLogPerfWindowLocked(uint64_t nowUs, bool force)
     const double elapsedMs = static_cast<double>(elapsedUs) / 1000.0;
     const double decodeAvgMs = m_perfDecodeCalls > 0 ? static_cast<double>(m_perfDecodeUsTotal) / static_cast<double>(m_perfDecodeCalls) / 1000.0 : 0.0;
     const double decodeMaxMs = static_cast<double>(m_perfDecodeUsMax) / 1000.0;
+    const double decodeOnlyAvgMs = m_perfDecodeCalls > 0 ? static_cast<double>(m_perfDecodeOnlyUsTotal) / static_cast<double>(m_perfDecodeCalls) / 1000.0 : 0.0;
+    const double decodeOnlyMaxMs = static_cast<double>(m_perfDecodeOnlyUsMax) / 1000.0;
+    const double inDecodeCbAvgMs = m_perfDecodeCalls > 0 ? static_cast<double>(m_perfDecodeNestedCallbackUsTotal) / static_cast<double>(m_perfDecodeCalls) / 1000.0 : 0.0;
+    const double inDecodeCbMaxMs = static_cast<double>(m_perfDecodeNestedCallbackUsMax) / 1000.0;
     const double cbAvgMs = m_perfCallbackCalls > 0 ? static_cast<double>(m_perfCallbackUsTotal) / static_cast<double>(m_perfCallbackCalls) / 1000.0 : 0.0;
     const double cbMaxMs = static_cast<double>(m_perfCallbackUsMax) / 1000.0;
     const double copyAvgMs = m_perfCallbackCalls > 0 ? static_cast<double>(m_perfCopyUsTotal) / static_cast<double>(m_perfCallbackCalls) / 1000.0 : 0.0;
@@ -390,7 +410,7 @@ void t507_vdec_node::maybeLogPerfWindowLocked(uint64_t nowUs, bool force)
     const double syncAvgMs = m_perfCallbackCalls > 0 ? static_cast<double>(m_perfSyncUsTotal) / static_cast<double>(m_perfCallbackCalls) / 1000.0 : 0.0;
     const double syncMaxMs = static_cast<double>(m_perfSyncUsMax) / 1000.0;
 
-    printf("[vdec-prof] chn=%d bypass=%d elapsed_ms=%.1f decode=%lu fail=%lu decode_avg=%.3f decode_max=%.3f cb=%lu cb_avg=%.3f cb_max=%.3f copy_avg=%.3f copy_max=%.3f sync_avg=%.3f sync_max=%.3f\n",
+    printf("[vdec-prof] chn=%d bypass=%d elapsed_ms=%.1f decode=%lu fail=%lu decode_avg=%.3f decode_max=%.3f decode_only_avg=%.3f decode_only_max=%.3f in_decode_cb_avg=%.3f in_decode_cb_max=%.3f cb=%lu cb_in=%lu cb_out=%lu cb_avg=%.3f cb_max=%.3f copy_avg=%.3f copy_max=%.3f sync_avg=%.3f sync_max=%.3f\n",
            m_chn,
            m_bypassCopyProbe ? 1 : 0,
            elapsedMs,
@@ -398,7 +418,13 @@ void t507_vdec_node::maybeLogPerfWindowLocked(uint64_t nowUs, bool force)
            m_perfDecodeFails,
            decodeAvgMs,
            decodeMaxMs,
+           decodeOnlyAvgMs,
+           decodeOnlyMaxMs,
+           inDecodeCbAvgMs,
+           inDecodeCbMaxMs,
            m_perfCallbackCalls,
+           m_perfCallbackInsideDecodeCalls,
+           m_perfCallbackOutsideDecodeCalls,
            cbAvgMs,
            cbMaxMs,
            copyAvgMs,
@@ -418,6 +444,12 @@ void t507_vdec_node::maybeLogPerfWindowLocked(uint64_t nowUs, bool force)
     m_perfCopyUsMax = 0;
     m_perfSyncUsTotal = 0;
     m_perfSyncUsMax = 0;
+    m_perfCallbackInsideDecodeCalls = 0;
+    m_perfCallbackOutsideDecodeCalls = 0;
+    m_perfDecodeOnlyUsTotal = 0;
+    m_perfDecodeOnlyUsMax = 0;
+    m_perfDecodeNestedCallbackUsTotal = 0;
+    m_perfDecodeNestedCallbackUsMax = 0;
     const char* bypassEnv = getenv("RTSPPULL_BYPASS_VDEC_COPY");
     m_bypassCopyProbe = (bypassEnv != nullptr && bypassEnv[0] != '\0' && strcmp(bypassEnv, "0") != 0);
     m_bypassCopyFrameCount = 0;
@@ -481,14 +513,25 @@ int t507_vdec_node::sendFrame(media_frame *frame)
         }
     }
 
+    {
+        std::lock_guard<std::mutex> perfLock(m_perfMutex);
+        m_decodeTimingActive = true;
+        m_decodeTimingCallbackUs = 0;
+    }
     const uint64_t decodeStartUs = monotonicTimeUs();
     ret = m_decoder->decode(&pkt);
     const uint64_t decodeEndUs = monotonicTimeUs();
     const uint64_t decodeElapsedUs = decodeEndUs - decodeStartUs;
     {
         std::lock_guard<std::mutex> perfLock(m_perfMutex);
+        const uint64_t nestedCallbackUs = m_decodeTimingCallbackUs;
+        const uint64_t decodeOnlyUs = decodeElapsedUs >= nestedCallbackUs ? (decodeElapsedUs - nestedCallbackUs) : 0;
+        m_decodeTimingActive = false;
+        m_decodeTimingCallbackUs = 0;
         ++m_perfDecodeCalls;
         accumulatePerfDuration(decodeElapsedUs, m_perfDecodeUsTotal, m_perfDecodeUsMax);
+        accumulatePerfDuration(nestedCallbackUs, m_perfDecodeNestedCallbackUsTotal, m_perfDecodeNestedCallbackUsMax);
+        accumulatePerfDuration(decodeOnlyUs, m_perfDecodeOnlyUsTotal, m_perfDecodeOnlyUsMax);
         if (ret < 0)
         {
             ++m_perfDecodeFails;
@@ -589,8 +632,18 @@ int t507_vdec_node::decoderDataReady(awvideodecoder::AVPacket *packet)
         const uint64_t cbEndUs = monotonicTimeUs();
         {
             std::lock_guard<std::mutex> perfLock(m_perfMutex);
+            const uint64_t callbackElapsedUs = cbEndUs - cbStartUs;
             ++m_perfCallbackCalls;
-            accumulatePerfDuration(cbEndUs - cbStartUs, m_perfCallbackUsTotal, m_perfCallbackUsMax);
+            if (m_decodeTimingActive)
+            {
+                ++m_perfCallbackInsideDecodeCalls;
+                m_decodeTimingCallbackUs += callbackElapsedUs;
+            }
+            else
+            {
+                ++m_perfCallbackOutsideDecodeCalls;
+            }
+            accumulatePerfDuration(callbackElapsedUs, m_perfCallbackUsTotal, m_perfCallbackUsMax);
             maybeLogPerfWindowLocked(cbEndUs);
         }
         if (m_bypassCopyFrameCount == 1 || (m_bypassCopyFrameCount % 60) == 0)
@@ -655,8 +708,18 @@ int t507_vdec_node::decoderDataReady(awvideodecoder::AVPacket *packet)
     const uint64_t cbEndUs = monotonicTimeUs();
     {
         std::lock_guard<std::mutex> perfLock(m_perfMutex);
+        const uint64_t callbackElapsedUs = cbEndUs - cbStartUs;
         ++m_perfCallbackCalls;
-        accumulatePerfDuration(cbEndUs - cbStartUs, m_perfCallbackUsTotal, m_perfCallbackUsMax);
+        if (m_decodeTimingActive)
+        {
+            ++m_perfCallbackInsideDecodeCalls;
+            m_decodeTimingCallbackUs += callbackElapsedUs;
+        }
+        else
+        {
+            ++m_perfCallbackOutsideDecodeCalls;
+        }
+        accumulatePerfDuration(callbackElapsedUs, m_perfCallbackUsTotal, m_perfCallbackUsMax);
         accumulatePerfDuration(copyElapsedUs, m_perfCopyUsTotal, m_perfCopyUsMax);
         accumulatePerfDuration(syncElapsedUs, m_perfSyncUsTotal, m_perfSyncUsMax);
         maybeLogPerfWindowLocked(cbEndUs);

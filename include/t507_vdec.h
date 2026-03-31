@@ -55,6 +55,14 @@ private:
     uint64_t m_perfCopyUsMax;
     uint64_t m_perfSyncUsTotal;
     uint64_t m_perfSyncUsMax;
+    unsigned long m_perfCallbackInsideDecodeCalls;
+    unsigned long m_perfCallbackOutsideDecodeCalls;
+    uint64_t m_perfDecodeOnlyUsTotal;
+    uint64_t m_perfDecodeOnlyUsMax;
+    uint64_t m_perfDecodeNestedCallbackUsTotal;
+    uint64_t m_perfDecodeNestedCallbackUsMax;
+    bool m_decodeTimingActive;
+    uint64_t m_decodeTimingCallbackUs;
     bool m_bypassCopyProbe;
     unsigned long m_bypassCopyFrameCount;
 
