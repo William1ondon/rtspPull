@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.10)
+﻿cmake_minimum_required(VERSION 3.10)
 
 set(APP_NAME vdec_test)
 set(SDK_DIR /home/flork/T5_SDK/HD250_RTSP)
@@ -66,6 +66,7 @@ target_link_libraries(${APP_NAME} venc_base)
 target_link_libraries(${APP_NAME} sdk_memory)
 target_link_libraries(${APP_NAME} cdx_ion)
 target_link_libraries(${APP_NAME} sdk_decoder)
+target_link_libraries(${APP_NAME} ${PROJECT_SOURCE_DIR}/libs/lib64/libsdk_g2d.so)
 target_link_libraries(${APP_NAME} venc_codec)
 target_link_libraries(${APP_NAME} pthread)
 target_link_libraries(${APP_NAME} 
@@ -73,3 +74,4 @@ target_link_libraries(${APP_NAME}
     ${PROJECT_SOURCE_DIR}/libs/libgroupsock.a
     ${PROJECT_SOURCE_DIR}/libs/libUsageEnvironment.a
     ${PROJECT_SOURCE_DIR}/libs/libBasicUsageEnvironment.a)
+

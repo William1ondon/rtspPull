@@ -16,6 +16,7 @@
 #include <errno.h>
 
 #include "t507_vdec.h"
+#include "G2dApi.h"
 
 #define ALIGN_16B(x) (((x) + (15)) & ~(15))
 
@@ -266,9 +267,16 @@ t507_vdec_node::t507_vdec_node(int chn)
     m_perfCopyUsMax = 0;
     m_perfSyncUsTotal = 0;
     m_perfSyncUsMax = 0;
-    const char* bypassEnv = getenv("RTSPPULL_BYPASS_VDEC_COPY");
+    const char *bypassEnv = getenv("RTSPPULL_BYPASS_VDEC_COPY");
     m_bypassCopyProbe = (bypassEnv != nullptr && bypassEnv[0] != '\0' && strcmp(bypassEnv, "0") != 0);
     m_bypassCopyFrameCount = 0;
+    const char *g2dEnv = getenv("RTSPPULL_USE_G2D_COPY");
+    m_useG2dCopy = !(g2dEnv != nullptr && g2dEnv[0] != '\0' && strcmp(g2dEnv, "0") == 0);
+    m_g2dHandle = -1;
+    m_perfG2dCalls = 0;
+    m_perfG2dFails = 0;
+    m_perfG2dUsTotal = 0;
+    m_perfG2dUsMax = 0;
     if (m_bypassCopyProbe)
     {
         printf("[vdec-probe] chn=%d bypass copy/Ion enabled via RTSPPULL_BYPASS_VDEC_COPY\n", m_chn);
@@ -325,6 +333,34 @@ int t507_vdec_node::create()
     else
         logInfo("decoder init success. \n");
 
+    const char *g2dEnv = getenv("RTSPPULL_USE_G2D_COPY");
+    printf("[vdec-g2d] chn=%d requested=%d env=%s\n",
+           m_chn,
+           m_useG2dCopy ? 1 : 0,
+           g2dEnv != nullptr ? g2dEnv : "<unset>");
+    fflush(stdout);
+
+    if (m_useG2dCopy)
+    {
+        m_g2dHandle = g2dapi::g2dInit();
+        if (m_g2dHandle < 0)
+        {
+            m_useG2dCopy = false;
+            printf("[vdec-g2d] chn=%d init failed, fallback to memcpy\n", m_chn);
+            fflush(stdout);
+        }
+        else
+        {
+            printf("[vdec-g2d] chn=%d enabled handle=%d\n", m_chn, m_g2dHandle);
+            fflush(stdout);
+        }
+    }
+    else
+    {
+        printf("[vdec-g2d] chn=%d disabled by RTSPPULL_USE_G2D_COPY\n", m_chn);
+        fflush(stdout);
+    }
+
     m_bCreated = true;
     m_decodeFailStreak = 0;
     {
@@ -341,6 +377,10 @@ int t507_vdec_node::create()
         m_perfCopyUsMax = 0;
         m_perfSyncUsTotal = 0;
         m_perfSyncUsMax = 0;
+        m_perfG2dCalls = 0;
+        m_perfG2dFails = 0;
+        m_perfG2dUsTotal = 0;
+        m_perfG2dUsMax = 0;
     }
     return 0;
 }
@@ -351,9 +391,15 @@ int t507_vdec_node::destroy()
     {
         m_bCreated = false;
         usleep(100 * 1000); // 延时是让送过去的解码视频帧解完
+        if (m_g2dHandle >= 0)
+        {
+            g2dapi::g2dUnit(m_g2dHandle);
+            m_g2dHandle = -1;
+        }
         AWVideoDecoder::destroy(m_decoder);
 
         m_decoder = NULL;
+        m_g2dHandle = -1;
     }
     else
         logWarn("vdec had been destoryed already. \n");
@@ -389,10 +435,13 @@ void t507_vdec_node::maybeLogPerfWindowLocked(uint64_t nowUs, bool force)
     const double copyMaxMs = static_cast<double>(m_perfCopyUsMax) / 1000.0;
     const double syncAvgMs = m_perfCallbackCalls > 0 ? static_cast<double>(m_perfSyncUsTotal) / static_cast<double>(m_perfCallbackCalls) / 1000.0 : 0.0;
     const double syncMaxMs = static_cast<double>(m_perfSyncUsMax) / 1000.0;
+    const double g2dAvgMs = m_perfG2dCalls > 0 ? static_cast<double>(m_perfG2dUsTotal) / static_cast<double>(m_perfG2dCalls) / 1000.0 : 0.0;
+    const double g2dMaxMs = static_cast<double>(m_perfG2dUsMax) / 1000.0;
 
-    printf("[vdec-prof] chn=%d bypass=%d elapsed_ms=%.1f decode=%lu fail=%lu decode_avg=%.3f decode_max=%.3f cb=%lu cb_avg=%.3f cb_max=%.3f copy_avg=%.3f copy_max=%.3f sync_avg=%.3f sync_max=%.3f\n",
+    printf("[vdec-prof] chn=%d bypass=%d g2d=%d elapsed_ms=%.1f decode=%lu fail=%lu decode_avg=%.3f decode_max=%.3f cb=%lu cb_avg=%.3f cb_max=%.3f copy_avg=%.3f copy_max=%.3f sync_avg=%.3f sync_max=%.3f g2d_calls=%lu g2d_fail=%lu g2d_avg=%.3f g2d_max=%.3f\n",
            m_chn,
            m_bypassCopyProbe ? 1 : 0,
+           m_useG2dCopy ? 1 : 0,
            elapsedMs,
            m_perfDecodeCalls,
            m_perfDecodeFails,
@@ -404,7 +453,11 @@ void t507_vdec_node::maybeLogPerfWindowLocked(uint64_t nowUs, bool force)
            copyAvgMs,
            copyMaxMs,
            syncAvgMs,
-           syncMaxMs);
+           syncMaxMs,
+           m_perfG2dCalls,
+           m_perfG2dFails,
+           g2dAvgMs,
+           g2dMaxMs);
 
     m_perfWindowStartUs = nowUs;
     m_perfDecodeCalls = 0;
@@ -421,6 +474,10 @@ void t507_vdec_node::maybeLogPerfWindowLocked(uint64_t nowUs, bool force)
     const char* bypassEnv = getenv("RTSPPULL_BYPASS_VDEC_COPY");
     m_bypassCopyProbe = (bypassEnv != nullptr && bypassEnv[0] != '\0' && strcmp(bypassEnv, "0") != 0);
     m_bypassCopyFrameCount = 0;
+    m_perfG2dCalls = 0;
+    m_perfG2dFails = 0;
+    m_perfG2dUsTotal = 0;
+    m_perfG2dUsMax = 0;
     if (m_bypassCopyProbe)
     {
         printf("[vdec-probe] chn=%d bypass copy/Ion enabled via RTSPPULL_BYPASS_VDEC_COPY\n", m_chn);
@@ -604,31 +661,85 @@ int t507_vdec_node::decoderDataReady(awvideodecoder::AVPacket *packet)
         return 0;
     }
 
-    my_buffer::getInstance()->getVideobuffer(m_chn, T507_PREVIEW_BUF_NUM + bufIndex[m_chn], &mem);
+        my_buffer::getInstance()->getVideobuffer(m_chn, T507_PREVIEW_BUF_NUM + bufIndex[m_chn], &mem);
 
-    // logWarn("chn%d before memcpy,bufIndex num = %d, mem.virt = %ld\n",m_chn,bufIndex[m_chn],mem.virt);
-
-    if (ALIGN_16B(m_height) == 1088)
+    bool usedG2d = false;
+    if (m_useG2dCopy && m_g2dHandle >= 0)
     {
-        const uint64_t copyStartUs = monotonicTimeUs();
-        memcpy((void *)mem.virt, packet->pAddrVir0, 1920 * 1080);                                 // Y
-        memcpy((void *)mem.virt + 1920 * 1080, packet->pAddrVir0 + 1920 * 1088, 1920 * 1080 / 2); // Y
-        copyElapsedUs = monotonicTimeUs() - copyStartUs;
-        const uint64_t syncStartUs = monotonicTimeUs();
-        IonDmaSync(mem.dmafd);
-        syncElapsedUs = monotonicTimeUs() - syncStartUs;
+        const uint64_t g2dStartUs = monotonicTimeUs();
+        const int g2dRet = g2dapi::g2dFormatConv(m_g2dHandle,
+                                                 packet->pAddrVir0,
+                                                 g2dapi::G2D_FORMAT_YUV420UVC_V1U1V0U0,
+                                                 m_width,
+                                                 ALIGN_16B(m_height),
+                                                 0,
+                                                 0,
+                                                 m_width,
+                                                 m_height,
+                                                 (void*)mem.virt,
+                                                 g2dapi::G2D_FORMAT_YUV420UVC_V1U1V0U0,
+                                                 IMAGEWIDTH,
+                                                 IMAGEHEIGHT,
+                                                 0,
+                                                 0,
+                                                 m_width,
+                                                 m_height);
+        copyElapsedUs = monotonicTimeUs() - g2dStartUs;
+        {
+            std::lock_guard<std::mutex> perfLock(m_perfMutex);
+            ++m_perfG2dCalls;
+            accumulatePerfDuration(copyElapsedUs, m_perfG2dUsTotal, m_perfG2dUsMax);
+            if (g2dRet != 0)
+            {
+                ++m_perfG2dFails;
+            }
+        }
+
+        if (g2dRet == 0)
+        {
+            usedG2d = true;
+            const uint64_t syncStartUs = monotonicTimeUs();
+            IonDmaSync(mem.dmafd);
+            syncElapsedUs = monotonicTimeUs() - syncStartUs;
+        }
+        else
+        {
+            m_useG2dCopy = false;
+            printf("[vdec-g2d] chn=%d formatConv failed ret=%d src=%dx%d dst=%dx%d, fallback to memcpy\n",
+                   m_chn,
+                   g2dRet,
+                   m_width,
+                   ALIGN_16B(m_height),
+                   IMAGEWIDTH,
+                   IMAGEHEIGHT);
+            fflush(stdout);
+        }
     }
-    else if (ALIGN_16B(m_height) == 720)
+
+    if (!usedG2d)
     {
-        const uint64_t copyStartUs = monotonicTimeUs();
-        for (int i = 0; i < 720; i++)
-            memcpy((void *)mem.virt + i * 1920, packet->pAddrVir0 + i * 1280, 1280); // Y
-        for (int i = 0; i < 720 / 2; i++)
-            memcpy((void *)mem.virt + 1920 * 1080 + i * 1920, packet->pAddrVir0 + 1280 * 720 + i * 1280, 1280); // Y
-        copyElapsedUs = monotonicTimeUs() - copyStartUs;
-        const uint64_t syncStartUs = monotonicTimeUs();
-        IonDmaSync(mem.dmafd);                                                                                  // 增加720p的ion同步，否则会出现动态画面撕裂
-        syncElapsedUs = monotonicTimeUs() - syncStartUs;
+        if (ALIGN_16B(m_height) == 1088)
+        {
+            const uint64_t copyStartUs = monotonicTimeUs();
+            memcpy((void *)mem.virt, packet->pAddrVir0, 1920 * 1080);
+            memcpy((void *)mem.virt + 1920 * 1080, packet->pAddrVir0 + 1920 * 1088, 1920 * 1080 / 2);
+            copyElapsedUs = monotonicTimeUs() - copyStartUs;
+            const uint64_t syncStartUs = monotonicTimeUs();
+            IonDmaSync(mem.dmafd);
+            syncElapsedUs = monotonicTimeUs() - syncStartUs;
+        }
+        else if (ALIGN_16B(m_height) == 720)
+        {
+            const uint64_t copyStartUs = monotonicTimeUs();
+            for (int i = 0; i < 720; i++)
+                memcpy((void *)mem.virt + i * 1920, packet->pAddrVir0 + i * 1280, 1280);
+            for (int i = 0; i < 720 / 2; i++)
+                memcpy((void *)mem.virt + 1920 * 1080 + i * 1920, packet->pAddrVir0 + 1280 * 720 + i * 1280, 1280);
+            copyElapsedUs = monotonicTimeUs() - copyStartUs;
+            const uint64_t syncStartUs = monotonicTimeUs();
+            IonDmaSync(mem.dmafd);
+            syncElapsedUs = monotonicTimeUs() - syncStartUs;
+        }
     }
     // 高一定要对齐 否则回放视频会有一道绿边
 
@@ -664,3 +775,4 @@ int t507_vdec_node::decoderDataReady(awvideodecoder::AVPacket *packet)
 
     return 0;
 }
+
