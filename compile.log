@@ -1,0 +1,46 @@
+> make
+Scanning dependencies of target vdec_test
+[  8%] Building CXX object CMakeFiles/vdec_test.dir/src/t507_vdec.cpp.o
+/home/flork/workspace/rtspPull/src/t507_vdec.cpp:154:1: error: expected initializer before ‘static’
+ static bool findStartCode(const uint8_t* data, size_t len, size_t* scLen)
+ ^~~~~~
+/home/flork/workspace/rtspPull/src/t507_vdec.cpp: In function ‘FrameType parseH264FrameType(const uint8_t*, size_t)’:
+/home/flork/workspace/rtspPull/src/t507_vdec.cpp:228:10: error: ‘findStartCode’ was not declared in this scope
+     if (!findStartCode(data, len, &scLen)) return FRAME_UNKNOWN;
+          ^~~~~~~~~~~~~
+/home/flork/workspace/rtspPull/src/t507_vdec.cpp: In member function ‘char* t507_vdec_node::getFrameTypeName(FrameType)’:
+/home/flork/workspace/rtspPull/src/t507_vdec.cpp:411:20: warning: ISO C++ forbids converting a string constant to ‘char*’ [-Wwrite-strings]
+             return "I";
+                    ^~~
+/home/flork/workspace/rtspPull/src/t507_vdec.cpp:413:20: warning: ISO C++ forbids converting a string constant to ‘char*’ [-Wwrite-strings]
+             return "P";
+                    ^~~
+/home/flork/workspace/rtspPull/src/t507_vdec.cpp:415:20: warning: ISO C++ forbids converting a string constant to ‘char*’ [-Wwrite-strings]
+             return "B";
+                    ^~~
+/home/flork/workspace/rtspPull/src/t507_vdec.cpp:417:20: warning: ISO C++ forbids converting a string constant to ‘char*’ [-Wwrite-strings]
+             return "U";
+                    ^~~
+/home/flork/workspace/rtspPull/src/t507_vdec.cpp: In member function ‘int t507_vdec_node::sendFrame(media_frame*)’:
+/home/flork/workspace/rtspPull/src/t507_vdec.cpp:681:13: error: ‘findStartCode’ was not declared in this scope
+         if (findStartCode(pkt.pAddrVir0, pkt.dataLen0, &scLen) && pkt.dataLen0 > scLen)
+             ^~~~~~~~~~~~~
+/home/flork/workspace/rtspPull/src/t507_vdec.cpp: In member function ‘virtual int t507_vdec_node::decoderDataReady(awvideodecoder::AVPacket*)’:
+/home/flork/workspace/rtspPull/src/t507_vdec.cpp:843:37: warning: pointer of type ‘void *’ used in arithmetic [-Wpointer-arith]
+             memcpy((void *)mem.virt + 1920 * 1080, packet->pAddrVir0 + 1920 * 1088, 1920 * 1080 / 2);
+                    ~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~
+/home/flork/workspace/rtspPull/src/t507_vdec.cpp:853:41: warning: pointer of type ‘void *’ used in arithmetic [-Wpointer-arith]
+                 memcpy((void *)mem.virt + i * 1920, packet->pAddrVir0 + i * 1280, 1280);
+                        ~~~~~~~~~~~~~~~~~^~~~~~~~~~
+/home/flork/workspace/rtspPull/src/t507_vdec.cpp:855:41: warning: pointer of type ‘void *’ used in arithmetic [-Wpointer-arith]
+                 memcpy((void *)mem.virt + 1920 * 1080 + i * 1920, packet->pAddrVir0 + 1280 * 720 + i * 1280, 1280);
+                        ~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~
+/home/flork/workspace/rtspPull/src/t507_vdec.cpp:855:55: warning: pointer of type ‘void *’ used in arithmetic [-Wpointer-arith]
+                 memcpy((void *)mem.virt + 1920 * 1080 + i * 1920, packet->pAddrVir0 + 1280 * 720 + i * 1280, 1280);
+                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~
+CMakeFiles/vdec_test.dir/build.make:198: recipe for target 'CMakeFiles/vdec_test.dir/src/t507_vdec.cpp.o' failed
+make[2]: *** [CMakeFiles/vdec_test.dir/src/t507_vdec.cpp.o] Error 1
+CMakeFiles/Makefile2:94: recipe for target 'CMakeFiles/vdec_test.dir/all' failed
+make[1]: *** [CMakeFiles/vdec_test.dir/all] Error 2
+Makefile:102: recipe for target 'all' failed
+make: *** [all] Error 2
