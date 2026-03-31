@@ -19,6 +19,7 @@
 #include <unistd.h>
 #include <sys/mman.h>
 #include <time.h>
+#include <stdlib.h>
 #include "my_opengl.h"
 #include "sunxiMemInterface.h"
 #include "sv_common.h"
@@ -382,6 +383,9 @@ CT507Graphics::CT507Graphics()
     pthread_mutex_init(&RenderMutex, NULL);
     pthread_cond_init(&RenderCond, NULL);
     bRender = false;
+    bRenderBusy = false;
+    const char* glFinishEnv = getenv("RTSPPULL_GL_FINISH");
+    m_useGlFinish = (glFinishEnv != nullptr && glFinishEnv[0] != '\0' && strcmp(glFinishEnv, "0") != 0);
 }
 
 CT507Graphics::~CT507Graphics()
@@ -393,6 +397,14 @@ CT507Graphics *CT507Graphics::getInstance()
     if (singleGraphics == NULL)
         singleGraphics = new CT507Graphics;
     return singleGraphics;
+}
+
+bool CT507Graphics::isRenderBusyOrPending()
+{
+    pthread_mutex_lock(&RenderMutex);
+    const bool busyOrPending = bRender || bRenderBusy;
+    pthread_mutex_unlock(&RenderMutex);
+    return busyOrPending;
 }
 
 int CT507Graphics::readShaderSource(string &vShader, string &fShader, int s32Index)
@@ -551,6 +563,7 @@ int CT507Graphics::initEGL()
         return -1;
     }
     eglSwapInterval(m_egl.egl_display, 1);
+    printf("[render-opt] glFinish=%d\n", m_useGlFinish ? 1 : 0);
 
     return 0;
 }
@@ -760,6 +773,7 @@ int CT507Graphics::picDraw()
         pthread_cond_wait(&RenderCond, &RenderMutex);
     }
     bRender = false;
+    bRenderBusy = true;
     pthread_mutex_unlock(&RenderMutex);
 
     startTime = sv_safeFunc_GetTimeTick();
@@ -777,15 +791,21 @@ int CT507Graphics::picDraw()
 #else
     fullScreenMode();
 #endif
-    eglSwapInterval(m_egl.egl_display, 1);
     const uint64_t drawWorkDoneUs = monotonicTimeUs();
 
     const uint64_t swapStartUs = monotonicTimeUs();
     eglSwapBuffers(m_egl.egl_display, m_egl.egl_surface);
     const uint64_t swapEndUs = monotonicTimeUs();
     const uint64_t finishStartUs = swapEndUs;
-    glFinish();
+    if (m_useGlFinish)
+    {
+        glFinish();
+    }
     const uint64_t totalEndUs = monotonicTimeUs();
+
+    pthread_mutex_lock(&RenderMutex);
+    bRenderBusy = false;
+    pthread_mutex_unlock(&RenderMutex);
 
     endTime = sv_safeFunc_GetTimeTick();
     // printf("===============> Render time = %lld ms\n", endTime - startTime);

@@ -266,9 +266,13 @@ t507_vdec_node::t507_vdec_node(int chn)
     m_perfCopyUsMax = 0;
     m_perfSyncUsTotal = 0;
     m_perfSyncUsMax = 0;
+    m_perfDisplaySkipCount = 0;
     const char* bypassEnv = getenv("RTSPPULL_BYPASS_VDEC_COPY");
     m_bypassCopyProbe = (bypassEnv != nullptr && bypassEnv[0] != '\0' && strcmp(bypassEnv, "0") != 0);
     m_bypassCopyFrameCount = 0;
+    m_displaySkipCount = 0;
+    m_dropDisplayForNextDecode = false;
+    m_hasFreshFrame = false;
     if (m_bypassCopyProbe)
     {
         printf("[vdec-probe] chn=%d bypass copy/Ion enabled via RTSPPULL_BYPASS_VDEC_COPY\n", m_chn);
@@ -327,6 +331,8 @@ int t507_vdec_node::create()
 
     m_bCreated = true;
     m_decodeFailStreak = 0;
+    m_dropDisplayForNextDecode = false;
+    m_hasFreshFrame = false;
     {
         std::lock_guard<std::mutex> perfLock(m_perfMutex);
         m_perfWindowStartUs = 0;
@@ -341,6 +347,7 @@ int t507_vdec_node::create()
         m_perfCopyUsMax = 0;
         m_perfSyncUsTotal = 0;
         m_perfSyncUsMax = 0;
+        m_perfDisplaySkipCount = 0;
     }
     return 0;
 }
@@ -390,7 +397,7 @@ void t507_vdec_node::maybeLogPerfWindowLocked(uint64_t nowUs, bool force)
     const double syncAvgMs = m_perfCallbackCalls > 0 ? static_cast<double>(m_perfSyncUsTotal) / static_cast<double>(m_perfCallbackCalls) / 1000.0 : 0.0;
     const double syncMaxMs = static_cast<double>(m_perfSyncUsMax) / 1000.0;
 
-    printf("[vdec-prof] chn=%d bypass=%d elapsed_ms=%.1f decode=%lu fail=%lu decode_avg=%.3f decode_max=%.3f cb=%lu cb_avg=%.3f cb_max=%.3f copy_avg=%.3f copy_max=%.3f sync_avg=%.3f sync_max=%.3f\n",
+    printf("[vdec-prof] chn=%d bypass=%d elapsed_ms=%.1f decode=%lu fail=%lu decode_avg=%.3f decode_max=%.3f cb=%lu cb_avg=%.3f cb_max=%.3f copy_avg=%.3f copy_max=%.3f sync_avg=%.3f sync_max=%.3f display_skip=%lu\n",
            m_chn,
            m_bypassCopyProbe ? 1 : 0,
            elapsedMs,
@@ -404,7 +411,8 @@ void t507_vdec_node::maybeLogPerfWindowLocked(uint64_t nowUs, bool force)
            copyAvgMs,
            copyMaxMs,
            syncAvgMs,
-           syncMaxMs);
+           syncMaxMs,
+           m_perfDisplaySkipCount);
 
     m_perfWindowStartUs = nowUs;
     m_perfDecodeCalls = 0;
@@ -418,9 +426,13 @@ void t507_vdec_node::maybeLogPerfWindowLocked(uint64_t nowUs, bool force)
     m_perfCopyUsMax = 0;
     m_perfSyncUsTotal = 0;
     m_perfSyncUsMax = 0;
+    m_perfDisplaySkipCount = 0;
     const char* bypassEnv = getenv("RTSPPULL_BYPASS_VDEC_COPY");
     m_bypassCopyProbe = (bypassEnv != nullptr && bypassEnv[0] != '\0' && strcmp(bypassEnv, "0") != 0);
     m_bypassCopyFrameCount = 0;
+    m_displaySkipCount = 0;
+    m_dropDisplayForNextDecode = false;
+    m_hasFreshFrame = false;
     if (m_bypassCopyProbe)
     {
         printf("[vdec-probe] chn=%d bypass copy/Ion enabled via RTSPPULL_BYPASS_VDEC_COPY\n", m_chn);
@@ -483,6 +495,7 @@ int t507_vdec_node::sendFrame(media_frame *frame)
 
     const uint64_t decodeStartUs = monotonicTimeUs();
     ret = m_decoder->decode(&pkt);
+    m_dropDisplayForNextDecode = false;
     const uint64_t decodeEndUs = monotonicTimeUs();
     const uint64_t decodeElapsedUs = decodeEndUs - decodeStartUs;
     {
@@ -549,6 +562,11 @@ int t507_vdec_node::sendFrame(media_frame *frame)
     return 0;
 }
 
+void t507_vdec_node::setDisplayDropHint(bool drop)
+{
+    m_dropDisplayForNextDecode = drop;
+}
+
 void t507_vdec_node::retainInputBuffer(const std::shared_ptr<std::vector<uint8_t>>& buffer)
 {
     if (!buffer)
@@ -569,6 +587,12 @@ void t507_vdec_node::retainInputBuffer(const std::shared_ptr<std::vector<uint8_t
 
 media_frame *t507_vdec_node::getFrame()
 {
+    if (!m_hasFreshFrame)
+    {
+        return nullptr;
+    }
+
+    m_hasFreshFrame = false;
     return m_frame[m_curFrame];
 }
 
@@ -582,23 +606,54 @@ int t507_vdec_node::decoderDataReady(awvideodecoder::AVPacket *packet)
     const uint64_t cbStartUs = monotonicTimeUs();
     uint64_t copyElapsedUs = 0;
     uint64_t syncElapsedUs = 0;
+    const bool skipDisplayCopy = m_bypassCopyProbe || m_dropDisplayForNextDecode;
 
-    if (m_bypassCopyProbe)
+    if (skipDisplayCopy)
     {
-        ++m_bypassCopyFrameCount;
+        if (m_bypassCopyProbe)
+        {
+            ++m_bypassCopyFrameCount;
+        }
+        else
+        {
+            ++m_displaySkipCount;
+        }
+        m_hasFreshFrame = false;
         const uint64_t cbEndUs = monotonicTimeUs();
         {
             std::lock_guard<std::mutex> perfLock(m_perfMutex);
             ++m_perfCallbackCalls;
+            if (!m_bypassCopyProbe)
+            {
+                ++m_perfDisplaySkipCount;
+            }
             accumulatePerfDuration(cbEndUs - cbStartUs, m_perfCallbackUsTotal, m_perfCallbackUsMax);
             maybeLogPerfWindowLocked(cbEndUs);
         }
-        if (m_bypassCopyFrameCount == 1 || (m_bypassCopyFrameCount % 60) == 0)
         {
-            printf("[vdec-copy-bypass] chn=%d callbacks=%lu inputLen=%u pts=%lld\n",
+            std::lock_guard<std::mutex> lock(m_retainedInputsMutex);
+            if (m_retainedInputs.size() > kRetainedInputSafetyCount)
+            {
+                m_retainedInputBytes -= m_retainedInputs.front()->size();
+                m_retainedInputs.pop_front();
+            }
+        }
+        if (m_bypassCopyProbe)
+        {
+            if (m_bypassCopyFrameCount == 1 || (m_bypassCopyFrameCount % 60) == 0)
+            {
+                printf("[vdec-copy-bypass] chn=%d callbacks=%lu inputLen=%u pts=%lld\n",
+                       m_chn,
+                       m_bypassCopyFrameCount,
+                       packet != nullptr ? packet->dataLen0 : 0,
+                       packet != nullptr ? packet->pts : 0);
+            }
+        }
+        else if (m_displaySkipCount == 1 || (m_displaySkipCount % 60) == 0)
+        {
+            printf("[vdec-display-skip] chn=%d skips=%lu pts=%lld\n",
                    m_chn,
-                   m_bypassCopyFrameCount,
-                   packet != nullptr ? packet->dataLen0 : 0,
+                   m_displaySkipCount,
                    packet != nullptr ? packet->pts : 0);
         }
         return 0;
@@ -636,6 +691,7 @@ int t507_vdec_node::decoderDataReady(awvideodecoder::AVPacket *packet)
     m_frame[bufIndex[m_chn]]->refill(MEDIA_PT_YUV_420SP_NV21, (void *)mem.virt, mem.phy, m_width, m_height, packet->pts, false);
 
     m_curFrame = bufIndex[m_chn];
+    m_hasFreshFrame = true;
     // logDebug(" bufIndex[m_chn] = %d\n", bufIndex[m_chn]);
 
     bufIndex[m_chn]++;

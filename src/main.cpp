@@ -77,6 +77,7 @@ struct PipePerfWindow
     size_t nullFrameCount{0};
     size_t preIdrDropCount{0};
     size_t resyncDropCount{0};
+    size_t displayDropCount{0};
     size_t idrCount{0};
     size_t queueDepthMax{0};
     size_t inputBytes{0};
@@ -119,7 +120,7 @@ static void maybePrintPipePerf(int chn, PipePerfWindow& perf, bool force = false
     const double loopAvgMs = perf.popCount > 0 ? static_cast<double>(perf.loopUsTotal) / static_cast<double>(perf.popCount) / 1000.0 : 0.0;
     const double loopMaxMs = static_cast<double>(perf.loopUsMax) / 1000.0;
 
-    printf("[pipe-prof] chn=%d elapsed_ms=%.1f pop=%zu send=%zu send_fail=%zu load=%zu null=%zu drop_pre=%zu drop_resync=%zu idr=%zu qmax=%zu in_kb=%.1f out_kb=%.1f popwait_avg=%.3f popwait_max=%.3f send_avg=%.3f send_max=%.3f get_avg=%.3f get_max=%.3f load_avg=%.3f load_max=%.3f loop_avg=%.3f loop_max=%.3f\n",
+    printf("[pipe-prof] chn=%d elapsed_ms=%.1f pop=%zu send=%zu send_fail=%zu load=%zu null=%zu drop_pre=%zu drop_resync=%zu drop_display=%zu idr=%zu qmax=%zu in_kb=%.1f out_kb=%.1f popwait_avg=%.3f popwait_max=%.3f send_avg=%.3f send_max=%.3f get_avg=%.3f get_max=%.3f load_avg=%.3f load_max=%.3f loop_avg=%.3f loop_max=%.3f\n",
            chn,
            elapsedMs,
            perf.popCount,
@@ -129,6 +130,7 @@ static void maybePrintPipePerf(int chn, PipePerfWindow& perf, bool force = false
            perf.nullFrameCount,
            perf.preIdrDropCount,
            perf.resyncDropCount,
+           perf.displayDropCount,
            perf.idrCount,
            perf.queueDepthMax,
            static_cast<double>(perf.inputBytes) / 1024.0,
@@ -441,6 +443,17 @@ static void* listen_body(void* arg)
 
         const size_t queueDepthBeforeSend = ctx->h264Queue->depth();
         pipePerf.queueDepthMax = std::max(pipePerf.queueDepthMax, queueDepthBeforeSend);
+        const bool renderBusyOrPending = CT507Graphics::getInstance()->isRenderBusyOrPending();
+        constexpr size_t kDisplayDropQueueDepth = 5;
+        constexpr size_t kDisplayDropQueueDepthWhenRenderBusy = 2;
+        const bool dropDisplayForDecode = !pkt.isIDR &&
+            (queueDepthBeforeSend >= kDisplayDropQueueDepth ||
+             (renderBusyOrPending && queueDepthBeforeSend >= kDisplayDropQueueDepthWhenRenderBusy));
+        ctx->vdecNode->setDisplayDropHint(dropDisplayForDecode);
+        if (dropDisplayForDecode)
+        {
+            ++pipePerf.displayDropCount;
+        }
         size_t outSize = 4 + pkt.size;
         bool needExtra = false;
 
@@ -779,3 +792,4 @@ int main(int argc, char* argv[])
 
     return 0;
 }
+
