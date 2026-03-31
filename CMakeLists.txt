@@ -11,8 +11,8 @@ set(CMAKE_CXX_STANDARD 17)
 
 
 set(MYSYSROOT ${SDK_DIR}/out/t507/demo2.0/longan/buildroot/host/aarch64-buildroot-linux-gnu/sysroot)
-set(CMAKE_C_FLAGS "--sysroot=${MYSYSROOT} -mcpu=cortex-a53 -Wno-aligned-new  -fno-aggressive-loop-optimizations -fPIC -g -W -std=c++11  -DVERSION_GLES3  -DDEBU -D__ARM__ -DUSE_OZONE -DEGL_EGLEXT_PROTOTYPES -DGL_GLEXT_PROTOTYPES -s ${CMAKE_C_FLAGS}")
-set(CMAKE_CXX_FLAGS "--sysroot=${MYSYSROOT} -mcpu=cortex-a53 -Wno-aligned-new  -fno-aggressive-loop-optimizations -fPIC  -g -W -std=c++11  -DVERSION_GLES3  -DDEBU -D__ARM__ -DUSE_OZONE -DEGL_EGLEXT_PROTOTYPES -DGL_GLEXT_PROTOTYPES -s ${CMAKE_CXX_FLAGS}")
+set(CMAKE_C_FLAGS "--sysroot=${MYSYSROOT} -mcpu=cortex-a53 -march=armv8-a -Wno-aligned-new  -fno-aggressive-loop-optimizations -fPIC -g -W -std=c++11  -DVERSION_GLES3  -DDEBU -D__ARM__ -DUSE_OZONE -DEGL_EGLEXT_PROTOTYPES -DGL_GLEXT_PROTOTYPES -s ${CMAKE_C_FLAGS}")
+set(CMAKE_CXX_FLAGS "--sysroot=${MYSYSROOT} -mcpu=cortex-a53 -march=armv8-a -Wno-aligned-new  -fno-aggressive-loop-optimizations -fPIC  -g -W -std=c++11  -DVERSION_GLES3  -DDEBU -D__ARM__ -DUSE_OZONE -DEGL_EGLEXT_PROTOTYPES -DGL_GLEXT_PROTOTYPES -s ${CMAKE_CXX_FLAGS}")
 set(CMAKE_C_LINK_FLAGS "${CMAKE_C_LINK_FLAGS} --sysroot=${MYSYSROOT}" CACHE INTERNAL "" FORCE)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --sysroot=${MYSYSROOT}" CACHE INTERNAL "" FORCE)
 set(CMAKE_FIND_ROOT_PATH "${MYSYSROOT}")

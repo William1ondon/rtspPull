@@ -11,7 +11,7 @@
 #include <memory>
 #include <mutex>
 #include <vector>
-
+#include "my_util.h"
 using namespace awvideodecoder;
 
 typedef enum FrameType_
@@ -76,7 +76,7 @@ public:
 
     /* input */
     // int getInputId();
-    // /* vdec没有实现getFrame 直接调用sendFrame就是开启数据解码 */
+    // /* vdec没锟斤拷实锟斤拷getFrame 直锟接碉拷锟斤拷sendFrame锟斤拷锟角匡拷锟斤拷锟斤拷锟捷斤拷锟斤拷 */
     int sendFrame(media_frame *frame);
     void retainInputBuffer(const std::shared_ptr<std::vector<uint8_t>>& buffer);
     // bool isBound();

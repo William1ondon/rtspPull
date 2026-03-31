@@ -1,338 +1,51 @@
-########## bypass off
 PLAY started
-[vdec-fail] chn=3 ret=-6 streak=1 total=1 nal=7 frameType=U inputLen=51094 retained=0 retainedBytes=0 head=00 00 00 01
-[dec-resync-arm] chn=3 sendRet=-1 q=0 nal=5 pkt=51060 out=51094 idr=1 first_mb=0 primed=0 sps=17 pps=5 extra=1
-[dec-fail] chn=3 sendRet=-1 q=0 nal=5 pkt=51060 out=51094 idr=1 first_mb=0 primed=0 sps=17 pps=5 extra=1
-[dec-fail-hist] chn=3 idx=0 q=0 nal=5 pkt=51060 out=51094 idr=1 first_mb=0 primed=0 sps=17 pps=5 extra=1
+[dec-fail] chn=3 sendRet=-1 q=0 nal=5 pkt=59019 out=59053 idr=1 first_mb=0 primed=0 sps=17 pps=5 extra=1
+[dec-fail-hist] chn=3 idx=0 q=7 nal=5 pkt=60839 out=60873 idr=1 first_mb=0 primed=0 sps=17 pps=5 extra=1
+[dec-fail-hist] chn=3 idx=1 q=0 nal=5 pkt=59019 out=59053 idr=1 first_mb=0 primed=0 sps=17 pps=5 extra=1
+[vdec-fail] chn=2 ret=-6 streak=1 total=1 nal=7 frameType=U inputLen=100071 retained=0 retainedBytes=0 head=00 00 00 01
+[dec-resync-arm] chn=2 sendRet=-1 q=0 nal=5 pkt=100035 out=100071 idr=1 first_mb=0 primed=0 sps=20 pps=4 extra=1
+[dec-fail] chn=2 sendRet=-1 q=0 nal=5 pkt=100035 out=100071 idr=1 first_mb=0 primed=0 sps=20 pps=4 extra=1
+[dec-fail-hist] chn=2 idx=0 q=0 nal=5 pkt=100035 out=100071 idr=1 first_mb=0 primed=0 sps=20 pps=4 extra=1
 debug  : cedarc <AvcSbmFrameCheckBitStreamType:325>: result: bStreamWithStartCode[1], with[1], whitout[0]
-debug  : cedarc <AvcSbmFrameCheckBitStreamType:325>: result: bStreamWithStartCode[1], with[1], whitout[0]
-[vdec-fail] chn=1 ret=-6 streak=1 total=1 nal=7 frameType=U inputLen=63531 retained=0 retainedBytes=0 head=00 00 00 01
-[dec-resync-arm] chn=1 sendRet=-1 q=0 nal=5 pkt=63495 out=63531 idr=1 first_mb=0 primed=0 sps=20 pps=4 extra=1
-[dec-fail] chn=1 sendRet=-1 q=0 nal=5 pkt=63495 out=63531 idr=1 first_mb=0 primed=0 sps=20 pps=4 extra=1
-[dec-fail-hist] chn=1 idx=0 q=0 nal=5 pkt=63495 out=63531 idr=1 first_mb=0 primed=0 sps=20 pps=4 extra=1
-debug  : cedarc <AvcSbmFrameCheckBitStreamType:325>: result: bStreamWithStartCode[1], with[1], whitout[0]
-[vdec-fail] chn=2 ret=-6 streak=1 total=1 nal=7 frameType=U inputLen=95001 retained=0 retainedBytes=0 head=00 00 00 01
-[dec-resync-arm] chn=2 sendRet=-1 q=3 nal=5 pkt=94965 out=95001 idr=1 first_mb=0 primed=0 sps=20 pps=4 extra=1
-[dec-fail] chn=2 sendRet=-1 q=3 nal=5 pkt=94965 out=95001 idr=1 first_mb=0 primed=0 sps=20 pps=4 extra=1
-[dec-fail-hist] chn=2 idx=0 q=3 nal=5 pkt=94965 out=95001 idr=1 first_mb=0 primed=0 sps=20 pps=4 extra=1
-[pipe-prof] chn=1 elapsed_ms=1029.0 pop=34 send=1 send_fail=1 load=0 null=0 drop_pre=17 drop_resync=16 idr=1 qmax=0 in_kb=62.0 out_kb=62.0 popwait_avg=50.447 popwait_max=688.350 send_avg=0.269 send_max=0.269 get_avg=0.000 get_max=0.000 load_avg=0.000 load_max=0.000 loop_avg=50.512 loop_max=688.395
-[pipe-prof] chn=2 elapsed_ms=1010.7 pop=28 send=1 send_fail=1 load=0 null=0 drop_pre=9 drop_resync=18 idr=1 qmax=3 in_kb=92.7 out_kb=92.8 popwait_avg=62.786 popwait_max=750.621 send_avg=0.251 send_max=0.251 get_avg=0.000 get_max=0.000 load_avg=0.000 load_max=0.000 loop_avg=62.908 loop_max=750.727
-[pipe-prof] chn=0 elapsed_ms=1042.0 pop=27 send=0 send_fail=0 load=0 null=0 drop_pre=27 drop_resync=0 idr=0 qmax=0 in_kb=0.0 out_kb=0.0 popwait_avg=66.299 popwait_max=749.296 send_avg=0.000 send_max=0.000 get_avg=0.000 get_max=0.000 load_avg=0.000 load_max=0.000 loop_avg=66.344 loop_max=749.355
-[pipe-prof] chn=3 elapsed_ms=1012.5 pop=28 send=1 send_fail=1 load=0 null=0 drop_pre=0 drop_resync=27 idr=1 qmax=0 in_kb=49.9 out_kb=49.9 popwait_avg=70.652 popwait_max=968.332 send_avg=0.460 send_max=0.460 get_avg=0.000 get_max=0.000 load_avg=0.000 load_max=0.000 loop_avg=70.794 loop_max=969.712
-debug  : cedarc <H264DecVuiParameters:341>: nFrameRate=25
-debug  : cedarc <H264DecodePictureScanType:2779>: here3:hCtx->bProgressice=1
-
-[dec-fail] chn=2 sendRet=-1 q=0 nal=5 pkt=88388 out=88424 idr=1 first_mb=0 primed=0 sps=20 pps=4 extra=1
-[dec-fail-hist] chn=2 idx=0 q=3 nal=5 pkt=94965 out=95001 idr=1 first_mb=0 primed=0 sps=20 pps=4 extra=1
-[dec-fail-hist] chn=2 idx=1 q=0 nal=5 pkt=88388 out=88424 idr=1 first_mb=0 primed=0 sps=20 pps=4 extra=1
-debug  : cedarc <H264DecVuiParameters:341>: nFrameRate=25
-debug  : cedarc <H264DecodePictureScanType:2779>: here3:hCtx->bProgressice=1
-
-[vdec-prof] chn=1 bypass=0 elapsed_ms=1002.8 decode=2 fail=2 decode_avg=0.258 decode_max=0.281 cb=0 cb_avg=0.000 cb_max=0.000 copy_avg=0.000 copy_max=0.000 sync_avg=0.000 sync_max=0.000
-[dec-fail] chn=1 sendRet=-1 q=0 nal=5 pkt=59828 out=59864 idr=1 first_mb=0 primed=0 sps=20 pps=4 extra=1
-[dec-fail-hist] chn=1 idx=0 q=0 nal=5 pkt=63495 out=63531 idr=1 first_mb=0 primed=0 sps=20 pps=4 extra=1
-[dec-fail-hist] chn=1 idx=1 q=0 nal=5 pkt=59828 out=59864 idr=1 first_mb=0 primed=0 sps=20 pps=4 extra=1
-debug  : cedarc <AvcSbmFrameCheckBitStreamType:325>: result: bStreamWithStartCode[1], with[1], whitout[0]
-[vdec-fail] chn=0 ret=-6 streak=1 total=1 nal=7 frameType=U inputLen=67609 retained=0 retainedBytes=0 head=00 00 00 01
-[dec-resync-arm] chn=0 sendRet=-1 q=0 nal=5 pkt=67573 out=67609 idr=1 first_mb=0 primed=0 sps=20 pps=4 extra=1
-[dec-fail] chn=0 sendRet=-1 q=0 nal=5 pkt=67573 out=67609 idr=1 first_mb=0 primed=0 sps=20 pps=4 extra=1
-[dec-fail-hist] chn=0 idx=0 q=0 nal=5 pkt=67573 out=67609 idr=1 first_mb=0 primed=0 sps=20 pps=4 extra=1
-[vdec-prof] chn=3 bypass=0 elapsed_ms=1646.8 decode=2 fail=2 decode_avg=0.259 decode_max=0.357 cb=0 cb_avg=0.000 cb_max=0.000 copy_avg=0.000 copy_max=0.000 sync_avg=0.000 sync_max=0.000
-[dec-fail] chn=3 sendRet=-1 q=0 nal=5 pkt=55150 out=55184 idr=1 first_mb=0 primed=0 sps=17 pps=5 extra=1
-[dec-fail-hist] chn=3 idx=0 q=0 nal=5 pkt=51060 out=51094 idr=1 first_mb=0 primed=0 sps=17 pps=5 extra=1
-[dec-fail-hist] chn=3 idx=1 q=0 nal=5 pkt=55150 out=55184 idr=1 first_mb=0 primed=0 sps=17 pps=5 extra=1
-[pipe-prof] chn=1 elapsed_ms=1031.1 pop=25 send=1 send_fail=1 load=0 null=0 drop_pre=0 drop_resync=24 idr=1 qmax=0 in_kb=58.4 out_kb=58.5 popwait_avg=41.163 popwait_max=277.996 send_avg=0.340 send_max=0.340 get_avg=0.000 get_max=0.000 load_avg=0.000 load_max=0.000 loop_avg=41.238 loop_max=279.024
-[pipe-prof] chn=2 elapsed_ms=1009.2 pop=25 send=1 send_fail=1 load=0 null=0 drop_pre=0 drop_resync=24 idr=1 qmax=0 in_kb=86.3 out_kb=86.4 popwait_avg=40.226 popwait_max=248.163 send_avg=0.390 send_max=0.390 get_avg=0.000 get_max=0.000 load_avg=0.000 load_max=0.000 loop_avg=40.363 loop_max=249.545
-[pipe-prof] chn=0 elapsed_ms=1003.0 pop=25 send=1 send_fail=1 load=0 null=0 drop_pre=7 drop_resync=17 idr=1 qmax=0 in_kb=66.0 out_kb=66.0 popwait_avg=40.021 popwait_max=357.164 send_avg=0.253 send_max=0.253 get_avg=0.000 get_max=0.000 load_avg=0.000 load_max=0.000 loop_avg=40.116 loop_max=358.231
-[pipe-prof] chn=3 elapsed_ms=1021.9 pop=26 send=1 send_fail=1 load=0 null=0 drop_pre=0 drop_resync=25 idr=1 qmax=0 in_kb=53.9 out_kb=53.9 popwait_avg=39.176 popwait_max=131.002 send_avg=0.284 send_max=0.284 get_avg=0.000 get_max=0.000 load_avg=0.000 load_max=0.000 loop_avg=39.299 loop_max=131.121
-debug  : cedarc <VeSetEnableAfbcFlag:1771>: **** VeSetEnableAfbcFlag: 0
-debug  : fbm.c <FbmCreateBuffer:148>: FbmCreate, total fbm number: 6, decoder needed: 2,  nWidth=1920, nHeight=1088 nAlignStride = 0
-debug  : fbm.c <FbmCreateBuffer:252>: ** call allocate pic buf, i = 0, maxNum = 6
-debug  : fbm.c <FbmAllocatePictureBuffer:1454>: pPicture->bEnableAfbcFlag = 0
-debug  : fbm.c <FbmCreateBuffer:252>: ** call allocate pic buf, i = 1, maxNum = 6
-debug  : fbm.c <FbmAllocatePictureBuffer:1454>: pPicture->bEnableAfbcFlag = 0
-debug  : fbm.c <FbmCreateBuffer:252>: ** call allocate pic buf, i = 2, maxNum = 6
-debug  : fbm.c <FbmAllocatePictureBuffer:1454>: pPicture->bEnableAfbcFlag = 0
-debug  : fbm.c <FbmCreateBuffer:252>: ** call allocate pic buf, i = 3, maxNum = 6
-debug  : fbm.c <FbmAllocatePictureBuffer:1454>: pPicture->bEnableAfbcFlag = 0
-debug  : fbm.c <FbmCreateBuffer:252>: ** call allocate pic buf, i = 4, maxNum = 6
-debug  : fbm.c <FbmAllocatePictureBuffer:1454>: pPicture->bEnableAfbcFlag = 0
-debug  : fbm.c <FbmCreateBuffer:252>: ** call allocate pic buf, i = 5, maxNum = 6
-debug  : fbm.c <FbmAllocatePictureBuffer:1454>: pPicture->bEnableAfbcFlag = 0
-debug  : fbm.c <FbmCreateBuffer:405>: *** finish fbmCreateBuffer
-[vdec-recover] chn=1 streak=2 total=2 frameType=U inputLen=52520
-[dec-resync-release] chn=1 dropped=48 idr_size=52484
-[render-prof] elapsed_ms=2608.1 draws=1 draw_avg=1.272 draw_max=1.272 swap_avg=0.533 swap_max=0.533 finish_avg=8.497 finish_max=8.497 total_avg=2608.119 total_max=2608.119
-debug  : cedarc <VeSetEnableAfbcFlag:1771>: **** VeSetEnableAfbcFlag: 0
-debug  : fbm.c <FbmCreateBuffer:148>: FbmCreate, total fbm number: 6, decoder needed: 2,  nWidth=1920, nHeight=1088 nAlignStride = 0
-debug  : fbm.c <FbmCreateBuffer:252>: ** call allocate pic buf, i = 0, maxNum = 6
-[vdec-prof] chn=1 bypass=0 elapsed_ms=1031.2 decode=1 fail=0 decode_avg=19.641 decode_max=19.641 cb=2 cb_avg=6.661 cb_max=7.310 copy_avg=6.203 copy_max=6.688 sync_avg=0.451 sync_max=0.613
-debug  : fbm.c <FbmAllocatePictureBuffer:1454>: pPicture->bEnableAfbcFlag = 0
-debug  : fbm.c <FbmCreateBuffer:252>: ** call allocate pic buf, i = 1, maxNum = 6
-debug  : fbm.c <FbmAllocatePictureBuffer:1454>: pPicture->bEnableAfbcFlag = 0
-debug  : fbm.c <FbmCreateBuffer:252>: ** call allocate pic buf, i = 2, maxNum = 6
-debug  : fbm.c <FbmAllocatePictureBuffer:1454>: pPicture->bEnableAfbcFlag = 0
-debug  : fbm.c <FbmCreateBuffer:252>: ** call allocate pic buf, i = 3, maxNum = 6
-debug  : fbm.c <FbmAllocatePictureBuffer:1454>: pPicture->bEnableAfbcFlag = 0
-debug  : fbm.c <FbmCreateBuffer:252>: ** call allocate pic buf, i = 4, maxNum = 6
-debug  : fbm.c <FbmAllocatePictureBuffer:1454>: pPicture->bEnableAfbcFlag = 0
-debug  : fbm.c <FbmCreateBuffer:252>: ** call allocate pic buf, i = 5, maxNum = 6
-debug  : fbm.c <FbmAllocatePictureBuffer:1454>: pPicture->bEnableAfbcFlag = 0
-debug  : fbm.c <FbmCreateBuffer:405>: *** finish fbmCreateBuffer
-[vdec-prof] chn=2 bypass=0 elapsed_ms=2049.0 decode=2 fail=2 decode_avg=0.298 decode_max=0.381 cb=1 cb_avg=9.172 cb_max=9.172 copy_avg=8.568 copy_max=8.568 sync_avg=0.597 sync_max=0.597
-[vdec-recover] chn=2 streak=2 total=2 frameType=U inputLen=101454
-[dec-resync-release] chn=2 dropped=48 idr_size=101418
-[pipe-prof] chn=1 elapsed_ms=1028.6 pop=25 send=17 send_fail=0 load=17 null=0 drop_pre=0 drop_resync=8 idr=1 qmax=4 in_kb=100.0 out_kb=100.0 popwait_avg=23.841 popwait_max=217.082 send_avg=25.251 send_max=28.473 get_avg=0.001 get_max=0.002 load_avg=0.014 load_max=0.061 loop_avg=41.137 loop_max=237.447
-[pipe-prof] chn=2 elapsed_ms=1020.6 pop=23 send=17 send_fail=0 load=17 null=0 drop_pre=0 drop_resync=6 idr=1 qmax=5 in_kb=209.8 out_kb=209.9 popwait_avg=25.655 popwait_max=311.708 send_avg=24.730 send_max=27.208 get_avg=0.001 get_max=0.002 load_avg=0.274 load_max=1.660 loop_avg=44.367 loop_max=341.369
-[pipe-prof] chn=0 elapsed_ms=1024.6 pop=26 send=0 send_fail=0 load=0 null=0 drop_pre=0 drop_resync=26 idr=0 qmax=0 in_kb=0.0 out_kb=0.0 popwait_avg=39.340 popwait_max=91.085 send_avg=0.000 send_max=0.000 get_avg=0.000 get_max=0.000 load_avg=0.000 load_max=0.000 loop_avg=39.402 loop_max=91.129
-[pipe-prof] chn=3 elapsed_ms=1037.1 pop=26 send=0 send_fail=0 load=0 null=0 drop_pre=0 drop_resync=26 idr=0 qmax=0 in_kb=0.0 out_kb=0.0 popwait_avg=39.760 popwait_max=112.917 send_avg=0.000 send_max=0.000 get_avg=0.000 get_max=0.000 load_avg=0.000 load_max=0.000 loop_avg=39.880 loop_max=113.016
-debug  : cedarc <H264DecodePictureScanType:2779>: here3:hCtx->bProgressice=1
-
-[vdec-prof] chn=3 bypass=0 elapsed_ms=1621.0 decode=1 fail=1 decode_avg=0.297 decode_max=0.297 cb=0 cb_avg=0.000 cb_max=0.000 copy_avg=0.000 copy_max=0.000 sync_avg=0.000 sync_max=0.000
-[dec-fail] chn=3 sendRet=-1 q=0 nal=5 pkt=52362 out=52396 idr=1 first_mb=0 primed=0 sps=17 pps=5 extra=1
-[dec-fail-hist] chn=3 idx=0 q=0 nal=5 pkt=51060 out=51094 idr=1 first_mb=0 primed=0 sps=17 pps=5 extra=1
-[dec-fail-hist] chn=3 idx=1 q=0 nal=5 pkt=55150 out=55184 idr=1 first_mb=0 primed=0 sps=17 pps=5 extra=1
-[dec-fail-hist] chn=3 idx=2 q=0 nal=5 pkt=52362 out=52396 idr=1 first_mb=0 primed=0 sps=17 pps=5 extra=1
-[vdec-prof] chn=0 bypass=0 elapsed_ms=1939.0 decode=2 fail=2 decode_avg=0.199 decode_max=0.221 cb=0 cb_avg=0.000 cb_max=0.000 copy_avg=0.000 copy_max=0.000 sync_avg=0.000 sync_max=0.000
-[dec-fail] chn=0 sendRet=-1 q=0 nal=5 pkt=64225 out=64261 idr=1 first_mb=0 primed=0 sps=20 pps=4 extra=1
-[dec-fail-hist] chn=0 idx=0 q=0 nal=5 pkt=67573 out=67609 idr=1 first_mb=0 primed=0 sps=20 pps=4 extra=1
-[dec-fail-hist] chn=0 idx=1 q=0 nal=5 pkt=64225 out=64261 idr=1 first_mb=0 primed=0 sps=20 pps=4 extra=1
-[render-prof] elapsed_ms=1104.3 draws=49 draw_avg=1.153 draw_max=2.523 swap_avg=0.460 swap_max=1.653 finish_avg=10.572 finish_max=12.307 total_avg=22.531 total_max=315.959
-[vdec-prof] chn=1 bypass=0 elapsed_ms=1037.6 decode=24 fail=0 decode_avg=22.634 decode_max=28.433 cb=24 cb_avg=8.545 cb_max=11.654 copy_avg=8.182 copy_max=11.292 sync_avg=0.353 sync_max=0.586
-[vdec-prof] chn=2 bypass=0 elapsed_ms=1026.1 decode=26 fail=0 decode_avg=21.689 decode_max=27.008 cb=26 cb_avg=9.350 cb_max=15.664 copy_avg=8.969 copy_max=15.341 sync_avg=0.372 sync_max=0.753
-[pipe-prof] chn=1 elapsed_ms=1007.1 pop=24 send=24 send_fail=0 load=24 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=3 in_kb=124.9 out_kb=125.0 popwait_avg=19.545 popwait_max=317.891 send_avg=22.246 send_max=27.904 get_avg=0.001 get_max=0.003 load_avg=0.017 load_max=0.049 loop_avg=41.952 loop_max=338.477
-[pipe-prof] chn=2 elapsed_ms=1006.8 pop=24 send=24 send_fail=0 load=24 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=3 in_kb=231.2 out_kb=231.3 popwait_avg=18.821 popwait_max=301.568 send_avg=21.877 send_max=32.093 get_avg=0.001 get_max=0.002 load_avg=0.919 load_max=1.872 loop_avg=41.943 loop_max=317.412
-[pipe-prof] chn=0 elapsed_ms=1032.6 pop=26 send=1 send_fail=1 load=0 null=0 drop_pre=0 drop_resync=25 idr=1 qmax=0 in_kb=62.7 out_kb=62.8 popwait_avg=39.609 popwait_max=305.891 send_avg=0.303 send_max=0.303 get_avg=0.000 get_max=0.000 load_avg=0.000 load_max=0.000 loop_avg=39.705 loop_max=306.946
-[pipe-prof] chn=3 elapsed_ms=1002.1 pop=25 send=1 send_fail=1 load=0 null=0 drop_pre=0 drop_resync=24 idr=1 qmax=0 in_kb=51.1 out_kb=51.2 popwait_avg=39.935 popwait_max=194.873 send_avg=0.358 send_max=0.358 get_avg=0.000 get_max=0.000 load_avg=0.000 load_max=0.000 loop_avg=40.074 loop_max=195.898
-[render-prof] elapsed_ms=1019.5 draws=54 draw_avg=0.992 draw_max=1.709 swap_avg=0.384 swap_max=0.647 finish_avg=10.838 finish_max=12.542 total_avg=18.870 total_max=253.090
-[vdec-prof] chn=1 bypass=0 elapsed_ms=1017.1 decode=25 fail=0 decode_avg=23.800 decode_max=27.109 cb=25 cb_avg=9.921 cb_max=11.952 copy_avg=9.531 copy_max=11.617 sync_avg=0.377 sync_max=0.597
-[vdec-prof] chn=2 bypass=0 elapsed_ms=1017.3 decode=29 fail=0 decode_avg=21.983 decode_max=31.952 cb=29 cb_avg=8.889 cb_max=12.436 copy_avg=8.482 copy_max=11.850 sync_avg=0.395 sync_max=0.803
-debug  : cedarc <VeSetEnableAfbcFlag:1771>: **** VeSetEnableAfbcFlag: 0
-debug  : fbm.c <FbmCreateBuffer:148>: FbmCreate, total fbm number: 6, decoder needed: 2,  nWidth=1920, nHeight=1088 nAlignStride = 0
-debug  : fbm.c <FbmCreateBuffer:252>: ** call allocate pic buf, i = 0, maxNum = 6
-debug  : fbm.c <FbmAllocatePictureBuffer:1454>: pPicture->bEnableAfbcFlag = 0
-debug  : fbm.c <FbmCreateBuffer:252>: ** call allocate pic buf, i = 1, maxNum = 6
-debug  : fbm.c <FbmAllocatePictureBuffer:1454>: pPicture->bEnableAfbcFlag = 0
-debug  : fbm.c <FbmCreateBuffer:252>: ** call allocate pic buf, i = 2, maxNum = 6
-debug  : fbm.c <FbmAllocatePictureBuffer:1454>: pPicture->bEnableAfbcFlag = 0
-debug  : fbm.c <FbmCreateBuffer:252>: ** call allocate pic buf, i = 3, maxNum = 6
-debug  : fbm.c <FbmAllocatePictureBuffer:1454>: pPicture->bEnableAfbcFlag = 0
-debug  : fbm.c <FbmCreateBuffer:252>: ** call allocate pic buf, i = 4, maxNum = 6
-debug  : fbm.c <FbmAllocatePictureBuffer:1454>: pPicture->bEnableAfbcFlag = 0
-debug  : fbm.c <FbmCreateBuffer:252>: ** call allocate pic buf, i = 5, maxNum = 6
-debug  : fbm.c <FbmAllocatePictureBuffer:1454>: pPicture->bEnableAfbcFlag = 0
-debug  : fbm.c <FbmCreateBuffer:405>: *** finish fbmCreateBuffer
-[vdec-prof] chn=3 bypass=0 elapsed_ms=1560.0 decode=0 fail=0 decode_avg=0.000 decode_max=0.000 cb=1 cb_avg=12.568 cb_max=12.568 copy_avg=12.113 copy_max=12.113 sync_avg=0.440 sync_max=0.440
-[vdec-recover] chn=3 streak=3 total=3 frameType=U inputLen=53707
-[dec-resync-release] chn=3 dropped=117 idr_size=53673
-[pipe-prof] chn=2 elapsed_ms=1014.4 pop=27 send=27 send_fail=0 load=27 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=2 in_kb=266.6 out_kb=266.7 popwait_avg=14.091 popwait_max=242.325 send_avg=22.200 send_max=35.375 get_avg=0.001 get_max=0.002 load_avg=1.002 load_max=2.160 loop_avg=37.560 loop_max=256.840
-[pipe-prof] chn=1 elapsed_ms=1037.2 pop=26 send=26 send_fail=0 load=26 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=6 in_kb=140.5 out_kb=140.6 popwait_avg=15.546 popwait_max=316.994 send_avg=24.149 send_max=42.271 get_avg=0.001 get_max=0.002 load_avg=0.034 load_max=0.477 loop_avg=39.881 loop_max=348.450
-[pipe-prof] chn=0 elapsed_ms=1034.0 pop=26 send=0 send_fail=0 load=0 null=0 drop_pre=0 drop_resync=26 idr=0 qmax=0 in_kb=0.0 out_kb=0.0 popwait_avg=39.705 popwait_max=112.083 send_avg=0.000 send_max=0.000 get_avg=0.000 get_max=0.000 load_avg=0.000 load_max=0.000 loop_avg=39.759 loop_max=112.109
-[pipe-prof] chn=3 elapsed_ms=1015.1 pop=23 send=8 send_fail=0 load=8 null=0 drop_pre=0 drop_resync=15 idr=1 qmax=2 in_kb=83.1 out_kb=83.1 popwait_avg=31.367 popwait_max=119.539 send_avg=36.196 send_max=42.326 get_avg=0.001 get_max=0.003 load_avg=0.019 load_max=0.073 loop_avg=44.127 loop_max=155.254
-debug  : cedarc <H264DecVuiParameters:341>: nFrameRate=25
-debug  : cedarc <H264DecodePictureScanType:2779>: here3:hCtx->bProgressice=1
-
-[vdec-prof] chn=0 bypass=0 elapsed_ms=1978.4 decode=1 fail=1 decode_avg=0.312 decode_max=0.312 cb=0 cb_avg=0.000 cb_max=0.000 copy_avg=0.000 copy_max=0.000 sync_avg=0.000 sync_max=0.000
-[dec-fail] chn=0 sendRet=-1 q=0 nal=5 pkt=64512 out=64548 idr=1 first_mb=0 primed=0 sps=20 pps=4 extra=1
-[dec-fail-hist] chn=0 idx=0 q=0 nal=5 pkt=67573 out=67609 idr=1 first_mb=0 primed=0 sps=20 pps=4 extra=1
-[dec-fail-hist] chn=0 idx=1 q=0 nal=5 pkt=64225 out=64261 idr=1 first_mb=0 primed=0 sps=20 pps=4 extra=1
-[dec-fail-hist] chn=0 idx=2 q=0 nal=5 pkt=64512 out=64548 idr=1 first_mb=0 primed=0 sps=20 pps=4 extra=1
-[render-prof] elapsed_ms=1012.6 draws=61 draw_avg=1.139 draw_max=2.002 swap_avg=0.467 swap_max=0.852 finish_avg=10.912 finish_max=12.822 total_avg=16.592 total_max=63.826
-[vdec-prof] chn=2 bypass=0 elapsed_ms=1000.0 decode=22 fail=0 decode_avg=28.527 decode_max=39.194 cb=21 cb_avg=11.683 cb_max=14.214 copy_avg=11.131 copy_max=13.888 sync_avg=0.538 sync_max=1.395
-[vdec-prof] chn=1 bypass=0 elapsed_ms=1040.3 decode=26 fail=0 decode_avg=28.409 decode_max=42.246 cb=26 cb_avg=9.371 cb_max=12.067 copy_avg=8.916 copy_max=11.776 sync_avg=0.445 sync_max=0.971
-[vdec-prof] chn=3 bypass=0 elapsed_ms=1027.4 decode=26 fail=0 decode_avg=29.824 decode_max=44.112 cb=26 cb_avg=9.559 cb_max=21.196 copy_avg=9.185 copy_max=20.821 sync_avg=0.365 sync_max=0.754
-[pipe-prof] chn=2 elapsed_ms=1035.9 pop=19 send=19 send_fail=0 load=19 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=7 in_kb=220.3 out_kb=220.4 popwait_avg=17.685 popwait_max=297.288 send_avg=35.889 send_max=42.875 get_avg=0.001 get_max=0.003 load_avg=0.477 load_max=1.963 loop_avg=54.509 loop_max=316.496
-[pipe-prof] chn=1 elapsed_ms=1039.8 pop=20 send=20 send_fail=0 load=20 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=7 in_kb=111.9 out_kb=112.0 popwait_avg=14.084 popwait_max=281.580 send_avg=37.608 send_max=53.477 get_avg=0.001 get_max=0.003 load_avg=0.012 load_max=0.020 loop_avg=51.972 loop_max=302.839
-[pipe-prof] chn=0 elapsed_ms=1045.2 pop=26 send=1 send_fail=1 load=0 null=0 drop_pre=0 drop_resync=25 idr=1 qmax=0 in_kb=63.0 out_kb=63.0 popwait_avg=40.076 popwait_max=256.271 send_avg=0.369 send_max=0.369 get_avg=0.000 get_max=0.000 load_avg=0.000 load_max=0.000 loop_avg=40.193 loop_max=257.568
-[pipe-prof] chn=3 elapsed_ms=1016.9 pop=25 send=25 send_fail=0 load=25 null=0 drop_pre=0 drop_resync=0 idr=0 qmax=2 in_kb=254.3 out_kb=254.4 popwait_avg=9.400 popwait_max=53.015 send_avg=31.019 send_max=44.302 get_avg=0.001 get_max=0.002 load_avg=0.018 load_max=0.045 loop_avg=40.663 loop_max=75.111
-[render-prof] elapsed_ms=1003.3 draws=73 draw_avg=1.145 draw_max=1.733 swap_avg=0.422 swap_max=0.773 finish_avg=11.666 finish_max=13.520 total_avg=13.736 total_max=16.100
-[vdec-prof] chn=2 bypass=0 elapsed_ms=1002.7 decode=24 fail=0 decode_avg=38.392 decode_max=42.778 cb=25 cb_avg=11.550 cb_max=14.186 copy_avg=11.087 copy_max=13.691 sync_avg=0.452 sync_max=0.880
-[vdec-prof] chn=1 bypass=0 elapsed_ms=1034.4 decode=26 fail=0 decode_avg=39.221 decode_max=53.333 cb=26 cb_avg=11.268 cb_max=12.216 copy_avg=10.814 copy_max=11.880 sync_avg=0.443 sync_max=1.469
-[vdec-prof] chn=3 bypass=0 elapsed_ms=1006.7 decode=23 fail=0 decode_avg=38.506 decode_max=43.866 cb=23 cb_avg=11.146 cb_max=12.891 copy_avg=10.609 copy_max=12.248 sync_avg=0.527 sync_max=1.326
-[pipe-prof] chn=1 elapsed_ms=1010.1 pop=25 send=25 send_fail=0 load=25 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=7 in_kb=123.7 out_kb=123.8 popwait_avg=1.062 popwait_max=26.439 send_avg=39.100 send_max=54.309 get_avg=0.001 get_max=0.002 load_avg=0.018 load_max=0.027 loop_avg=40.393 loop_max=54.478
-[pipe-prof] chn=2 elapsed_ms=1036.8 pop=27 send=27 send_fail=0 load=27 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=7 in_kb=264.9 out_kb=265.1 popwait_avg=0.005 popwait_max=0.013 send_avg=36.792 send_max=52.595 get_avg=0.001 get_max=0.002 load_avg=1.058 load_max=1.988 loop_avg=38.335 loop_max=54.290
-[pipe-prof] chn=0 elapsed_ms=1046.8 pop=26 send=0 send_fail=0 load=0 null=0 drop_pre=0 drop_resync=26 idr=0 qmax=0 in_kb=0.0 out_kb=0.0 popwait_avg=40.182 popwait_max=123.831 send_avg=0.000 send_max=0.000 get_avg=0.000 get_max=0.000 load_avg=0.000 load_max=0.000 loop_avg=40.248 loop_max=123.904
-[pipe-prof] chn=3 elapsed_ms=1036.6 pop=24 send=24 send_fail=0 load=24 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=3 in_kb=233.9 out_kb=234.0 popwait_avg=3.913 popwait_max=80.530 send_avg=38.969 send_max=54.314 get_avg=0.001 get_max=0.002 load_avg=0.015 load_max=0.026 loop_avg=43.180 loop_max=106.596
-[render-prof] elapsed_ms=1008.9 draws=74 draw_avg=1.150 draw_max=1.904 swap_avg=0.458 swap_max=0.911 finish_avg=11.529 finish_max=14.762 total_avg=13.626 total_max=18.314
-[vdec-prof] chn=2 bypass=0 elapsed_ms=1009.0 decode=24 fail=0 decode_avg=36.612 decode_max=53.220 cb=24 cb_avg=11.532 cb_max=13.537 copy_avg=11.043 copy_max=12.897 sync_avg=0.477 sync_max=0.707
-[vdec-prof] chn=1 bypass=0 elapsed_ms=1003.0 decode=24 fail=0 decode_avg=38.943 decode_max=54.646 cb=24 cb_avg=10.802 cb_max=12.870 copy_avg=10.343 copy_max=12.538 sync_avg=0.447 sync_max=0.904
-debug  : cedarc <VeSetEnableAfbcFlag:1771>: **** VeSetEnableAfbcFlag: 0
-debug  : fbm.c <FbmCreateBuffer:148>: FbmCreate, total fbm number: 6, decoder needed: 2,  nWidth=1920, nHeight=1088 nAlignStride = 0
-debug  : fbm.c <FbmCreateBuffer:252>: ** call allocate pic buf, i = 0, maxNum = 6
-debug  : fbm.c <FbmAllocatePictureBuffer:1454>: pPicture->bEnableAfbcFlag = 0
-debug  : fbm.c <FbmCreateBuffer:252>: ** call allocate pic buf, i = 1, maxNum = 6
-debug  : fbm.c <FbmAllocatePictureBuffer:1454>: pPicture->bEnableAfbcFlag = 0
-debug  : fbm.c <FbmCreateBuffer:252>: ** call allocate pic buf, i = 2, maxNum = 6
-debug  : fbm.c <FbmAllocatePictureBuffer:1454>: pPicture->bEnableAfbcFlag = 0
-debug  : fbm.c <FbmCreateBuffer:252>: ** call allocate pic buf, i = 3, maxNum = 6
-debug  : fbm.c <FbmAllocatePictureBuffer:1454>: pPicture->bEnableAfbcFlag = 0
-debug  : fbm.c <FbmCreateBuffer:252>: ** call allocate pic buf, i = 4, maxNum = 6
-debug  : fbm.c <FbmAllocatePictureBuffer:1454>: pPicture->bEnableAfbcFlag = 0
-debug  : fbm.c <FbmCreateBuffer:252>: ** call allocate pic buf, i = 5, maxNum = 6
-debug  : fbm.c <FbmAllocatePictureBuffer:1454>: pPicture->bEnableAfbcFlag = 0
-debug  : fbm.c <FbmCreateBuffer:405>: *** finish fbmCreateBuffer
-[vdec-prof] chn=0 bypass=0 elapsed_ms=2275.8 decode=0 fail=0 decode_avg=0.000 decode_max=0.000 cb=1 cb_avg=12.607 cb_max=12.607 copy_avg=12.115 copy_max=12.115 sync_avg=0.482 sync_max=0.482
-[vdec-recover] chn=0 streak=3 total=3 frameType=U inputLen=66383
-[dec-resync-release] chn=0 dropped=147 idr_size=66347
-[vdec-prof] chn=3 bypass=0 elapsed_ms=1016.2 decode=26 fail=0 decode_avg=38.362 decode_max=59.408 cb=26 cb_avg=11.022 cb_max=13.134 copy_avg=10.429 copy_max=12.284 sync_avg=0.582 sync_max=2.072
-[pipe-prof] chn=1 elapsed_ms=1010.4 pop=22 send=22 send_fail=0 load=22 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=9 in_kb=121.8 out_kb=121.9 popwait_avg=2.496 popwait_max=53.056 send_avg=43.202 send_max=69.847 get_avg=0.001 get_max=0.003 load_avg=0.019 load_max=0.096 loop_avg=45.917 loop_max=80.527
-[pipe-prof] chn=2 elapsed_ms=1031.1 pop=22 send=22 send_fail=0 load=22 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=8 in_kb=244.8 out_kb=245.0 popwait_avg=4.051 popwait_max=89.008 send_avg=41.654 send_max=69.779 get_avg=0.001 get_max=0.002 load_avg=0.801 load_max=1.730 loop_avg=46.857 loop_max=123.048
-[pipe-prof] chn=0 elapsed_ms=1020.4 pop=11 send=9 send_fail=0 load=9 null=0 drop_pre=0 drop_resync=2 idr=1 qmax=7 in_kb=95.1 out_kb=95.2 popwait_avg=52.050 popwait_max=460.144 send_avg=49.431 send_max=57.657 get_avg=0.001 get_max=0.002 load_avg=0.014 load_max=0.028 loop_avg=92.722 loop_max=518.284
-[queue] overflow flush chn=1 depth=10 max=10 incoming_nal=1 incoming_size=3782 isIDR=0 isSpsOrPps=0 isSei=0 pts=257560
-[queue] overflow flush chn=0 depth=10 max=10 incoming_nal=1 incoming_size=1003 isIDR=0 isSpsOrPps=0 isSei=0 pts=257573
-[pipe-prof] chn=3 elapsed_ms=1002.7 pop=25 send=25 send_fail=0 load=25 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=3 in_kb=281.0 out_kb=281.1 popwait_avg=0.070 popwait_max=1.647 send_avg=39.762 send_max=59.627 get_avg=0.001 get_max=0.003 load_avg=0.014 load_max=0.031 loop_avg=40.095 loop_max=61.632
-[queue] resync chn=1 dropped=3 incoming_size=20873 pts=257669
-[queue] overflow flush chn=2 depth=10 max=10 incoming_nal=1 incoming_size=6311 isIDR=0 isSpsOrPps=0 isSei=0 pts=257944
-[render-prof] elapsed_ms=1004.5 draws=74 draw_avg=1.229 draw_max=1.858 swap_avg=0.473 swap_max=0.857 finish_avg=11.348 finish_max=15.100 total_avg=13.566 total_max=20.482
-[vdec-prof] chn=1 bypass=0 elapsed_ms=1007.5 decode=19 fail=0 decode_avg=47.502 decode_max=69.813 cb=19 cb_avg=10.624 cb_max=12.314 copy_avg=10.242 copy_max=11.998 sync_avg=0.372 sync_max=0.585
-[vdec-prof] chn=3 bypass=0 elapsed_ms=1013.7 decode=29 fail=0 decode_avg=29.799 decode_max=54.210 cb=29 cb_avg=8.782 cb_max=12.930 copy_avg=8.420 copy_max=12.546 sync_avg=0.354 sync_max=0.561
-[pipe-prof] chn=1 elapsed_ms=1008.6 pop=24 send=24 send_fail=0 load=24 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=9 in_kb=104.6 out_kb=104.7 popwait_avg=10.573 popwait_max=97.437 send_avg=31.293 send_max=54.656 get_avg=0.001 get_max=0.003 load_avg=0.017 load_max=0.070 loop_avg=42.012 loop_max=132.917
-[pipe-prof] chn=3 elapsed_ms=1070.9 pop=29 send=29 send_fail=0 load=29 null=0 drop_pre=0 drop_resync=0 idr=0 qmax=2 in_kb=266.8 out_kb=267.0 popwait_avg=14.264 popwait_max=115.433 send_avg=22.151 send_max=40.944 get_avg=0.001 get_max=0.002 load_avg=0.323 load_max=1.956 loop_avg=36.916 loop_max=129.736
-[queue] resync chn=2 dropped=17 incoming_size=89066 pts=258853
-[vdec-prof] chn=2 bypass=0 elapsed_ms=1903.4 decode=23 fail=0 decode_avg=42.787 decode_max=69.530 cb=23 cb_avg=11.705 cb_max=14.309 copy_avg=11.254 copy_max=13.775 sync_avg=0.441 sync_max=0.745
-[pipe-prof] chn=2 elapsed_ms=1433.5 pop=13 send=13 send_fail=0 load=13 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=9 in_kb=176.3 out_kb=176.4 popwait_avg=68.687 popwait_max=892.893 send_avg=40.653 send_max=56.837 get_avg=0.001 get_max=0.002 load_avg=0.629 load_max=1.865 loop_avg=110.242 loop_max=923.605
-[render-prof] elapsed_ms=1006.3 draws=54 draw_avg=0.923 draw_max=1.951 swap_avg=0.366 swap_max=1.008 finish_avg=9.928 finish_max=15.698 total_avg=18.627 total_max=118.506
-[queue] resync chn=0 dropped=30 incoming_size=77153 pts=259016
-[vdec-prof] chn=1 bypass=0 elapsed_ms=1009.9 decode=25 fail=0 decode_avg=20.697 decode_max=39.376 cb=25 cb_avg=6.658 cb_max=11.672 copy_avg=6.338 copy_max=11.281 sync_avg=0.311 sync_max=0.607
-[vdec-prof] chn=0 bypass=0 elapsed_ms=1921.2 decode=10 fail=0 decode_avg=49.934 decode_max=57.596 cb=10 cb_avg=10.768 cb_max=15.040 copy_avg=10.306 copy_max=14.610 sync_avg=0.416 sync_max=0.545
-[pipe-prof] chn=0 elapsed_ms=1532.2 pop=2 send=2 send_fail=0 load=2 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=7 in_kb=80.0 out_kb=80.0 popwait_avg=714.956 popwait_max=1429.909 send_avg=50.217 send_max=55.070 get_avg=0.001 get_max=0.002 load_avg=0.007 load_max=0.009 loop_avg=765.973 loop_max=1476.745
-[queue] overflow flush chn=0 depth=10 max=10 incoming_nal=1 incoming_size=2005 isIDR=0 isSpsOrPps=0 isSei=0 pts=259360
-[vdec-prof] chn=3 bypass=0 elapsed_ms=1041.6 decode=22 fail=0 decode_avg=27.016 decode_max=55.614 cb=22 cb_avg=7.167 cb_max=12.182 copy_avg=6.850 copy_max=11.876 sync_avg=0.309 sync_max=0.667
-[pipe-prof] chn=1 elapsed_ms=1030.6 pop=21 send=21 send_fail=0 load=21 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=4 in_kb=108.8 out_kb=108.9 popwait_avg=15.412 popwait_max=104.946 send_avg=33.483 send_max=69.990 get_avg=0.001 get_max=0.002 load_avg=0.016 load_max=0.053 loop_avg=49.069 loop_max=124.336
-[pipe-prof] chn=3 elapsed_ms=1021.7 pop=24 send=24 send_fail=0 load=24 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=3 in_kb=231.0 out_kb=231.1 popwait_avg=6.230 popwait_max=67.566 send_avg=35.995 send_max=55.772 get_avg=0.001 get_max=0.003 load_avg=0.120 load_max=1.713 loop_avg=42.558 loop_max=109.074
-[vdec-prof] chn=2 bypass=0 elapsed_ms=1037.0 decode=24 fail=0 decode_avg=41.908 decode_max=75.927 cb=24 cb_avg=12.110 cb_max=13.822 copy_avg=11.416 copy_max=13.369 sync_avg=0.682 sync_max=2.457
-[pipe-prof] chn=2 elapsed_ms=1035.6 pop=24 send=24 send_fail=0 load=24 null=0 drop_pre=0 drop_resync=0 idr=0 qmax=8 in_kb=169.8 out_kb=169.9 popwait_avg=0.006 popwait_max=0.023 send_avg=42.492 send_max=75.986 get_avg=0.001 get_max=0.002 load_avg=0.417 load_max=1.891 loop_avg=43.136 loop_max=77.806
-[render-prof] elapsed_ms=1000.6 draws=72 draw_avg=1.354 draw_max=2.214 swap_avg=0.530 swap_max=2.925 finish_avg=11.667 finish_max=15.029 total_avg=13.888 total_max=19.647
-[vdec-prof] chn=1 bypass=0 elapsed_ms=1001.0 decode=23 fail=0 decode_avg=43.189 decode_max=69.833 cb=23 cb_avg=11.059 cb_max=13.113 copy_avg=10.626 copy_max=12.644 sync_avg=0.422 sync_max=0.577
-[pipe-prof] chn=1 elapsed_ms=1008.3 pop=25 send=25 send_fail=0 load=25 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=4 in_kb=121.7 out_kb=121.9 popwait_avg=0.005 popwait_max=0.020 send_avg=40.122 send_max=53.979 get_avg=0.001 get_max=0.002 load_avg=0.011 load_max=0.022 loop_avg=40.320 loop_max=54.192
-[vdec-prof] chn=3 bypass=0 elapsed_ms=1033.1 decode=26 fail=0 decode_avg=39.745 decode_max=53.835 cb=26 cb_avg=10.711 cb_max=12.734 copy_avg=10.265 copy_max=12.048 sync_avg=0.435 sync_max=0.693
-[pipe-prof] chn=3 elapsed_ms=1012.5 pop=25 send=25 send_fail=0 load=25 null=0 drop_pre=0 drop_resync=0 idr=0 qmax=3 in_kb=251.3 out_kb=251.4 popwait_avg=0.005 popwait_max=0.019 send_avg=40.242 send_max=53.822 get_avg=0.005 get_max=0.118 load_avg=0.010 load_max=0.022 loop_avg=40.489 loop_max=54.027
-[vdec-prof] chn=2 bypass=0 elapsed_ms=1069.8 decode=26 fail=0 decode_avg=37.143 decode_max=41.497 cb=26 cb_avg=12.412 cb_max=13.449 copy_avg=11.906 copy_max=12.944 sync_avg=0.495 sync_max=1.949
-[pipe-prof] chn=2 elapsed_ms=1069.7 pop=26 send=26 send_fail=0 load=26 null=0 drop_pre=0 drop_resync=0 idr=2 qmax=8 in_kb=355.8 out_kb=356.0 popwait_avg=3.224 popwait_max=83.689 send_avg=37.355 send_max=41.593 get_avg=0.001 get_max=0.003 load_avg=0.199 load_max=1.760 loop_avg=41.137 loop_max=122.823
-[render-prof] elapsed_ms=1013.3 draws=74 draw_avg=1.382 draw_max=2.017 swap_avg=0.554 swap_max=1.172 finish_avg=11.657 finish_max=18.247 total_avg=13.682 total_max=20.090
-[vdec-prof] chn=1 bypass=0 elapsed_ms=1026.7 decode=27 fail=0 decode_avg=37.692 decode_max=53.728 cb=27 cb_avg=10.562 cb_max=12.453 copy_avg=10.154 copy_max=12.166 sync_avg=0.398 sync_max=0.592
-[queue] resync chn=0 dropped=33 incoming_size=117344 pts=261209
-[vdec-prof] chn=0 bypass=0 elapsed_ms=2189.9 decode=7 fail=0 decode_avg=54.420 decode_max=87.754 cb=7 cb_avg=11.594 cb_max=17.610 copy_avg=11.251 copy_max=17.373 sync_avg=0.333 sync_max=0.424
-[pipe-prof] chn=0 elapsed_ms=2189.9 pop=7 send=7 send_fail=0 load=7 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=9 in_kb=144.5 out_kb=144.6 popwait_avg=258.448 popwait_max=1809.111 send_avg=53.955 send_max=87.829 get_avg=0.001 get_max=0.001 load_avg=0.008 load_max=0.012 loop_avg=312.831 loop_max=1852.604
-[pipe-prof] chn=1 elapsed_ms=1004.6 pop=25 send=25 send_fail=0 load=25 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=4 in_kb=131.6 out_kb=131.8 popwait_avg=1.521 popwait_max=37.806 send_avg=38.447 send_max=54.035 get_avg=0.001 get_max=0.003 load_avg=0.011 load_max=0.019 loop_avg=40.174 loop_max=67.241
-[vdec-prof] chn=3 bypass=0 elapsed_ms=1011.6 decode=25 fail=0 decode_avg=38.174 decode_max=53.158 cb=25 cb_avg=11.291 cb_max=13.655 copy_avg=10.895 copy_max=13.248 sync_avg=0.385 sync_max=0.547
-[queue] overflow flush chn=0 depth=10 max=10 incoming_nal=1 incoming_size=2942 isIDR=0 isSpsOrPps=0 isSei=0 pts=261536
-[pipe-prof] chn=3 elapsed_ms=1032.9 pop=25 send=25 send_fail=0 load=25 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=3 in_kb=245.3 out_kb=245.4 popwait_avg=1.602 popwait_max=39.939 send_avg=39.431 send_max=54.223 get_avg=0.001 get_max=0.002 load_avg=0.011 load_max=0.024 loop_avg=41.297 loop_max=79.653
-[vdec-prof] chn=2 bypass=0 elapsed_ms=1013.3 decode=24 fail=0 decode_avg=41.272 decode_max=53.436 cb=24 cb_avg=12.362 cb_max=13.276 copy_avg=11.941 copy_max=12.877 sync_avg=0.409 sync_max=0.632
-[pipe-prof] chn=2 elapsed_ms=1013.4 pop=24 send=24 send_fail=0 load=24 null=0 drop_pre=0 drop_resync=0 idr=0 qmax=9 in_kb=160.0 out_kb=160.1 popwait_avg=0.375 popwait_max=8.900 send_avg=41.468 send_max=53.589 get_avg=0.001 get_max=0.002 load_avg=0.170 load_max=2.186 loop_avg=42.220 loop_max=55.384
-[render-prof] elapsed_ms=1008.3 draws=73 draw_avg=1.449 draw_max=2.315 swap_avg=0.533 swap_max=0.875 finish_avg=11.774 finish_max=16.330 total_avg=13.804 total_max=18.698
-[vdec-prof] chn=1 bypass=0 elapsed_ms=1018.0 decode=23 fail=0 decode_avg=41.952 decode_max=53.899 cb=23 cb_avg=10.573 cb_max=11.994 copy_avg=10.194 copy_max=11.602 sync_avg=0.369 sync_max=0.703
-[queue] overflow flush chn=2 depth=10 max=10 incoming_nal=1 incoming_size=2349 isIDR=0 isSpsOrPps=0 isSei=0 pts=262232
-[pipe-prof] chn=1 elapsed_ms=1023.5 pop=28 send=28 send_fail=0 load=28 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=4 in_kb=130.7 out_kb=130.9 popwait_avg=0.009 popwait_max=0.112 send_avg=36.331 send_max=53.399 get_avg=0.001 get_max=0.002 load_avg=0.011 load_max=0.032 loop_avg=36.540 loop_max=53.650
-[vdec-prof] chn=3 bypass=0 elapsed_ms=1017.3 decode=28 fail=0 decode_avg=36.366 decode_max=53.929 cb=28 cb_avg=11.035 cb_max=13.501 copy_avg=10.625 copy_max=13.178 sync_avg=0.395 sync_max=0.779
-[pipe-prof] chn=3 elapsed_ms=1023.8 pop=29 send=29 send_fail=0 load=29 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=4 in_kb=293.5 out_kb=293.7 popwait_avg=5.362 popwait_max=95.498 send_avg=29.371 send_max=42.502 get_avg=0.001 get_max=0.002 load_avg=0.340 load_max=1.697 loop_avg=35.294 loop_max=107.326
-[queue] resync chn=0 dropped=34 incoming_size=50399 pts=262888
-[vdec-prof] chn=0 bypass=0 elapsed_ms=1667.4 decode=6 fail=0 decode_avg=47.748 decode_max=54.128 cb=6 cb_avg=10.519 cb_max=12.035 copy_avg=10.124 copy_max=11.593 sync_avg=0.385 sync_max=0.503
-[pipe-prof] chn=0 elapsed_ms=1667.5 pop=6 send=6 send_fail=0 load=6 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=9 in_kb=87.9 out_kb=88.0 popwait_avg=231.417 popwait_max=1306.803 send_avg=46.165 send_max=54.172 get_avg=0.001 get_max=0.002 load_avg=0.011 load_max=0.019 loop_avg=277.903 loop_max=1338.906
-[queue] resync chn=2 dropped=9 incoming_size=103972 pts=262972
-[render-prof] elapsed_ms=1004.1 draws=62 draw_avg=1.228 draw_max=1.952 swap_avg=0.462 swap_max=0.810 finish_avg=11.101 finish_max=16.734 total_avg=16.185 total_max=99.165
-[vdec-prof] chn=2 bypass=0 elapsed_ms=1089.8 decode=8 fail=0 decode_avg=37.319 decode_max=41.148 cb=8 cb_avg=12.049 cb_max=13.500 copy_avg=11.687 copy_max=13.157 sync_avg=0.351 sync_max=0.561
-[pipe-prof] chn=2 elapsed_ms=1089.8 pop=8 send=8 send_fail=0 load=8 null=0 drop_pre=0 drop_resync=0 idr=2 qmax=9 in_kb=258.6 out_kb=258.7 popwait_avg=96.757 popwait_max=733.870 send_avg=38.808 send_max=50.269 get_avg=0.001 get_max=0.002 load_avg=0.012 load_max=0.016 loop_avg=136.216 loop_max=763.059
-[vdec-prof] chn=1 bypass=0 elapsed_ms=1009.3 decode=26 fail=0 decode_avg=29.520 decode_max=49.809 cb=26 cb_avg=9.898 cb_max=12.502 copy_avg=9.484 copy_max=12.177 sync_avg=0.397 sync_max=0.630
-[queue] overflow flush chn=2 depth=10 max=10 incoming_nal=1 incoming_size=2875 isIDR=0 isSpsOrPps=0 isSei=0 pts=263400
-[pipe-prof] chn=1 elapsed_ms=1012.4 pop=20 send=20 send_fail=0 load=20 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=6 in_kb=116.9 out_kb=117.0 popwait_avg=11.076 popwait_max=221.446 send_avg=39.346 send_max=67.878 get_avg=0.001 get_max=0.002 load_avg=0.014 load_max=0.028 loop_avg=50.609 loop_max=243.370
-[vdec-prof] chn=3 bypass=0 elapsed_ms=1027.2 decode=23 fail=0 decode_avg=32.837 decode_max=59.389 cb=23 cb_avg=9.261 cb_max=13.555 copy_avg=8.901 copy_max=13.250 sync_avg=0.352 sync_max=0.822
-^C[pipe-prof] chn=2 elapsed_ms=670.9 pop=7 send=7 send_fail=0 load=7 null=0 drop_pre=0 drop_resync=0 idr=0 qmax=10 in_kb=43.9 out_kb=43.9 popwait_avg=0.005 popwait_max=0.008 send_avg=46.471 send_max=66.383 get_avg=0.001 get_max=0.002 load_avg=0.441 load_max=1.588 loop_avg=95.831 loop_max=338.773
-[pipe-prof] chn=2 elapsed_ms=0.2 pop=0 send=0 send_fail=0 load=0 null=0 drop_pre=0 drop_resync=0 idr=0 qmax=0 in_kb=0.0 out_kb=0.0 popwait_avg=0.000 popwait_max=0.000 send_avg=0.000 send_max=0.000 get_avg=0.000 get_max=0.000 load_avg=0.000 load_max=0.000 loop_avg=0.000 loop_max=0.000
-[pipe-prof] chn=3 elapsed_ms=964.6 pop=22 send=22 send_fail=0 load=22 null=0 drop_pre=0 drop_resync=0 idr=0 qmax=3 in_kb=227.4 out_kb=227.4 popwait_avg=3.962 popwait_max=31.298 send_avg=39.388 send_max=59.710 get_avg=0.001 get_max=0.002 load_avg=0.264 load_max=1.796 loop_avg=43.836 loop_max=59.956
-[pipe-prof] chn=1 elapsed_ms=285.7 pop=7 send=7 send_fail=0 load=7 null=0 drop_pre=0 drop_resync=0 idr=0 qmax=7 in_kb=22.3 out_kb=22.3 popwait_avg=0.004 popwait_max=0.006 send_avg=40.582 send_max=49.673 get_avg=0.001 get_max=0.002 load_avg=0.014 load_max=0.026 loop_avg=40.744 loop_max=49.779
-[pipe-prof] chn=0 elapsed_ms=873.9 pop=19 send=19 send_fail=0 load=19 null=0 drop_pre=0 drop_resync=0 idr=0 qmax=9 in_kb=85.6 out_kb=85.6 popwait_avg=0.154 popwait_max=2.854 send_avg=45.657 send_max=74.114 get_avg=0.001 get_max=0.002 load_avg=0.011 load_max=0.022 loop_avg=45.992 loop_max=74.278
-
-
-
-
-########## bypass on
-PLAY started
-secceed to setupTexture!
-[vdec-fail] chn=2 ret=-6 streak=1 total=1 nal=7 frameType=U inputLen=105710 retained=0 retainedBytes=0 head=00 00 00 01
-[dec-resync-arm] chn=2 sendRet=-1 q=3 nal=5 pkt=105674 out=105710 idr=1 first_mb=0 primed=0 sps=20 pps=4 extra=1
-[dec-fail] chn=2 sendRet=-1 q=3 nal=5 pkt=105674 out=105710 idr=1 first_mb=0 primed=0 sps=20 pps=4 extra=1
-[dec-fail-hist] chn=2 idx=0 q=3 nal=5 pkt=105674 out=105710 idr=1 first_mb=0 primed=0 sps=20 pps=4 extra=1
-debug  : cedarc <AvcSbmFrameCheckBitStreamType:325>: result: bStreamWithStartCode[1], with[1], whitout[0]
-[vdec-fail] chn=1 ret=-6 streak=1 total=1 nal=7 frameType=U inputLen=62694 retained=0 retainedBytes=0 head=00 00 00 01
-[dec-resync-arm] chn=1 sendRet=-1 q=1 nal=5 pkt=62658 out=62694 idr=1 first_mb=0 primed=0 sps=20 pps=4 extra=1
-[dec-fail] chn=1 sendRet=-1 q=1 nal=5 pkt=62658 out=62694 idr=1 first_mb=0 primed=0 sps=20 pps=4 extra=1
-[dec-fail-hist] chn=1 idx=0 q=1 nal=5 pkt=62658 out=62694 idr=1 first_mb=0 primed=0 sps=20 pps=4 extra=1
-debug  : cedarc <AvcSbmFrameCheckBitStreamType:325>: result: bStreamWithStartCode[1], with[1], whitout[0]
-debug  : cedarc <AvcSbmFrameCheckBitStreamType:325>: result: bStreamWithStartCode[1], with[1], whitout[0]
-[vdec-fail] chn=3 ret=-6 streak=1 total=1 nal=7 frameType=U inputLen=59267 retained=0 retainedBytes=0 head=00 00 00 01
-[dec-resync-arm] chn=3 sendRet=-1 q=1 nal=5 pkt=59233 out=59267 idr=1 first_mb=0 primed=0 sps=17 pps=5 extra=1
-[dec-fail] chn=3 sendRet=-1 q=1 nal=5 pkt=59233 out=59267 idr=1 first_mb=0 primed=0 sps=17 pps=5 extra=1
-[dec-fail-hist] chn=3 idx=0 q=1 nal=5 pkt=59233 out=59267 idr=1 first_mb=0 primed=0 sps=17 pps=5 extra=1
-[pipe-prof] chn=0 elapsed_ms=1024.4 pop=34 send=0 send_fail=0 load=0 null=0 drop_pre=34 drop_resync=0 idr=0 qmax=0 in_kb=0.0 out_kb=0.0 popwait_avg=49.632 popwait_max=664.832 send_avg=0.000 send_max=0.000 get_avg=0.000 get_max=0.000 load_avg=0.000 load_max=0.000 loop_avg=49.691 loop_max=665.130
-[pipe-prof] chn=2 elapsed_ms=1042.1 pop=34 send=1 send_fail=1 load=0 null=0 drop_pre=18 drop_resync=15 idr=1 qmax=3 in_kb=103.2 out_kb=103.2 popwait_avg=40.325 popwait_max=333.712 send_avg=0.531 send_max=0.531 get_avg=0.000 get_max=0.000 load_avg=0.000 load_max=0.000 loop_avg=40.494 loop_max=334.702
-[pipe-prof] chn=1 elapsed_ms=1005.0 pop=27 send=1 send_fail=1 load=0 null=0 drop_pre=18 drop_resync=8 idr=1 qmax=1 in_kb=61.2 out_kb=61.2 popwait_avg=63.346 popwait_max=707.515 send_avg=0.342 send_max=0.342 get_avg=0.000 get_max=0.000 load_avg=0.000 load_max=0.000 loop_avg=63.426 loop_max=707.552
-[vdec-fail] chn=0 ret=-6 streak=1 total=1 nal=7 frameType=U inputLen=72127 retained=0 retainedBytes=0 head=00 00 00 01
-[dec-resync-arm] chn=0 sendRet=-1 q=2 nal=5 pkt=72091 out=72127 idr=1 first_mb=0 primed=0 sps=20 pps=4 extra=1
-[dec-fail] chn=0 sendRet=-1 q=2 nal=5 pkt=72091 out=72127 idr=1 first_mb=0 primed=0 sps=20 pps=4 extra=1
-[dec-fail-hist] chn=0 idx=0 q=2 nal=5 pkt=72091 out=72127 idr=1 first_mb=0 primed=0 sps=20 pps=4 extra=1
+[pipe-prof] chn=3 elapsed_ms=1050.8 pop=34 send=2 send_fail=2 load=0 null=0 drop_pre=0 drop_resync=32 idr=2 qmax=7 in_kb=117.0 out_kb=117.1 popwait_avg=51.014 popwait_max=687.558 send_avg=0.323 send_max=0.454 get_avg=0.000 get_max=0.000 load_avg=0.000 load_max=0.000 loop_avg=51.164 loop_max=688.789
+[pipe-prof] chn=2 elapsed_ms=1046.1 pop=26 send=1 send_fail=1 load=0 null=0 drop_pre=17 drop_resync=8 idr=1 qmax=0 in_kb=97.7 out_kb=97.7 popwait_avg=69.304 popwait_max=759.423 send_avg=0.354 send_max=0.354 get_avg=0.000 get_max=0.000 load_avg=0.000 load_max=0.000 loop_avg=69.445 loop_max=759.526
+[pipe-prof] chn=0 elapsed_ms=1048.2 pop=27 send=0 send_fail=0 load=0 null=0 drop_pre=27 drop_resync=0 idr=0 qmax=0 in_kb=0.0 out_kb=0.0 popwait_avg=66.668 popwait_max=752.894 send_avg=0.000 send_max=0.000 get_avg=0.000 get_max=0.000 load_avg=0.000 load_max=0.000 loop_avg=66.707 loop_max=752.932
+[vdec-fail] chn=1 ret=-6 streak=1 total=1 nal=7 frameType=U inputLen=105721 retained=0 retainedBytes=0 head=00 00 00 01
+[dec-resync-arm] chn=1 sendRet=-1 q=6 nal=5 pkt=105685 out=105721 idr=1 first_mb=0 primed=0 sps=20 pps=4 extra=1
+[dec-fail] chn=1 sendRet=-1 q=6 nal=5 pkt=105685 out=105721 idr=1 first_mb=0 primed=0 sps=20 pps=4 extra=1
+[dec-fail-hist] chn=1 idx=0 q=6 nal=5 pkt=105685 out=105721 idr=1 first_mb=0 primed=0 sps=20 pps=4 extra=1
+[pipe-prof] chn=1 elapsed_ms=1098.9 pop=19 send=1 send_fail=1 load=0 null=0 drop_pre=18 drop_resync=0 idr=1 qmax=6 in_kb=103.2 out_kb=103.2 popwait_avg=80.338 popwait_max=446.371 send_avg=0.302 send_max=0.302 get_avg=0.000 get_max=0.000 load_avg=0.000 load_max=0.000 loop_avg=80.440 loop_max=447.917
 debug  : cedarc <AvcSbmFrameCheckBitStreamType:325>: result: bStreamWithStartCode[1], with[1], whitout[0]
 debug  : cedarc <H264DecVuiParameters:341>: nFrameRate=25
 debug  : cedarc <H264DecodePictureScanType:2779>: here3:hCtx->bProgressice=1
 
-[vdec-prof] chn=2 bypass=1 elapsed_ms=1120.4 decode=2 fail=2 decode_avg=0.416 decode_max=0.434 cb=0 cb_avg=0.000 cb_max=0.000 copy_avg=0.000 copy_max=0.000 sync_avg=0.000 sync_max=0.000
-[vdec-probe] chn=2 bypass copy/Ion enabled via RTSPPULL_BYPASS_VDEC_COPY
-[dec-fail] chn=2 sendRet=-1 q=0 nal=5 pkt=111287 out=111323 idr=1 first_mb=0 primed=0 sps=20 pps=4 extra=1
-[dec-fail-hist] chn=2 idx=0 q=3 nal=5 pkt=105674 out=105710 idr=1 first_mb=0 primed=0 sps=20 pps=4 extra=1
-[dec-fail-hist] chn=2 idx=1 q=0 nal=5 pkt=111287 out=111323 idr=1 first_mb=0 primed=0 sps=20 pps=4 extra=1
-[pipe-prof] chn=3 elapsed_ms=1016.1 pop=28 send=1 send_fail=1 load=0 null=0 drop_pre=0 drop_resync=27 idr=1 qmax=1 in_kb=57.8 out_kb=57.9 popwait_avg=81.886 popwait_max=1279.313 send_avg=0.278 send_max=0.278 get_avg=0.000 get_max=0.000 load_avg=0.000 load_max=0.000 loop_avg=82.014 loop_max=1280.353
-[vdec-prof] chn=1 bypass=1 elapsed_ms=1100.7 decode=2 fail=2 decode_avg=0.207 decode_max=0.242 cb=0 cb_avg=0.000 cb_max=0.000 copy_avg=0.000 copy_max=0.000 sync_avg=0.000 sync_max=0.000
-[vdec-probe] chn=1 bypass copy/Ion enabled via RTSPPULL_BYPASS_VDEC_COPY
-[dec-fail] chn=1 sendRet=-1 q=0 nal=5 pkt=62156 out=62192 idr=1 first_mb=0 primed=0 sps=20 pps=4 extra=1
-[dec-fail-hist] chn=1 idx=0 q=1 nal=5 pkt=62658 out=62694 idr=1 first_mb=0 primed=0 sps=20 pps=4 extra=1
-[dec-fail-hist] chn=1 idx=1 q=0 nal=5 pkt=62156 out=62192 idr=1 first_mb=0 primed=0 sps=20 pps=4 extra=1
-[pipe-prof] chn=0 elapsed_ms=1024.2 pop=22 send=1 send_fail=1 load=0 null=0 drop_pre=9 drop_resync=12 idr=1 qmax=2 in_kb=70.4 out_kb=70.4 popwait_avg=46.446 popwait_max=236.345 send_avg=0.283 send_max=0.283 get_avg=0.000 get_max=0.000 load_avg=0.000 load_max=0.000 loop_avg=46.549 loop_max=237.497
-[pipe-prof] chn=1 elapsed_ms=1035.2 pop=23 send=1 send_fail=1 load=0 null=0 drop_pre=0 drop_resync=22 idr=1 qmax=0 in_kb=60.7 out_kb=60.7 popwait_avg=44.931 popwait_max=216.041 send_avg=0.265 send_max=0.265 get_avg=0.000 get_max=0.000 load_avg=0.000 load_max=0.000 loop_avg=45.008 loop_max=217.016
-[pipe-prof] chn=2 elapsed_ms=1060.4 pop=22 send=1 send_fail=1 load=0 null=0 drop_pre=0 drop_resync=21 idr=1 qmax=0 in_kb=108.7 out_kb=108.7 popwait_avg=48.037 popwait_max=342.927 send_avg=0.468 send_max=0.468 get_avg=0.000 get_max=0.000 load_avg=0.000 load_max=0.000 loop_avg=48.194 loop_max=344.744
-[vdec-prof] chn=3 bypass=1 elapsed_ms=1556.8 decode=2 fail=2 decode_avg=0.204 decode_max=0.244 cb=0 cb_avg=0.000 cb_max=0.000 copy_avg=0.000 copy_max=0.000 sync_avg=0.000 sync_max=0.000
-[vdec-probe] chn=3 bypass copy/Ion enabled via RTSPPULL_BYPASS_VDEC_COPY
-[dec-fail] chn=3 sendRet=-1 q=0 nal=5 pkt=57715 out=57749 idr=1 first_mb=0 primed=0 sps=17 pps=5 extra=1
-[dec-fail-hist] chn=3 idx=0 q=1 nal=5 pkt=59233 out=59267 idr=1 first_mb=0 primed=0 sps=17 pps=5 extra=1
-[dec-fail-hist] chn=3 idx=1 q=0 nal=5 pkt=57715 out=57749 idr=1 first_mb=0 primed=0 sps=17 pps=5 extra=1
-debug  : cedarc <VeSetEnableAfbcFlag:1771>: **** VeSetEnableAfbcFlag: 0
-debug  : fbm.c <FbmCreateBuffer:148>: FbmCreate, total fbm number: 6, decoder needed: 2,  nWidth=1920, nHeight=1088 nAlignStride = 0
-debug  : fbm.c <FbmCreateBuffer:252>: ** call allocate pic buf, i = 0, maxNum = 6
-debug  : fbm.c <FbmAllocatePictureBuffer:1454>: pPicture->bEnableAfbcFlag = 0
-debug  : fbm.c <FbmCreateBuffer:252>: ** call allocate pic buf, i = 1, maxNum = 6
-debug  : fbm.c <FbmAllocatePictureBuffer:1454>: pPicture->bEnableAfbcFlag = 0
-debug  : fbm.c <FbmCreateBuffer:252>: ** call allocate pic buf, i = 2, maxNum = 6
-debug  : fbm.c <FbmAllocatePictureBuffer:1454>: pPicture->bEnableAfbcFlag = 0
-debug  : fbm.c <FbmCreateBuffer:252>: ** call allocate pic buf, i = 3, maxNum = 6
-debug  : fbm.c <FbmAllocatePictureBuffer:1454>: pPicture->bEnableAfbcFlag = 0
-debug  : fbm.c <FbmCreateBuffer:252>: ** call allocate pic buf, i = 4, maxNum = 6
-debug  : fbm.c <FbmAllocatePictureBuffer:1454>: pPicture->bEnableAfbcFlag = 0
-debug  : fbm.c <FbmCreateBuffer:252>: ** call allocate pic buf, i = 5, maxNum = 6
-debug  : fbm.c <FbmAllocatePictureBuffer:1454>: pPicture->bEnableAfbcFlag = 0
-debug  : fbm.c <FbmCreateBuffer:405>: *** finish fbmCreateBuffer
-[vdec-copy-bypass] chn=2 callbacks=1 inputLen=2088960 pts=37644712
-[vdec-recover] chn=2 streak=2 total=2 frameType=U inputLen=101705
-[dec-resync-release] chn=2 dropped=48 idr_size=101669
-[vdec-prof] chn=2 bypass=1 elapsed_ms=1011.2 decode=5 fail=0 decode_avg=7.915 decode_max=13.583 cb=6 cb_avg=0.000 cb_max=0.001 copy_avg=0.000 copy_max=0.000 sync_avg=0.000 sync_max=0.000
-[vdec-probe] chn=2 bypass copy/Ion enabled via RTSPPULL_BYPASS_VDEC_COPY
-[vdec-copy-bypass] chn=2 callbacks=0 inputLen=2088960 pts=39740185
-[vdec-copy-bypass] chn=2 callbacks=1 inputLen=2088960 pts=39749176
+[vdec-prof] chn=2 bypass=0 elapsed_ms=1029.9 decode=2 fail=2 decode_avg=0.317 decode_max=0.398 cb=0 cb_avg=0.000 cb_max=0.000 copy_avg=0.000 copy_max=0.000 sync_avg=0.000 sync_max=0.000
+[dec-fail] chn=2 sendRet=-1 q=0 nal=5 pkt=98948 out=98984 idr=1 first_mb=0 primed=0 sps=20 pps=4 extra=1
+[dec-fail-hist] chn=2 idx=0 q=0 nal=5 pkt=100035 out=100071 idr=1 first_mb=0 primed=0 sps=20 pps=4 extra=1
+[dec-fail-hist] chn=2 idx=1 q=0 nal=5 pkt=98948 out=98984 idr=1 first_mb=0 primed=0 sps=20 pps=4 extra=1
+[pipe-prof] chn=3 elapsed_ms=1003.2 pop=25 send=0 send_fail=0 load=0 null=0 drop_pre=0 drop_resync=25 idr=0 qmax=0 in_kb=0.0 out_kb=0.0 popwait_avg=40.012 popwait_max=103.047 send_avg=0.000 send_max=0.000 get_avg=0.000 get_max=0.000 load_avg=0.000 load_max=0.000 loop_avg=40.122 loop_max=103.154
+[pipe-prof] chn=2 elapsed_ms=1021.2 pop=25 send=1 send_fail=1 load=0 null=0 drop_pre=0 drop_resync=24 idr=1 qmax=0 in_kb=96.6 out_kb=96.7 popwait_avg=40.707 popwait_max=253.062 send_avg=0.456 send_max=0.456 get_avg=0.000 get_max=0.000 load_avg=0.000 load_max=0.000 loop_avg=40.842 loop_max=254.626
+debug  : cedarc <H264DecodePictureScanType:2779>: here3:hCtx->bProgressice=1
+
+[vdec-prof] chn=3 bypass=0 elapsed_ms=2272.0 decode=3 fail=3 decode_avg=0.301 decode_max=0.418 cb=0 cb_avg=0.000 cb_max=0.000 copy_avg=0.000 copy_max=0.000 sync_avg=0.000 sync_max=0.000
+[dec-fail] chn=3 sendRet=-1 q=1 nal=5 pkt=61394 out=61428 idr=1 first_mb=0 primed=0 sps=17 pps=5 extra=1
+[dec-fail-hist] chn=3 idx=0 q=7 nal=5 pkt=60839 out=60873 idr=1 first_mb=0 primed=0 sps=17 pps=5 extra=1
+[dec-fail-hist] chn=3 idx=1 q=0 nal=5 pkt=59019 out=59053 idr=1 first_mb=0 primed=0 sps=17 pps=5 extra=1
+[dec-fail-hist] chn=3 idx=2 q=1 nal=5 pkt=61394 out=61428 idr=1 first_mb=0 primed=0 sps=17 pps=5 extra=1
+[vdec-fail] chn=0 ret=-6 streak=1 total=1 nal=7 frameType=U inputLen=99600 retained=0 retainedBytes=0 head=00 00 00 01
+[dec-resync-arm] chn=0 sendRet=-1 q=0 nal=5 pkt=99564 out=99600 idr=1 first_mb=0 primed=0 sps=20 pps=4 extra=1
+[dec-fail] chn=0 sendRet=-1 q=0 nal=5 pkt=99564 out=99600 idr=1 first_mb=0 primed=0 sps=20 pps=4 extra=1
+[dec-fail-hist] chn=0 idx=0 q=0 nal=5 pkt=99564 out=99600 idr=1 first_mb=0 primed=0 sps=20 pps=4 extra=1
+[pipe-prof] chn=0 elapsed_ms=1177.0 pop=17 send=1 send_fail=1 load=0 null=0 drop_pre=16 drop_resync=0 idr=1 qmax=0 in_kb=97.2 out_kb=97.3 popwait_avg=69.099 popwait_max=586.815 send_avg=0.264 send_max=0.264 get_avg=0.000 get_max=0.000 load_avg=0.000 load_max=0.000 loop_avg=69.233 loop_max=588.268
+debug  : cedarc <AvcSbmFrameCheckBitStreamType:325>: result: bStreamWithStartCode[1], with[1], whitout[0]
 debug  : cedarc <H264DecVuiParameters:341>: nFrameRate=25
 debug  : cedarc <H264DecodePictureScanType:2779>: here3:hCtx->bProgressice=1
 
-[dec-fail] chn=1 sendRet=-1 q=0 nal=5 pkt=75092 out=75128 idr=1 first_mb=0 primed=0 sps=20 pps=4 extra=1
-[dec-fail-hist] chn=1 idx=0 q=1 nal=5 pkt=62658 out=62694 idr=1 first_mb=0 primed=0 sps=20 pps=4 extra=1
-[dec-fail-hist] chn=1 idx=1 q=0 nal=5 pkt=62156 out=62192 idr=1 first_mb=0 primed=0 sps=20 pps=4 extra=1
-[dec-fail-hist] chn=1 idx=2 q=0 nal=5 pkt=75092 out=75128 idr=1 first_mb=0 primed=0 sps=20 pps=4 extra=1
-[pipe-prof] chn=3 elapsed_ms=1006.9 pop=27 send=1 send_fail=1 load=0 null=0 drop_pre=0 drop_resync=26 idr=1 qmax=0 in_kb=56.4 out_kb=56.4 popwait_avg=37.160 popwait_max=126.990 send_avg=0.301 send_max=0.301 get_avg=0.000 get_max=0.000 load_avg=0.000 load_max=0.000 loop_avg=37.285 loop_max=128.009
-[pipe-prof] chn=0 elapsed_ms=1025.8 pop=29 send=0 send_fail=0 load=0 null=0 drop_pre=0 drop_resync=29 idr=0 qmax=0 in_kb=0.0 out_kb=0.0 popwait_avg=35.330 popwait_max=104.016 send_avg=0.000 send_max=0.000 get_avg=0.000 get_max=0.000 load_avg=0.000 load_max=0.000 loop_avg=35.367 loop_max=104.099
-[pipe-prof] chn=1 elapsed_ms=1003.8 pop=28 send=1 send_fail=1 load=0 null=0 drop_pre=0 drop_resync=27 idr=1 qmax=0 in_kb=73.3 out_kb=73.4 popwait_avg=35.766 popwait_max=166.230 send_avg=0.352 send_max=0.352 get_avg=0.000 get_max=0.000 load_avg=0.000 load_max=0.000 loop_avg=35.845 loop_max=167.575
-[pipe-prof] chn=2 elapsed_ms=1009.4 pop=30 send=18 send_fail=0 load=0 null=0 drop_pre=0 drop_resync=12 idr=1 qmax=1 in_kb=197.6 out_kb=197.7 popwait_avg=28.904 popwait_max=284.146 send_avg=7.709 send_max=13.605 get_avg=0.001 get_max=0.002 load_avg=0.000 load_max=0.000 loop_avg=33.644 loop_max=298.931
-[vdec-prof] chn=0 bypass=1 elapsed_ms=2101.8 decode=2 fail=2 decode_avg=0.235 decode_max=0.292 cb=0 cb_avg=0.000 cb_max=0.000 copy_avg=0.000 copy_max=0.000 sync_avg=0.000 sync_max=0.000
-[vdec-probe] chn=0 bypass copy/Ion enabled via RTSPPULL_BYPASS_VDEC_COPY
-[dec-fail] chn=0 sendRet=-1 q=0 nal=5 pkt=125834 out=125870 idr=1 first_mb=0 primed=0 sps=20 pps=4 extra=1
-[dec-fail-hist] chn=0 idx=0 q=2 nal=5 pkt=72091 out=72127 idr=1 first_mb=0 primed=0 sps=20 pps=4 extra=1
-[dec-fail-hist] chn=0 idx=1 q=0 nal=5 pkt=125834 out=125870 idr=1 first_mb=0 primed=0 sps=20 pps=4 extra=1
-[pipe-prof] chn=3 elapsed_ms=1028.1 pop=24 send=0 send_fail=0 load=0 null=0 drop_pre=0 drop_resync=24 idr=0 qmax=0 in_kb=0.0 out_kb=0.0 popwait_avg=42.719 popwait_max=124.022 send_avg=0.000 send_max=0.000 get_avg=0.000 get_max=0.000 load_avg=0.000 load_max=0.000 loop_avg=42.829 loop_max=124.118
+[vdec-prof] chn=1 bypass=0 elapsed_ms=1193.7 decode=2 fail=2 decode_avg=0.276 decode_max=0.308 cb=0 cb_avg=0.000 cb_max=0.000 copy_avg=0.000 copy_max=0.000 sync_avg=0.000 sync_max=0.000
+[dec-fail] chn=1 sendRet=-1 q=0 nal=5 pkt=91056 out=91092 idr=1 first_mb=0 primed=0 sps=20 pps=4 extra=1
+[dec-fail-hist] chn=1 idx=0 q=6 nal=5 pkt=105685 out=105721 idr=1 first_mb=0 primed=0 sps=20 pps=4 extra=1
+[dec-fail-hist] chn=1 idx=1 q=0 nal=5 pkt=91056 out=91092 idr=1 first_mb=0 primed=0 sps=20 pps=4 extra=1
+[pipe-prof] chn=1 elapsed_ms=1193.7 pop=25 send=1 send_fail=1 load=0 null=0 drop_pre=0 drop_resync=24 idr=1 qmax=0 in_kb=88.9 out_kb=89.0 popwait_avg=47.673 popwait_max=627.219 send_avg=0.366 send_max=0.366 get_avg=0.000 get_max=0.000 load_avg=0.000 load_max=0.000 loop_avg=47.746 loop_max=628.603
 debug  : cedarc <VeSetEnableAfbcFlag:1771>: **** VeSetEnableAfbcFlag: 0
 debug  : fbm.c <FbmCreateBuffer:148>: FbmCreate, total fbm number: 6, decoder needed: 2,  nWidth=1920, nHeight=1088 nAlignStride = 0
 debug  : fbm.c <FbmCreateBuffer:252>: ** call allocate pic buf, i = 0, maxNum = 6
@@ -348,39 +61,10 @@ debug  : fbm.c <FbmAllocatePictureBuffer:1454>: pPicture->bEnableAfbcFlag = 0
 debug  : fbm.c <FbmCreateBuffer:252>: ** call allocate pic buf, i = 5, maxNum = 6
 debug  : fbm.c <FbmAllocatePictureBuffer:1454>: pPicture->bEnableAfbcFlag = 0
 debug  : fbm.c <FbmCreateBuffer:405>: *** finish fbmCreateBuffer
-[vdec-prof] chn=1 bypass=1 elapsed_ms=2059.9 decode=1 fail=1 decode_avg=0.342 decode_max=0.342 cb=1 cb_avg=0.001 cb_max=0.001 copy_avg=0.000 copy_max=0.000 sync_avg=0.000 sync_max=0.000
-[vdec-probe] chn=1 bypass copy/Ion enabled via RTSPPULL_BYPASS_VDEC_COPY
-[vdec-copy-bypass] chn=1 callbacks=0 inputLen=2088960 pts=37914996
-[vdec-recover] chn=1 streak=3 total=3 frameType=U inputLen=76828
-[dec-resync-release] chn=1 dropped=72 idr_size=76792
-[vdec-copy-bypass] chn=1 callbacks=1 inputLen=2088960 pts=39015798
-[vdec-prof] chn=2 bypass=1 elapsed_ms=1331.5 decode=20 fail=0 decode_avg=7.596 decode_max=7.838 cb=20 cb_avg=0.001 cb_max=0.001 copy_avg=0.000 copy_max=0.000 sync_avg=0.000 sync_max=0.000
-[vdec-probe] chn=2 bypass copy/Ion enabled via RTSPPULL_BYPASS_VDEC_COPY
-[vdec-copy-bypass] chn=2 callbacks=0 inputLen=2088960 pts=40387019
-[pipe-prof] chn=1 elapsed_ms=1001.5 pop=22 send=7 send_fail=0 load=0 null=0 drop_pre=0 drop_resync=15 idr=1 qmax=1 in_kb=89.1 out_kb=89.1 popwait_avg=42.628 popwait_max=239.680 send_avg=8.862 send_max=15.814 get_avg=0.000 get_max=0.001 load_avg=0.000 load_max=0.000 loop_avg=45.519 loop_max=253.960
-[vdec-copy-bypass] chn=2 callbacks=1 inputLen=2088960 pts=40421024
-[pipe-prof] chn=0 elapsed_ms=1036.2 pop=25 send=1 send_fail=1 load=0 null=0 drop_pre=0 drop_resync=24 idr=1 qmax=0 in_kb=122.9 out_kb=122.9 popwait_avg=41.320 popwait_max=335.236 send_avg=0.431 send_max=0.431 get_avg=0.000 get_max=0.000 load_avg=0.000 load_max=0.000 loop_avg=41.443 loop_max=337.167
-debug  : cedarc <H264DecodePictureScanType:2779>: here3:hCtx->bProgressice=1
-
-[vdec-prof] chn=3 bypass=1 elapsed_ms=1634.0 decode=1 fail=1 decode_avg=0.234 decode_max=0.234 cb=0 cb_avg=0.000 cb_max=0.000 copy_avg=0.000 copy_max=0.000 sync_avg=0.000 sync_max=0.000
-[vdec-probe] chn=3 bypass copy/Ion enabled via RTSPPULL_BYPASS_VDEC_COPY
-[dec-fail] chn=3 sendRet=-1 q=1 nal=5 pkt=58661 out=58695 idr=1 first_mb=0 primed=0 sps=17 pps=5 extra=1
-[dec-fail-hist] chn=3 idx=0 q=1 nal=5 pkt=59233 out=59267 idr=1 first_mb=0 primed=0 sps=17 pps=5 extra=1
-[dec-fail-hist] chn=3 idx=1 q=0 nal=5 pkt=57715 out=57749 idr=1 first_mb=0 primed=0 sps=17 pps=5 extra=1
-[dec-fail-hist] chn=3 idx=2 q=1 nal=5 pkt=58661 out=58695 idr=1 first_mb=0 primed=0 sps=17 pps=5 extra=1
-[pipe-prof] chn=2 elapsed_ms=1066.6 pop=10 send=10 send_fail=0 load=0 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=0 in_kb=190.9 out_kb=191.0 popwait_avg=97.263 popwait_max=660.813 send_avg=9.095 send_max=16.887 get_avg=0.001 get_max=0.002 load_avg=0.000 load_max=0.000 loop_avg=106.645 loop_max=679.597
-[pipe-prof] chn=3 elapsed_ms=1046.0 pop=27 send=1 send_fail=1 load=0 null=0 drop_pre=0 drop_resync=26 idr=1 qmax=1 in_kb=57.3 out_kb=57.3 popwait_avg=38.605 popwait_max=108.368 send_avg=0.300 send_max=0.300 get_avg=0.000 get_max=0.000 load_avg=0.000 load_max=0.000 loop_avg=38.734 loop_max=109.441
-[vdec-prof] chn=1 bypass=1 elapsed_ms=1027.9 decode=33 fail=0 decode_avg=9.278 decode_max=15.796 cb=33 cb_avg=0.000 cb_max=0.001 copy_avg=0.000 copy_max=0.000 sync_avg=0.000 sync_max=0.000
-[vdec-probe] chn=1 bypass copy/Ion enabled via RTSPPULL_BYPASS_VDEC_COPY
-[vdec-copy-bypass] chn=1 callbacks=0 inputLen=2088960 pts=41994099
-[vdec-prof] chn=2 bypass=1 elapsed_ms=1021.1 decode=41 fail=0 decode_avg=9.873 decode_max=16.874 cb=41 cb_avg=0.000 cb_max=0.001 copy_avg=0.000 copy_max=0.000 sync_avg=0.000 sync_max=0.000
-[vdec-probe] chn=2 bypass copy/Ion enabled via RTSPPULL_BYPASS_VDEC_COPY
-[vdec-copy-bypass] chn=2 callbacks=0 inputLen=2088960 pts=42020102
-[vdec-copy-bypass] chn=1 callbacks=1 inputLen=2088960 pts=42018906
-[pipe-prof] chn=1 elapsed_ms=1006.8 pop=28 send=28 send_fail=0 load=0 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=1 in_kb=141.1 out_kb=141.2 popwait_avg=26.307 popwait_max=179.265 send_avg=9.552 send_max=14.723 get_avg=0.000 get_max=0.001 load_avg=0.000 load_max=0.000 loop_avg=35.953 loop_max=194.602
-[vdec-copy-bypass] chn=2 callbacks=1 inputLen=2088960 pts=42087975
-[pipe-prof] chn=0 elapsed_ms=1042.9 pop=27 send=0 send_fail=0 load=0 null=0 drop_pre=0 drop_resync=27 idr=0 qmax=0 in_kb=0.0 out_kb=0.0 popwait_avg=38.580 popwait_max=92.088 send_avg=0.000 send_max=0.000 get_avg=0.000 get_max=0.000 load_avg=0.000 load_max=0.000 loop_avg=38.619 loop_max=92.128
-[pipe-prof] chn=2 elapsed_ms=1009.2 pop=42 send=42 send_fail=0 load=0 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=3 in_kb=347.2 out_kb=347.4 popwait_avg=13.960 popwait_max=164.859 send_avg=9.945 send_max=15.665 get_avg=0.001 get_max=0.001 load_avg=0.000 load_max=0.000 loop_avg=24.026 loop_max=173.166
+[vdec-recover] chn=2 streak=2 total=2 frameType=U inputLen=48558
+[dec-resync-release] chn=2 dropped=48 idr_size=48522
+[render-prof] elapsed_ms=2828.7 draws=1 draw_avg=1.101 draw_max=1.101 swap_avg=0.544 swap_max=0.544 finish_avg=8.272 finish_max=8.272 total_avg=2828.715 total_max=2828.715
+[vdec-prof] chn=2 bypass=0 elapsed_ms=1050.8 decode=5 fail=0 decode_avg=11.662 decode_max=13.472 cb=6 cb_avg=4.342 cb_max=5.822 copy_avg=4.072 copy_max=5.528 sync_avg=0.263 sync_max=0.406
 debug  : cedarc <VeSetEnableAfbcFlag:1771>: **** VeSetEnableAfbcFlag: 0
 debug  : fbm.c <FbmCreateBuffer:148>: FbmCreate, total fbm number: 6, decoder needed: 2,  nWidth=1920, nHeight=1088 nAlignStride = 0
 debug  : fbm.c <FbmCreateBuffer:252>: ** call allocate pic buf, i = 0, maxNum = 6
@@ -396,52 +80,60 @@ debug  : fbm.c <FbmAllocatePictureBuffer:1454>: pPicture->bEnableAfbcFlag = 0
 debug  : fbm.c <FbmCreateBuffer:252>: ** call allocate pic buf, i = 5, maxNum = 6
 debug  : fbm.c <FbmAllocatePictureBuffer:1454>: pPicture->bEnableAfbcFlag = 0
 debug  : fbm.c <FbmCreateBuffer:405>: *** finish fbmCreateBuffer
-[vdec-prof] chn=3 bypass=1 elapsed_ms=1645.8 decode=0 fail=0 decode_avg=0.000 decode_max=0.000 cb=1 cb_avg=0.001 cb_max=0.001 copy_avg=0.000 copy_max=0.000 sync_avg=0.000 sync_max=0.000
-[vdec-probe] chn=3 bypass copy/Ion enabled via RTSPPULL_BYPASS_VDEC_COPY
-[vdec-copy-bypass] chn=3 callbacks=0 inputLen=2088960 pts=37989788
-[vdec-recover] chn=3 streak=3 total=3 frameType=U inputLen=60387
-[dec-resync-release] chn=3 dropped=117 idr_size=60353
-[vdec-copy-bypass] chn=3 callbacks=1 inputLen=2088960 pts=39546716
-[pipe-prof] chn=3 elapsed_ms=1001.8 pop=24 send=10 send_fail=0 load=0 null=0 drop_pre=0 drop_resync=14 idr=1 qmax=1 in_kb=104.8 out_kb=104.8 popwait_avg=37.594 popwait_max=147.947 send_avg=9.632 send_max=21.167 get_avg=0.000 get_max=0.001 load_avg=0.000 load_max=0.000 loop_avg=41.734 loop_max=169.804
+[vdec-recover] chn=1 streak=2 total=2 frameType=U inputLen=75595
+[dec-resync-release] chn=1 dropped=48 idr_size=75559
+[pipe-prof] chn=3 elapsed_ms=1014.6 pop=26 send=1 send_fail=1 load=0 null=0 drop_pre=0 drop_resync=25 idr=1 qmax=1 in_kb=60.0 out_kb=60.0 popwait_avg=38.885 popwait_max=160.988 send_avg=0.361 send_max=0.361 get_avg=0.000 get_max=0.000 load_avg=0.000 load_max=0.000 loop_avg=39.016 loop_max=162.152
+[pipe-prof] chn=2 elapsed_ms=1002.0 pop=26 send=10 send_fail=0 load=10 null=0 drop_pre=0 drop_resync=16 idr=1 qmax=0 in_kb=128.8 out_kb=128.9 popwait_avg=32.187 popwait_max=115.292 send_avg=14.909 send_max=24.076 get_avg=0.000 get_max=0.001 load_avg=1.264 load_max=1.809 loop_avg=38.531 loop_max=131.230
+[pipe-prof] chn=0 elapsed_ms=1013.2 pop=39 send=0 send_fail=0 load=0 null=0 drop_pre=0 drop_resync=39 idr=0 qmax=0 in_kb=0.0 out_kb=0.0 popwait_avg=25.926 popwait_max=74.841 send_avg=0.000 send_max=0.000 get_avg=0.000 get_max=0.000 load_avg=0.000 load_max=0.000 loop_avg=25.976 loop_max=74.904
+[vdec-prof] chn=1 bypass=0 elapsed_ms=1018.4 decode=15 fail=0 decode_avg=18.751 decode_max=26.343 cb=16 cb_avg=6.526 cb_max=9.730 copy_avg=6.293 copy_max=9.517 sync_avg=0.225 sync_max=0.321
+[pipe-prof] chn=1 elapsed_ms=1018.6 pop=40 send=16 send_fail=0 load=16 null=0 drop_pre=0 drop_resync=24 idr=1 qmax=3 in_kb=105.9 out_kb=106.0 popwait_avg=17.892 popwait_max=242.517 send_avg=18.737 send_max=26.375 get_avg=0.001 get_max=0.002 load_avg=0.018 load_max=0.040 loop_avg=25.463 loop_max=258.803
+debug  : cedarc <VeSetEnableAfbcFlag:1771>: **** VeSetEnableAfbcFlag: 0
+debug  : fbm.c <FbmCreateBuffer:148>: FbmCreate, total fbm number: 6, decoder needed: 2,  nWidth=1920, nHeight=1088 nAlignStride = 0
+debug  : fbm.c <FbmCreateBuffer:252>: ** call allocate pic buf, i = 0, maxNum = 6
+debug  : fbm.c <FbmAllocatePictureBuffer:1454>: pPicture->bEnableAfbcFlag = 0
+debug  : fbm.c <FbmCreateBuffer:252>: ** call allocate pic buf, i = 1, maxNum = 6
+debug  : fbm.c <FbmAllocatePictureBuffer:1454>: pPicture->bEnableAfbcFlag = 0
+debug  : fbm.c <FbmCreateBuffer:252>: ** call allocate pic buf, i = 2, maxNum = 6
+debug  : fbm.c <FbmAllocatePictureBuffer:1454>: pPicture->bEnableAfbcFlag = 0
+debug  : fbm.c <FbmCreateBuffer:252>: ** call allocate pic buf, i = 3, maxNum = 6
+debug  : fbm.c <FbmAllocatePictureBuffer:1454>: pPicture->bEnableAfbcFlag = 0
+debug  : fbm.c <FbmCreateBuffer:252>: ** call allocate pic buf, i = 4, maxNum = 6
+debug  : fbm.c <FbmAllocatePictureBuffer:1454>: pPicture->bEnableAfbcFlag = 0
+debug  : fbm.c <FbmCreateBuffer:252>: ** call allocate pic buf, i = 5, maxNum = 6
+debug  : fbm.c <FbmAllocatePictureBuffer:1454>: pPicture->bEnableAfbcFlag = 0
+debug  : fbm.c <FbmCreateBuffer:405>: *** finish fbmCreateBuffer
+[vdec-prof] chn=3 bypass=0 elapsed_ms=1533.3 decode=0 fail=0 decode_avg=0.000 decode_max=0.000 cb=1 cb_avg=6.116 cb_max=6.116 copy_avg=5.752 copy_max=5.752 sync_avg=0.359 sync_max=0.359
+[vdec-recover] chn=3 streak=3 total=3 frameType=U inputLen=58884
+[dec-resync-release] chn=3 dropped=98 idr_size=58850
+[render-prof] elapsed_ms=1017.9 draws=51 draw_avg=0.844 draw_max=1.373 swap_avg=0.357 swap_max=0.644 finish_avg=9.348 finish_max=11.386 total_avg=19.953 total_max=59.940
+[vdec-prof] chn=2 bypass=0 elapsed_ms=1075.3 decode=20 fail=0 decode_avg=18.615 decode_max=23.955 cb=20 cb_avg=6.024 cb_max=10.105 copy_avg=5.794 copy_max=9.803 sync_avg=0.223 sync_max=0.338
+[pipe-prof] chn=3 elapsed_ms=1036.4 pop=25 send=9 send_fail=0 load=9 null=0 drop_pre=0 drop_resync=16 idr=1 qmax=0 in_kb=100.4 out_kb=100.4 popwait_avg=37.048 popwait_max=136.809 send_avg=11.836 send_max=14.757 get_avg=0.000 get_max=0.001 load_avg=0.020 load_max=0.029 loop_avg=41.450 loop_max=151.581
+[pipe-prof] chn=2 elapsed_ms=1021.4 pop=19 send=19 send_fail=0 load=19 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=0 in_kb=220.5 out_kb=220.6 popwait_avg=35.102 popwait_max=346.036 send_avg=17.624 send_max=23.741 get_avg=0.001 get_max=0.002 load_avg=0.825 load_max=1.930 loop_avg=53.744 loop_max=362.466
 debug  : cedarc <H264DecVuiParameters:341>: nFrameRate=25
 debug  : cedarc <H264DecodePictureScanType:2779>: here3:hCtx->bProgressice=1
 
-[vdec-prof] chn=0 bypass=1 elapsed_ms=2329.0 decode=1 fail=1 decode_avg=7.197 decode_max=7.197 cb=0 cb_avg=0.000 cb_max=0.000 copy_avg=0.000 copy_max=0.000 sync_avg=0.000 sync_max=0.000
-[vdec-probe] chn=0 bypass copy/Ion enabled via RTSPPULL_BYPASS_VDEC_COPY
-[dec-fail] chn=0 sendRet=-1 q=0 nal=5 pkt=128111 out=128147 idr=1 first_mb=0 primed=0 sps=20 pps=4 extra=1
-[dec-fail-hist] chn=0 idx=0 q=2 nal=5 pkt=72091 out=72127 idr=1 first_mb=0 primed=0 sps=20 pps=4 extra=1
-[dec-fail-hist] chn=0 idx=1 q=0 nal=5 pkt=125834 out=125870 idr=1 first_mb=0 primed=0 sps=20 pps=4 extra=1
-[dec-fail-hist] chn=0 idx=2 q=0 nal=5 pkt=128111 out=128147 idr=1 first_mb=0 primed=0 sps=20 pps=4 extra=1
-[vdec-prof] chn=1 bypass=1 elapsed_ms=1004.0 decode=18 fail=0 decode_avg=8.696 decode_max=13.925 cb=18 cb_avg=0.001 cb_max=0.001 copy_avg=0.000 copy_max=0.000 sync_avg=0.000 sync_max=0.000
-[vdec-probe] chn=1 bypass copy/Ion enabled via RTSPPULL_BYPASS_VDEC_COPY
-[vdec-copy-bypass] chn=1 callbacks=0 inputLen=2088960 pts=42750964
-[vdec-copy-bypass] chn=1 callbacks=1 inputLen=2088960 pts=42805007
-[vdec-prof] chn=2 bypass=1 elapsed_ms=1002.1 decode=22 fail=0 decode_avg=9.601 decode_max=15.443 cb=22 cb_avg=0.000 cb_max=0.001 copy_avg=0.000 copy_max=0.000 sync_avg=0.000 sync_max=0.000
-[vdec-probe] chn=2 bypass copy/Ion enabled via RTSPPULL_BYPASS_VDEC_COPY
-[vdec-copy-bypass] chn=2 callbacks=0 inputLen=2088960 pts=43048047
-[vdec-copy-bypass] chn=2 callbacks=1 inputLen=2088960 pts=43108349
-[pipe-prof] chn=1 elapsed_ms=1020.9 pop=20 send=20 send_fail=0 load=0 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=1 in_kb=121.6 out_kb=121.7 popwait_avg=41.683 popwait_max=276.776 send_avg=9.254 send_max=23.923 get_avg=0.000 get_max=0.001 load_avg=0.000 load_max=0.000 loop_avg=51.041 loop_max=286.246
-[pipe-prof] chn=0 elapsed_ms=1001.4 pop=15 send=1 send_fail=1 load=0 null=0 drop_pre=0 drop_resync=14 idr=1 qmax=0 in_kb=125.1 out_kb=125.1 popwait_avg=66.126 popwait_max=656.371 send_avg=7.248 send_max=7.248 get_avg=0.000 get_max=0.000 load_avg=0.000 load_max=0.000 loop_avg=66.745 loop_max=665.109
-[pipe-prof] chn=2 elapsed_ms=1000.7 pop=24 send=24 send_fail=0 load=0 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=2 in_kb=253.3 out_kb=253.4 popwait_avg=30.066 popwait_max=393.890 send_avg=11.466 send_max=23.946 get_avg=0.001 get_max=0.001 load_avg=0.000 load_max=0.000 loop_avg=41.693 loop_max=407.192
-[vdec-prof] chn=3 bypass=1 elapsed_ms=1019.1 decode=29 fail=0 decode_avg=12.891 decode_max=23.660 cb=29 cb_avg=0.000 cb_max=0.001 copy_avg=0.000 copy_max=0.000 sync_avg=0.000 sync_max=0.000
-[vdec-probe] chn=3 bypass copy/Ion enabled via RTSPPULL_BYPASS_VDEC_COPY
-[vdec-copy-bypass] chn=3 callbacks=0 inputLen=2088960 pts=43757439
-[vdec-copy-bypass] chn=3 callbacks=1 inputLen=2088960 pts=43781450
-[pipe-prof] chn=3 elapsed_ms=1002.2 pop=26 send=26 send_fail=0 load=0 null=0 drop_pre=0 drop_resync=0 idr=0 qmax=0 in_kb=264.4 out_kb=264.5 popwait_avg=23.594 popwait_max=70.160 send_avg=14.784 send_max=23.855 get_avg=0.000 get_max=0.001 load_avg=0.000 load_max=0.000 loop_avg=38.538 loop_max=79.085
-[vdec-prof] chn=1 bypass=1 elapsed_ms=1033.4 decode=33 fail=0 decode_avg=13.640 decode_max=23.901 cb=33 cb_avg=0.000 cb_max=0.002 copy_avg=0.000 copy_max=0.000 sync_avg=0.000 sync_max=0.000
-[vdec-probe] chn=1 bypass copy/Ion enabled via RTSPPULL_BYPASS_VDEC_COPY
-[vdec-copy-bypass] chn=1 callbacks=0 inputLen=2088960 pts=44046566
-[vdec-prof] chn=2 bypass=1 elapsed_ms=1024.9 decode=29 fail=0 decode_avg=13.630 decode_max=24.035 cb=29 cb_avg=0.000 cb_max=0.001 copy_avg=0.000 copy_max=0.000 sync_avg=0.000 sync_max=0.000
-[vdec-probe] chn=2 bypass copy/Ion enabled via RTSPPULL_BYPASS_VDEC_COPY
-[vdec-copy-bypass] chn=2 callbacks=0 inputLen=2088960 pts=44083948
-[vdec-copy-bypass] chn=2 callbacks=1 inputLen=2088960 pts=44116999
-[vdec-copy-bypass] chn=1 callbacks=1 inputLen=2088960 pts=44062184
-[pipe-prof] chn=1 elapsed_ms=1048.5 pop=31 send=31 send_fail=0 load=0 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=3 in_kb=137.9 out_kb=138.0 popwait_avg=19.867 popwait_max=159.061 send_avg=13.865 send_max=23.921 get_avg=0.001 get_max=0.001 load_avg=0.000 load_max=0.000 loop_avg=33.817 loop_max=173.875
-[pipe-prof] chn=0 elapsed_ms=1021.5 pop=36 send=0 send_fail=0 load=0 null=0 drop_pre=0 drop_resync=36 idr=0 qmax=0 in_kb=0.0 out_kb=0.0 popwait_avg=28.335 popwait_max=79.099 send_avg=0.000 send_max=0.000 get_avg=0.000 get_max=0.000 load_avg=0.000 load_max=0.000 loop_avg=28.370 loop_max=79.134
-[pipe-prof] chn=2 elapsed_ms=1018.2 pop=26 send=26 send_fail=0 load=0 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=0 in_kb=257.9 out_kb=258.1 popwait_avg=26.728 popwait_max=222.453 send_avg=12.277 send_max=24.069 get_avg=0.001 get_max=0.002 load_avg=0.000 load_max=0.000 loop_avg=39.158 loop_max=231.631
-[vdec-prof] chn=3 bypass=1 elapsed_ms=1000.7 decode=24 fail=0 decode_avg=13.803 decode_max=23.489 cb=24 cb_avg=0.001 cb_max=0.001 copy_avg=0.000 copy_max=0.000 sync_avg=0.000 sync_max=0.000
-[vdec-probe] chn=3 bypass copy/Ion enabled via RTSPPULL_BYPASS_VDEC_COPY
-[vdec-copy-bypass] chn=3 callbacks=0 inputLen=2088960 pts=44739114
+[vdec-prof] chn=0 bypass=0 elapsed_ms=1895.9 decode=2 fail=2 decode_avg=2.533 decode_max=4.861 cb=0 cb_avg=0.000 cb_max=0.000 copy_avg=0.000 copy_max=0.000 sync_avg=0.000 sync_max=0.000
+[dec-fail] chn=0 sendRet=-1 q=0 nal=5 pkt=86335 out=86371 idr=1 first_mb=0 primed=0 sps=20 pps=4 extra=1
+[dec-fail-hist] chn=0 idx=0 q=0 nal=5 pkt=99564 out=99600 idr=1 first_mb=0 primed=0 sps=20 pps=4 extra=1
+[dec-fail-hist] chn=0 idx=1 q=0 nal=5 pkt=86335 out=86371 idr=1 first_mb=0 primed=0 sps=20 pps=4 extra=1
+[pipe-prof] chn=0 elapsed_ms=1007.7 pop=16 send=1 send_fail=1 load=0 null=0 drop_pre=0 drop_resync=15 idr=1 qmax=0 in_kb=84.3 out_kb=84.3 popwait_avg=62.544 popwait_max=480.843 send_avg=4.953 send_max=4.953 get_avg=0.000 get_max=0.000 load_avg=0.000 load_max=0.000 loop_avg=62.968 loop_max=486.878
+[vdec-prof] chn=1 bypass=0 elapsed_ms=1005.8 decode=17 fail=0 decode_avg=20.223 decode_max=39.078 cb=17 cb_avg=6.342 cb_max=9.300 copy_avg=6.124 copy_max=9.070 sync_avg=0.210 sync_max=0.224
+[pipe-prof] chn=1 elapsed_ms=1006.1 pop=17 send=17 send_fail=0 load=17 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=6 in_kb=115.3 out_kb=115.4 popwait_avg=37.537 popwait_max=399.863 send_avg=21.449 send_max=39.151 get_avg=0.001 get_max=0.002 load_avg=0.025 load_max=0.097 loop_avg=59.174 loop_max=422.038
+[render-prof] elapsed_ms=1001.5 draws=64 draw_avg=1.185 draw_max=1.973 swap_avg=0.461 swap_max=1.085 finish_avg=10.635 finish_max=11.967 total_avg=15.641 total_max=47.845
+[vdec-prof] chn=3 bypass=0 elapsed_ms=1053.5 decode=26 fail=0 decode_avg=27.450 decode_max=40.061 cb=26 cb_avg=8.149 cb_max=11.255 copy_avg=7.904 copy_max=11.003 sync_avg=0.237 sync_max=0.334
+[vdec-prof] chn=2 bypass=0 elapsed_ms=1003.5 decode=28 fail=0 decode_avg=30.928 decode_max=39.559 cb=28 cb_avg=10.156 cb_max=12.221 copy_avg=9.742 copy_max=11.988 sync_avg=0.403 sync_max=1.925
+[pipe-prof] chn=3 elapsed_ms=1021.1 pop=25 send=25 send_fail=0 load=25 null=0 drop_pre=0 drop_resync=0 idr=0 qmax=1 in_kb=246.6 out_kb=246.7 popwait_avg=6.666 popwait_max=74.031 send_avg=33.916 send_max=40.215 get_avg=0.001 get_max=0.003 load_avg=0.014 load_max=0.080 loop_avg=40.836 loop_max=101.573
+[pipe-prof] chn=2 elapsed_ms=1000.3 pop=29 send=29 send_fail=0 load=29 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=6 in_kb=284.5 out_kb=284.6 popwait_avg=1.717 popwait_max=18.372 send_avg=32.165 send_max=39.692 get_avg=0.001 get_max=0.002 load_avg=0.314 load_max=2.105 loop_avg=34.483 loop_max=50.273
+[queue] overflow flush chn=1 depth=10 max=10 incoming_nal=1 incoming_size=1182 isIDR=0 isSpsOrPps=0 isSei=0 pts=2255521
+[pipe-prof] chn=0 elapsed_ms=1003.0 pop=33 send=0 send_fail=0 load=0 null=0 drop_pre=0 drop_resync=33 idr=0 qmax=0 in_kb=0.0 out_kb=0.0 popwait_avg=30.317 popwait_max=129.083 send_avg=0.000 send_max=0.000 get_avg=0.000 get_max=0.000 load_avg=0.000 load_max=0.000 loop_avg=30.380 loop_max=129.130
+[render-prof] elapsed_ms=1015.0 draws=64 draw_avg=1.007 draw_max=1.504 swap_avg=0.412 swap_max=1.194 finish_avg=10.255 finish_max=14.171 total_avg=15.852 total_max=63.268
+[vdec-prof] chn=3 bypass=0 elapsed_ms=1047.0 decode=27 fail=0 decode_avg=22.828 decode_max=37.235 cb=27 cb_avg=7.944 cb_max=11.188 copy_avg=7.697 copy_max=10.957 sync_avg=0.222 sync_max=0.303
+[pipe-prof] chn=3 elapsed_ms=1012.6 pop=26 send=26 send_fail=0 load=26 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=1 in_kb=250.1 out_kb=250.3 popwait_avg=20.560 popwait_max=67.041 send_avg=18.103 send_max=32.313 get_avg=0.001 get_max=0.002 load_avg=0.086 load_max=1.574 loop_avg=38.934 loop_max=79.033
+[queue] resync chn=1 dropped=12 incoming_size=108226 pts=2256345
+[vdec-prof] chn=2 bypass=0 elapsed_ms=1071.8 decode=22 fail=0 decode_avg=21.159 decode_max=32.587 cb=22 cb_avg=7.033 cb_max=10.970 copy_avg=6.788 copy_max=10.708 sync_avg=0.236 sync_max=0.342
+[vdec-prof] chn=1 bypass=0 elapsed_ms=1774.2 decode=21 fail=0 decode_avg=35.082 decode_max=39.743 cb=21 cb_avg=9.043 cb_max=10.528 copy_avg=8.814 copy_max=10.298 sync_avg=0.221 sync_max=0.271
+[pipe-prof] chn=1 elapsed_ms=1773.9 pop=21 send=21 send_fail=0 load=21 null=0 drop_pre=0 drop_resync=0 idr=2 qmax=7 in_kb=237.9 out_kb=238.0 popwait_avg=50.112 popwait_max=818.245 send_avg=34.089 send_max=39.776 get_avg=0.001 get_max=0.002 load_avg=0.011 load_max=0.024 loop_avg=84.464 loop_max=836.021
+[pipe-prof] chn=2 elapsed_ms=1031.1 pop=19 send=19 send_fail=0 load=19 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=2 in_kb=218.1 out_kb=218.2 popwait_avg=32.010 popwait_max=403.524 send_avg=21.328 send_max=32.846 get_avg=0.001 get_max=0.002 load_avg=0.582 load_max=2.002 loop_avg=54.160 loop_max=425.417
 debug  : cedarc <VeSetEnableAfbcFlag:1771>: **** VeSetEnableAfbcFlag: 0
 debug  : fbm.c <FbmCreateBuffer:148>: FbmCreate, total fbm number: 6, decoder needed: 2,  nWidth=1920, nHeight=1088 nAlignStride = 0
 debug  : fbm.c <FbmCreateBuffer:252>: ** call allocate pic buf, i = 0, maxNum = 6
@@ -457,130 +149,399 @@ debug  : fbm.c <FbmAllocatePictureBuffer:1454>: pPicture->bEnableAfbcFlag = 0
 debug  : fbm.c <FbmCreateBuffer:252>: ** call allocate pic buf, i = 5, maxNum = 6
 debug  : fbm.c <FbmAllocatePictureBuffer:1454>: pPicture->bEnableAfbcFlag = 0
 debug  : fbm.c <FbmCreateBuffer:405>: *** finish fbmCreateBuffer
-[vdec-prof] chn=0 bypass=1 elapsed_ms=1794.6 decode=0 fail=0 decode_avg=0.000 decode_max=0.000 cb=1 cb_avg=0.000 cb_max=0.000 copy_avg=0.000 copy_max=0.000 sync_avg=0.000 sync_max=0.000
-[vdec-probe] chn=0 bypass copy/Ion enabled via RTSPPULL_BYPASS_VDEC_COPY
-[vdec-copy-bypass] chn=0 callbacks=0 inputLen=2088960 pts=38658076
-[vdec-recover] chn=0 streak=3 total=3 frameType=U inputLen=139060
-[dec-resync-release] chn=0 dropped=147 idr_size=139024
-[vdec-copy-bypass] chn=0 callbacks=1 inputLen=2088960 pts=40759803
-[vdec-copy-bypass] chn=3 callbacks=1 inputLen=2088960 pts=44748029
-[pipe-prof] chn=3 elapsed_ms=1022.1 pop=24 send=24 send_fail=0 load=0 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=0 in_kb=233.0 out_kb=233.2 popwait_avg=24.970 popwait_max=118.810 send_avg=17.459 send_max=42.605 get_avg=0.000 get_max=0.001 load_avg=0.000 load_max=0.000 loop_avg=42.581 loop_max=134.531
-[vdec-prof] chn=2 bypass=1 elapsed_ms=1025.5 decode=22 fail=0 decode_avg=14.018 decode_max=45.581 cb=22 cb_avg=0.000 cb_max=0.001 copy_avg=0.000 copy_max=0.000 sync_avg=0.000 sync_max=0.000
-[vdec-probe] chn=2 bypass copy/Ion enabled via RTSPPULL_BYPASS_VDEC_COPY
-[vdec-copy-bypass] chn=2 callbacks=0 inputLen=2088960 pts=45128235
-[vdec-prof] chn=1 bypass=1 elapsed_ms=1049.1 decode=16 fail=0 decode_avg=12.436 decode_max=23.759 cb=16 cb_avg=0.001 cb_max=0.001 copy_avg=0.000 copy_max=0.000 sync_avg=0.000 sync_max=0.000
-[vdec-probe] chn=1 bypass copy/Ion enabled via RTSPPULL_BYPASS_VDEC_COPY
-[vdec-copy-bypass] chn=1 callbacks=0 inputLen=2088960 pts=44702050
-[vdec-copy-bypass] chn=2 callbacks=1 inputLen=2088960 pts=45143105
-[vdec-copy-bypass] chn=1 callbacks=1 inputLen=2088960 pts=44756990
-[pipe-prof] chn=1 elapsed_ms=1019.3 pop=17 send=17 send_fail=0 load=0 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=6 in_kb=101.2 out_kb=101.3 popwait_avg=46.007 popwait_max=324.853 send_avg=13.842 send_max=26.294 get_avg=0.000 get_max=0.001 load_avg=0.000 load_max=0.000 loop_avg=59.952 loop_max=352.096
-[pipe-prof] chn=0 elapsed_ms=1033.1 pop=24 send=19 send_fail=0 load=0 null=0 drop_pre=0 drop_resync=5 idr=1 qmax=4 in_kb=186.6 out_kb=186.7 popwait_avg=30.841 popwait_max=448.574 send_avg=15.254 send_max=31.975 get_avg=0.000 get_max=0.001 load_avg=0.000 load_max=0.000 loop_avg=43.043 loop_max=463.835
-[pipe-prof] chn=2 elapsed_ms=1022.8 pop=24 send=24 send_fail=0 load=0 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=1 in_kb=258.2 out_kb=258.3 popwait_avg=26.197 popwait_max=441.167 send_avg=16.254 send_max=45.656 get_avg=0.000 get_max=0.001 load_avg=0.000 load_max=0.000 loop_avg=42.613 loop_max=450.684
-[vdec-prof] chn=3 bypass=1 elapsed_ms=1025.7 decode=25 fail=0 decode_avg=25.472 decode_max=97.253 cb=25 cb_avg=0.000 cb_max=0.001 copy_avg=0.000 copy_max=0.000 sync_avg=0.000 sync_max=0.000
-[vdec-probe] chn=3 bypass copy/Ion enabled via RTSPPULL_BYPASS_VDEC_COPY
-[vdec-copy-bypass] chn=3 callbacks=0 inputLen=2088960 pts=45738472
-[vdec-copy-bypass] chn=3 callbacks=1 inputLen=2088960 pts=45758096
-[vdec-prof] chn=0 bypass=1 elapsed_ms=1011.5 decode=33 fail=0 decode_avg=18.701 decode_max=84.990 cb=33 cb_avg=0.000 cb_max=0.001 copy_avg=0.000 copy_max=0.000 sync_avg=0.000 sync_max=0.000
-[vdec-probe] chn=0 bypass copy/Ion enabled via RTSPPULL_BYPASS_VDEC_COPY
-[vdec-copy-bypass] chn=0 callbacks=0 inputLen=2088960 pts=45729363
-[vdec-copy-bypass] chn=0 callbacks=1 inputLen=2088960 pts=45826248
-[pipe-prof] chn=3 elapsed_ms=1068.3 pop=26 send=26 send_fail=0 load=0 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=1 in_kb=278.9 out_kb=279.1 popwait_avg=15.012 popwait_max=98.225 send_avg=25.912 send_max=97.427 get_avg=0.001 get_max=0.001 load_avg=0.000 load_max=0.000 loop_avg=41.082 loop_max=107.373
-[vdec-prof] chn=2 bypass=1 elapsed_ms=1006.7 decode=26 fail=0 decode_avg=20.362 decode_max=97.650 cb=26 cb_avg=0.001 cb_max=0.001 copy_avg=0.000 copy_max=0.000 sync_avg=0.000 sync_max=0.000
-[vdec-probe] chn=2 bypass copy/Ion enabled via RTSPPULL_BYPASS_VDEC_COPY
-[vdec-copy-bypass] chn=2 callbacks=0 inputLen=2088960 pts=46045035
-[vdec-copy-bypass] chn=2 callbacks=1 inputLen=2088960 pts=46063018
-[vdec-prof] chn=1 bypass=1 elapsed_ms=1029.9 decode=35 fail=0 decode_avg=14.129 decode_max=31.230 cb=35 cb_avg=0.000 cb_max=0.001 copy_avg=0.000 copy_max=0.000 sync_avg=0.000 sync_max=0.000
-[vdec-probe] chn=1 bypass copy/Ion enabled via RTSPPULL_BYPASS_VDEC_COPY
-[vdec-copy-bypass] chn=1 callbacks=0 inputLen=2088960 pts=46148028
-[vdec-copy-bypass] chn=1 callbacks=1 inputLen=2088960 pts=46156439
-[pipe-prof] chn=1 elapsed_ms=1037.6 pop=34 send=34 send_fail=0 load=0 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=8 in_kb=152.5 out_kb=152.7 popwait_avg=15.504 popwait_max=238.206 send_avg=14.929 send_max=45.992 get_avg=0.000 get_max=0.001 load_avg=0.000 load_max=0.000 loop_avg=30.513 loop_max=268.137
-[pipe-prof] chn=0 elapsed_ms=1038.2 pop=27 send=27 send_fail=0 load=0 null=0 drop_pre=0 drop_resync=0 idr=0 qmax=1 in_kb=79.7 out_kb=79.8 popwait_avg=15.905 popwait_max=86.872 send_avg=22.477 send_max=85.860 get_avg=0.001 get_max=0.001 load_avg=0.000 load_max=0.000 loop_avg=38.447 loop_max=120.916
-[pipe-prof] chn=2 elapsed_ms=1024.4 pop=25 send=25 send_fail=0 load=0 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=1 in_kb=266.3 out_kb=266.4 popwait_avg=15.864 popwait_max=163.693 send_avg=24.944 send_max=97.682 get_avg=0.001 get_max=0.001 load_avg=0.000 load_max=0.000 loop_avg=40.969 loop_max=175.405
-[vdec-prof] chn=3 bypass=1 elapsed_ms=1005.4 decode=26 fail=0 decode_avg=22.287 decode_max=87.301 cb=26 cb_avg=0.000 cb_max=0.001 copy_avg=0.000 copy_max=0.000 sync_avg=0.000 sync_max=0.000
-[vdec-probe] chn=3 bypass copy/Ion enabled via RTSPPULL_BYPASS_VDEC_COPY
-[vdec-copy-bypass] chn=3 callbacks=0 inputLen=2088960 pts=46768155
-[vdec-prof] chn=0 bypass=1 elapsed_ms=1013.8 decode=26 fail=0 decode_avg=17.646 decode_max=85.849 cb=26 cb_avg=0.001 cb_max=0.001 copy_avg=0.000 copy_max=0.000 sync_avg=0.000 sync_max=0.000
-[vdec-probe] chn=0 bypass copy/Ion enabled via RTSPPULL_BYPASS_VDEC_COPY
-[vdec-copy-bypass] chn=0 callbacks=0 inputLen=2088960 pts=46804106
-[vdec-copy-bypass] chn=3 callbacks=1 inputLen=2088960 pts=46804087
-[vdec-copy-bypass] chn=0 callbacks=1 inputLen=2088960 pts=46825154
-[pipe-prof] chn=3 elapsed_ms=1025.6 pop=27 send=27 send_fail=0 load=0 null=0 drop_pre=0 drop_resync=0 idr=0 qmax=1 in_kb=255.6 out_kb=255.7 popwait_avg=18.140 popwait_max=87.526 send_avg=19.684 send_max=46.028 get_avg=0.000 get_max=0.001 load_avg=0.000 load_max=0.000 loop_avg=37.980 loop_max=96.006
-[vdec-prof] chn=2 bypass=1 elapsed_ms=1025.8 decode=23 fail=0 decode_avg=22.696 decode_max=92.891 cb=23 cb_avg=0.000 cb_max=0.001 copy_avg=0.000 copy_max=0.000 sync_avg=0.000 sync_max=0.000
-[vdec-probe] chn=2 bypass copy/Ion enabled via RTSPPULL_BYPASS_VDEC_COPY
-[vdec-copy-bypass] chn=2 callbacks=0 inputLen=2088960 pts=47123316
-[vdec-prof] chn=1 bypass=1 elapsed_ms=1002.6 decode=20 fail=0 decode_avg=18.095 decode_max=45.965 cb=20 cb_avg=0.001 cb_max=0.002 copy_avg=0.000 copy_max=0.000 sync_avg=0.000 sync_max=0.000
-[vdec-probe] chn=1 bypass copy/Ion enabled via RTSPPULL_BYPASS_VDEC_COPY
-[vdec-copy-bypass] chn=1 callbacks=0 inputLen=2088960 pts=47115914
-[vdec-copy-bypass] chn=2 callbacks=1 inputLen=2088960 pts=47154760
-[vdec-copy-bypass] chn=1 callbacks=1 inputLen=2088960 pts=47147288
-[pipe-prof] chn=1 elapsed_ms=1026.3 pop=21 send=21 send_fail=0 load=0 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=5 in_kb=110.3 out_kb=110.4 popwait_avg=30.311 popwait_max=250.567 send_avg=18.460 send_max=38.667 get_avg=0.001 get_max=0.001 load_avg=0.000 load_max=0.000 loop_avg=48.869 loop_max=271.936
-[pipe-prof] chn=2 elapsed_ms=1002.5 pop=23 send=23 send_fail=0 load=0 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=4 in_kb=246.0 out_kb=246.2 popwait_avg=24.334 popwait_max=327.412 send_avg=19.092 send_max=38.389 get_avg=0.001 get_max=0.002 load_avg=0.000 load_max=0.000 loop_avg=43.582 loop_max=336.242
-[pipe-prof] chn=0 elapsed_ms=1049.2 pop=26 send=26 send_fail=0 load=0 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=1 in_kb=165.8 out_kb=165.9 popwait_avg=25.017 popwait_max=146.332 send_avg=15.229 send_max=31.341 get_avg=0.000 get_max=0.001 load_avg=0.000 load_max=0.000 loop_avg=40.350 loop_max=160.384
-[vdec-prof] chn=3 bypass=1 elapsed_ms=1029.9 decode=26 fail=0 decode_avg=18.876 decode_max=38.334 cb=26 cb_avg=0.001 cb_max=0.001 copy_avg=0.000 copy_max=0.000 sync_avg=0.000 sync_max=0.000
-[vdec-probe] chn=3 bypass copy/Ion enabled via RTSPPULL_BYPASS_VDEC_COPY
-[vdec-copy-bypass] chn=3 callbacks=0 inputLen=2088960 pts=47750293
-[vdec-copy-bypass] chn=3 callbacks=1 inputLen=2088960 pts=47784009
-[vdec-prof] chn=0 bypass=1 elapsed_ms=1046.6 decode=27 fail=0 decode_avg=16.951 decode_max=31.282 cb=27 cb_avg=0.001 cb_max=0.001 copy_avg=0.000 copy_max=0.000 sync_avg=0.000 sync_max=0.000
-[vdec-probe] chn=0 bypass copy/Ion enabled via RTSPPULL_BYPASS_VDEC_COPY
-[vdec-copy-bypass] chn=0 callbacks=0 inputLen=2088960 pts=47785934
-[vdec-copy-bypass] chn=0 callbacks=1 inputLen=2088960 pts=47847180
-[pipe-prof] chn=3 elapsed_ms=1019.1 pop=27 send=27 send_fail=0 load=0 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=1 in_kb=267.1 out_kb=267.2 popwait_avg=18.348 popwait_max=109.896 send_avg=19.224 send_max=38.476 get_avg=0.000 get_max=0.001 load_avg=0.000 load_max=0.000 loop_avg=37.739 loop_max=119.011
-[vdec-prof] chn=1 bypass=1 elapsed_ms=1011.5 decode=31 fail=0 decode_avg=20.107 decode_max=38.621 cb=31 cb_avg=0.000 cb_max=0.001 copy_avg=0.000 copy_max=0.000 sync_avg=0.000 sync_max=0.000
-[vdec-probe] chn=1 bypass copy/Ion enabled via RTSPPULL_BYPASS_VDEC_COPY
-[vdec-copy-bypass] chn=1 callbacks=0 inputLen=2088960 pts=48124030
-[vdec-prof] chn=2 bypass=1 elapsed_ms=1034.5 decode=31 fail=0 decode_avg=19.715 decode_max=38.289 cb=31 cb_avg=0.000 cb_max=0.001 copy_avg=0.000 copy_max=0.000 sync_avg=0.000 sync_max=0.000
-[vdec-probe] chn=2 bypass copy/Ion enabled via RTSPPULL_BYPASS_VDEC_COPY
-[vdec-copy-bypass] chn=2 callbacks=0 inputLen=2088960 pts=48160190
-[vdec-copy-bypass] chn=1 callbacks=1 inputLen=2088960 pts=48132267
-[vdec-copy-bypass] chn=2 callbacks=1 inputLen=2088960 pts=48184989
-[pipe-prof] chn=1 elapsed_ms=1014.3 pop=31 send=31 send_fail=0 load=0 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=5 in_kb=150.2 out_kb=150.4 popwait_avg=14.506 popwait_max=182.956 send_avg=18.122 send_max=31.301 get_avg=0.000 get_max=0.001 load_avg=0.000 load_max=0.000 loop_avg=32.715 loop_max=198.790
-[pipe-prof] chn=2 elapsed_ms=1034.9 pop=30 send=30 send_fail=0 load=0 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=3 in_kb=249.6 out_kb=249.7 popwait_avg=16.355 popwait_max=163.139 send_avg=18.005 send_max=31.121 get_avg=0.001 get_max=0.001 load_avg=0.000 load_max=0.000 loop_avg=34.494 loop_max=179.026
-[pipe-prof] chn=0 elapsed_ms=1031.7 pop=26 send=26 send_fail=0 load=0 null=0 drop_pre=0 drop_resync=0 idr=0 qmax=0 in_kb=98.6 out_kb=98.7 popwait_avg=22.197 popwait_max=74.611 send_avg=17.402 send_max=37.542 get_avg=0.001 get_max=0.002 load_avg=0.000 load_max=0.000 loop_avg=39.678 loop_max=98.496
-[vdec-prof] chn=3 bypass=1 elapsed_ms=1046.4 decode=25 fail=0 decode_avg=17.986 decode_max=36.838 cb=25 cb_avg=0.001 cb_max=0.001 copy_avg=0.000 copy_max=0.000 sync_avg=0.000 sync_max=0.000
-[vdec-probe] chn=3 bypass copy/Ion enabled via RTSPPULL_BYPASS_VDEC_COPY
-[vdec-copy-bypass] chn=3 callbacks=0 inputLen=2088960 pts=48769341
-[vdec-copy-bypass] chn=3 callbacks=1 inputLen=2088960 pts=48792505
-[vdec-prof] chn=0 bypass=1 elapsed_ms=1037.5 decode=25 fail=0 decode_avg=15.403 decode_max=39.545 cb=25 cb_avg=0.000 cb_max=0.001 copy_avg=0.000 copy_max=0.000 sync_avg=0.000 sync_max=0.000
-[vdec-probe] chn=0 bypass copy/Ion enabled via RTSPPULL_BYPASS_VDEC_COPY
-[vdec-copy-bypass] chn=0 callbacks=0 inputLen=2088960 pts=48797308
-[vdec-copy-bypass] chn=0 callbacks=1 inputLen=2088960 pts=48883023
-[pipe-prof] chn=3 elapsed_ms=1012.7 pop=24 send=24 send_fail=0 load=0 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=1 in_kb=265.4 out_kb=265.5 popwait_avg=21.015 popwait_max=91.348 send_avg=20.965 send_max=48.443 get_avg=0.000 get_max=0.002 load_avg=0.000 load_max=0.000 loop_avg=42.189 loop_max=99.950
-[vdec-prof] chn=2 bypass=1 elapsed_ms=1004.5 decode=24 fail=0 decode_avg=15.673 decode_max=40.329 cb=24 cb_avg=0.000 cb_max=0.001 copy_avg=0.000 copy_max=0.000 sync_avg=0.000 sync_max=0.000
-[vdec-probe] chn=2 bypass copy/Ion enabled via RTSPPULL_BYPASS_VDEC_COPY
-[vdec-copy-bypass] chn=2 callbacks=0 inputLen=2088960 pts=49162392
-[vdec-prof] chn=1 bypass=1 elapsed_ms=1027.5 decode=25 fail=0 decode_avg=15.564 decode_max=38.992 cb=25 cb_avg=0.000 cb_max=0.001 copy_avg=0.000 copy_max=0.000 sync_avg=0.000 sync_max=0.000
-[vdec-probe] chn=1 bypass copy/Ion enabled via RTSPPULL_BYPASS_VDEC_COPY
-[vdec-copy-bypass] chn=1 callbacks=0 inputLen=2088960 pts=49161970
-[vdec-copy-bypass] chn=2 callbacks=1 inputLen=2088960 pts=49191485
-[vdec-copy-bypass] chn=1 callbacks=1 inputLen=2088960 pts=49172462
-[pipe-prof] chn=1 elapsed_ms=1017.1 pop=25 send=25 send_fail=0 load=0 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=1 in_kb=114.6 out_kb=114.7 popwait_avg=22.909 popwait_max=121.274 send_avg=17.685 send_max=39.004 get_avg=0.000 get_max=0.002 load_avg=0.000 load_max=0.000 loop_avg=40.680 loop_max=136.585
-[pipe-prof] chn=2 elapsed_ms=1004.6 pop=25 send=25 send_fail=0 load=0 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=1 in_kb=257.0 out_kb=257.1 popwait_avg=22.271 popwait_max=279.579 send_avg=17.746 send_max=40.461 get_avg=0.000 get_max=0.001 load_avg=0.000 load_max=0.000 loop_avg=40.178 loop_max=304.003
-[pipe-prof] chn=0 elapsed_ms=1007.1 pop=25 send=25 send_fail=0 load=0 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=1 in_kb=142.7 out_kb=142.8 popwait_avg=19.905 popwait_max=182.686 send_avg=20.277 send_max=48.421 get_avg=0.000 get_max=0.001 load_avg=0.000 load_max=0.000 loop_avg=40.277 loop_max=191.083
-[vdec-prof] chn=3 bypass=1 elapsed_ms=1002.6 decode=26 fail=0 decode_avg=20.594 decode_max=48.313 cb=26 cb_avg=0.002 cb_max=0.031 copy_avg=0.000 copy_max=0.000 sync_avg=0.000 sync_max=0.000
-[vdec-probe] chn=3 bypass copy/Ion enabled via RTSPPULL_BYPASS_VDEC_COPY
-[vdec-copy-bypass] chn=3 callbacks=0 inputLen=2088960 pts=49781378
-[vdec-prof] chn=0 bypass=1 elapsed_ms=1002.8 decode=26 fail=0 decode_avg=20.066 decode_max=48.402 cb=26 cb_avg=0.000 cb_max=0.001 copy_avg=0.000 copy_max=0.000 sync_avg=0.000 sync_max=0.000
-[vdec-probe] chn=0 bypass copy/Ion enabled via RTSPPULL_BYPASS_VDEC_COPY
-[vdec-copy-bypass] chn=0 callbacks=0 inputLen=2088960 pts=49836152
-[vdec-copy-bypass] chn=3 callbacks=1 inputLen=2088960 pts=49827031
-[vdec-copy-bypass] chn=0 callbacks=1 inputLen=2088960 pts=49930165
-[pipe-prof] chn=3 elapsed_ms=1008.1 pop=26 send=26 send_fail=0 load=0 null=0 drop_pre=0 drop_resync=0 idr=0 qmax=1 in_kb=236.3 out_kb=236.4 popwait_avg=18.895 popwait_max=74.355 send_avg=19.706 send_max=31.661 get_avg=0.000 get_max=0.001 load_avg=0.000 load_max=0.000 loop_avg=38.764 loop_max=83.031
-[vdec-prof] chn=2 bypass=1 elapsed_ms=1008.2 decode=26 fail=0 decode_avg=18.603 decode_max=30.880 cb=26 cb_avg=0.000 cb_max=0.001 copy_avg=0.000 copy_max=0.000 sync_avg=0.000 sync_max=0.000
-[vdec-probe] chn=2 bypass copy/Ion enabled via RTSPPULL_BYPASS_VDEC_COPY
-[vdec-copy-bypass] chn=2 callbacks=0 inputLen=2088960 pts=50168301
-[vdec-prof] chn=1 bypass=1 elapsed_ms=1008.3 decode=26 fail=0 decode_avg=18.069 decode_max=31.183 cb=26 cb_avg=0.000 cb_max=0.001 copy_avg=0.000 copy_max=0.000 sync_avg=0.000 sync_max=0.000
-[vdec-probe] chn=1 bypass copy/Ion enabled via RTSPPULL_BYPASS_VDEC_COPY
-[vdec-copy-bypass] chn=1 callbacks=0 inputLen=2088960 pts=50167928
-[vdec-copy-bypass] chn=2 callbacks=1 inputLen=2088960 pts=50197866
-[vdec-copy-bypass] chn=1 callbacks=1 inputLen=2088960 pts=50197398
-[pipe-prof] chn=1 elapsed_ms=1022.4 pop=26 send=26 send_fail=0 load=0 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=3 in_kb=138.7 out_kb=138.8 popwait_avg=22.960 popwait_max=198.870 send_avg=16.252 send_max=31.181 get_avg=0.001 get_max=0.001 load_avg=0.000 load_max=0.000 loop_avg=39.316 loop_max=221.971
-[pipe-prof] chn=2 elapsed_ms=1037.1 pop=26 send=26 send_fail=0 load=0 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=1 in_kb=267.0 out_kb=267.2 popwait_avg=22.347 popwait_max=177.270 send_avg=17.379 send_max=30.971 get_avg=0.001 get_max=0.001 load_avg=0.000 load_max=0.000 loop_avg=39.883 loop_max=185.924
-[pipe-prof] chn=0 elapsed_ms=1006.0 pop=25 send=25 send_fail=0 load=0 null=0 drop_pre=0 drop_resync=0 idr=0 qmax=0 in_kb=97.2 out_kb=97.3 popwait_avg=23.695 popwait_max=86.607 send_avg=16.464 send_max=31.267 get_avg=0.000 get_max=0.001 load_avg=0.000 load_max=0.000 loop_avg=40.237 loop_max=101.518
-^C[pipe-prof] chn=1 elapsed_ms=329.5 pop=6 send=6 send_fail=0 load=0 null=0 drop_pre=0 drop_resync=0 idr=0 qmax=0 in_kb=15.1 out_kb=15.1 popwait_avg=42.677 popwait_max=101.918 send_avg=11.396 send_max=16.929 get_avg=0.001 get_max=0.001 load_avg=0.000 load_max=0.000 loop_avg=54.902 loop_max=110.176
-[pipe-prof] chn=1 elapsed_ms=0.1 pop=0 send=0 send_fail=0 load=0 null=0 drop_pre=0 drop_resync=0 idr=0 qmax=0 in_kb=0.0 out_kb=0.0 popwait_avg=0.000 popwait_max=0.000 send_avg=0.000 send_max=0.000 get_avg=0.000 get_max=0.000 load_avg=0.000 load_max=0.000 loop_avg=0.000 loop_max=0.000
-[pipe-prof] chn=2 elapsed_ms=299.3 pop=2 send=2 send_fail=0 load=0 null=0 drop_pre=0 drop_resync=0 idr=0 qmax=0 in_kb=16.6 out_kb=16.6 popwait_avg=24.576 popwait_max=39.804 send_avg=14.751 send_max=21.780 get_avg=0.001 get_max=0.001 load_avg=0.000 load_max=0.000 loop_avg=149.583 loop_max=220.272
-[pipe-prof] chn=2 elapsed_ms=0.2 pop=0 send=0 send_fail=0 load=0 null=0 drop_pre=0 drop_resync=0 idr=0 qmax=0 in_kb=0.0 out_kb=0.0 popwait_avg=0.000 popwait_max=0.000 send_avg=0.000 send_max=0.000 get_avg=0.000 get_max=0.000 load_avg=0.000 load_max=0.000 loop_avg=0.000 loop_max=0.000
-[pipe-prof] chn=3 elapsed_ms=431.5 pop=9 send=9 send_fail=0 load=0 null=0 drop_pre=0 drop_resync=0 idr=0 qmax=0 in_kb=87.9 out_kb=87.9 popwait_avg=35.199 popwait_max=110.377 send_avg=8.462 send_max=9.081 get_avg=0.000 get_max=0.001 load_avg=0.000 load_max=0.000 loop_avg=47.924 loop_max=118.991
-[pipe-prof] chn=3 elapsed_ms=0.1 pop=0 send=0 send_fail=0 load=0 null=0 drop_pre=0 drop_resync=0 idr=0 qmax=0 in_kb=0.0 out_kb=0.0 popwait_avg=0.000 popwait_max=0.000 send_avg=0.000 send_max=0.000 get_avg=0.000 get_max=0.000 load_avg=0.000 load_max=0.000 loop_avg=0.000 loop_max=0.000
-[pipe-prof] chn=0 elapsed_ms=299.1 pop=2 send=2 send_fail=0 load=0 null=0 drop_pre=0 drop_resync=0 idr=0 qmax=0 in_kb=12.4 out_kb=12.4 popwait_avg=17.442 popwait_max=28.636 send_avg=9.901 send_max=10.748 get_avg=0.000 get_max=0.000 load_avg=0.000 load_max=0.000 loop_avg=149.513 loop_max=244.076
-[pipe-prof] chn=0 elapsed_ms=0.1 pop=0 send=0 send_fail=0 load=0 null=0 drop_pre=0 drop_resync=0 idr=0 qmax=0 in_kb=0.0 out_kb=0.0 popwait_avg=0.000 popwait_max=0.000 send_avg=0.000 send_max=0.000 get_avg=0.000 get_max=0.000 load_avg=0.000 load_max=0.000 loop_avg=0.000 loop_max=0.000
+[vdec-prof] chn=0 bypass=0 elapsed_ms=2032.4 decode=0 fail=0 decode_avg=0.000 decode_max=0.000 cb=1 cb_avg=10.702 cb_max=10.702 copy_avg=10.286 copy_max=10.286 sync_avg=0.397 sync_max=0.397
+[vdec-recover] chn=0 streak=2 total=2 frameType=U inputLen=99233
+[dec-resync-release] chn=0 dropped=98 idr_size=99197
+[pipe-prof] chn=0 elapsed_ms=1000.8 pop=14 send=3 send_fail=0 load=3 null=0 drop_pre=0 drop_resync=11 idr=1 qmax=4 in_kb=103.9 out_kb=104.0 popwait_avg=62.206 popwait_max=480.655 send_avg=42.533 send_max=62.696 get_avg=0.000 get_max=0.001 load_avg=0.011 load_max=0.013 loop_avg=71.472 loop_max=513.968
+[queue] overflow flush chn=0 depth=10 max=10 incoming_nal=1 incoming_size=5303 isIDR=0 isSpsOrPps=0 isSei=0 pts=2256683
+[queue] overflow flush chn=2 depth=10 max=10 incoming_nal=1 incoming_size=5216 isIDR=0 isSpsOrPps=0 isSei=0 pts=2256842
+[queue] overflow flush chn=1 depth=10 max=10 incoming_nal=1 incoming_size=850 isIDR=0 isSpsOrPps=0 isSei=0 pts=2256880
+[render-prof] elapsed_ms=1008.1 draws=54 draw_avg=1.118 draw_max=1.642 swap_avg=0.449 swap_max=0.987 finish_avg=10.417 finish_max=13.758 total_avg=18.662 total_max=74.169
+[queue] resync chn=2 dropped=3 incoming_size=72275 pts=2257075
+[vdec-prof] chn=3 bypass=0 elapsed_ms=1012.5 decode=26 fail=0 decode_avg=25.022 decode_max=54.729 cb=26 cb_avg=6.479 cb_max=12.972 copy_avg=6.244 copy_max=12.654 sync_avg=0.226 sync_max=0.352
+[queue] resync chn=1 dropped=2 incoming_size=107716 pts=2257355
+[vdec-prof] chn=2 bypass=0 elapsed_ms=1015.7 decode=20 fail=0 decode_avg=30.585 decode_max=67.316 cb=20 cb_avg=8.541 cb_max=12.661 copy_avg=8.267 copy_max=12.424 sync_avg=0.265 sync_max=0.701
+[vdec-prof] chn=1 bypass=0 elapsed_ms=1014.3 decode=13 fail=0 decode_avg=40.879 decode_max=72.551 cb=13 cb_avg=8.531 cb_max=10.381 copy_avg=8.304 copy_max=10.141 sync_avg=0.217 sync_max=0.254
+[pipe-prof] chn=1 elapsed_ms=1014.4 pop=13 send=13 send_fail=0 load=13 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=9 in_kb=118.8 out_kb=118.9 popwait_avg=36.512 popwait_max=474.607 send_avg=41.286 send_max=72.578 get_avg=0.001 get_max=0.002 load_avg=0.013 load_max=0.038 loop_avg=78.025 loop_max=497.005
+[pipe-prof] chn=3 elapsed_ms=1061.4 pop=26 send=26 send_fail=0 load=26 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=1 in_kb=279.7 out_kb=279.9 popwait_avg=13.396 popwait_max=122.743 send_avg=27.157 send_max=55.064 get_avg=0.001 get_max=0.002 load_avg=0.041 load_max=0.680 loop_avg=40.811 loop_max=135.560
+[pipe-prof] chn=2 elapsed_ms=1034.1 pop=21 send=21 send_fail=0 load=21 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=7 in_kb=211.7 out_kb=211.8 popwait_avg=17.887 popwait_max=231.364 send_avg=30.712 send_max=67.515 get_avg=0.001 get_max=0.003 load_avg=0.415 load_max=1.517 loop_avg=49.234 loop_max=244.488
+[render-prof] elapsed_ms=1004.6 draws=70 draw_avg=1.156 draw_max=1.765 swap_avg=0.446 swap_max=0.757 finish_avg=10.656 finish_max=12.898 total_avg=14.345 total_max=58.143
+[vdec-prof] chn=3 bypass=0 elapsed_ms=1019.6 decode=25 fail=0 decode_avg=30.609 decode_max=39.223 cb=25 cb_avg=8.786 cb_max=10.981 copy_avg=8.534 copy_max=10.751 sync_avg=0.243 sync_max=0.414
+[queue] resync chn=0 dropped=34 incoming_size=47261 pts=2258256
+[vdec-prof] chn=0 bypass=0 elapsed_ms=1844.7 decode=6 fail=0 decode_avg=48.688 decode_max=62.639 cb=6 cb_avg=9.751 cb_max=14.412 copy_avg=9.449 copy_max=14.155 sync_avg=0.292 sync_max=0.423
+[pipe-prof] chn=0 elapsed_ms=1748.4 pop=4 send=4 send_fail=0 load=4 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=9 in_kb=55.0 out_kb=55.0 popwait_avg=391.940 popwait_max=1567.744 send_avg=44.828 send_max=58.213 get_avg=0.001 get_max=0.002 load_avg=0.009 load_max=0.013 loop_avg=437.040 loop_max=1582.749
+[vdec-prof] chn=1 bypass=0 elapsed_ms=1020.9 decode=26 fail=0 decode_avg=30.901 decode_max=38.719 cb=26 cb_avg=7.946 cb_max=9.999 copy_avg=7.702 copy_max=9.575 sync_avg=0.235 sync_max=0.410
+[pipe-prof] chn=1 elapsed_ms=1021.0 pop=26 send=26 send_fail=0 load=26 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=9 in_kb=95.9 out_kb=96.0 popwait_avg=7.596 popwait_max=197.392 send_avg=31.491 send_max=38.745 get_avg=0.001 get_max=0.003 load_avg=0.012 load_max=0.037 loop_avg=39.264 loop_max=235.340
+[vdec-prof] chn=2 bypass=0 elapsed_ms=1059.5 decode=18 fail=0 decode_avg=34.520 decode_max=39.225 cb=18 cb_avg=11.037 cb_max=12.313 copy_avg=10.804 copy_max=12.087 sync_avg=0.222 sync_max=0.242
+[pipe-prof] chn=3 elapsed_ms=1033.6 pop=25 send=25 send_fail=0 load=25 null=0 drop_pre=0 drop_resync=0 idr=0 qmax=1 in_kb=267.5 out_kb=267.6 popwait_avg=8.541 popwait_max=48.734 send_avg=32.502 send_max=48.713 get_avg=0.001 get_max=0.002 load_avg=0.019 load_max=0.151 loop_avg=41.333 loop_max=60.823
+[pipe-prof] chn=2 elapsed_ms=1074.6 pop=17 send=17 send_fail=0 load=17 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=1 in_kb=212.0 out_kb=212.1 popwait_avg=25.601 popwait_max=335.974 send_avg=37.295 send_max=51.770 get_avg=0.001 get_max=0.002 load_avg=0.013 load_max=0.016 loop_avg=63.196 loop_max=368.200
+[queue] overflow flush chn=1 depth=10 max=10 incoming_nal=1 incoming_size=1044 isIDR=0 isSpsOrPps=0 isSei=0 pts=2258914
+[render-prof] elapsed_ms=1002.6 draws=69 draw_avg=1.134 draw_max=1.575 swap_avg=0.525 swap_max=3.328 finish_avg=11.048 finish_max=19.355 total_avg=14.523 total_max=62.768
+[vdec-prof] chn=3 bypass=0 elapsed_ms=1022.3 decode=23 fail=0 decode_avg=37.374 decode_max=58.192 cb=23 cb_avg=9.250 cb_max=13.071 copy_avg=8.894 copy_max=12.864 sync_avg=0.346 sync_max=1.458
+[vdec-prof] chn=0 bypass=0 elapsed_ms=1017.7 decode=26 fail=0 decode_avg=36.940 decode_max=64.363 cb=26 cb_avg=8.883 cb_max=10.595 copy_avg=8.620 copy_max=10.359 sync_avg=0.254 sync_max=0.560
+[pipe-prof] chn=0 elapsed_ms=1017.7 pop=26 send=26 send_fail=0 load=26 null=0 drop_pre=0 drop_resync=0 idr=0 qmax=6 in_kb=173.5 out_kb=173.6 popwait_avg=0.890 popwait_max=14.124 send_avg=38.039 send_max=64.590 get_avg=0.001 get_max=0.003 load_avg=0.015 load_max=0.136 loop_avg=39.139 loop_max=64.828
+[queue] overflow flush chn=2 depth=10 max=10 incoming_nal=1 incoming_size=4786 isIDR=0 isSpsOrPps=0 isSei=0 pts=2259329
+[queue] resync chn=1 dropped=2 incoming_size=86998 pts=2259359
+[vdec-prof] chn=1 bypass=0 elapsed_ms=1022.3 decode=13 fail=0 decode_avg=45.161 decode_max=62.533 cb=13 cb_avg=9.007 cb_max=10.097 copy_avg=8.744 copy_max=9.882 sync_avg=0.241 sync_max=0.368
+[pipe-prof] chn=1 elapsed_ms=1022.3 pop=13 send=13 send_fail=0 load=13 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=9 in_kb=111.9 out_kb=112.0 popwait_avg=33.236 popwait_max=432.013 send_avg=45.165 send_max=62.683 get_avg=0.001 get_max=0.002 load_avg=0.014 load_max=0.032 loop_avg=78.631 loop_max=459.583
+[pipe-prof] chn=3 elapsed_ms=1025.9 pop=26 send=26 send_fail=0 load=26 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=2 in_kb=259.1 out_kb=259.2 popwait_avg=0.004 popwait_max=0.017 send_avg=39.203 send_max=58.333 get_avg=0.001 get_max=0.003 load_avg=0.014 load_max=0.071 loop_avg=39.445 loop_max=58.500
+[queue] resync chn=2 dropped=17 incoming_size=29756 pts=2260000
+[vdec-prof] chn=2 bypass=0 elapsed_ms=1614.3 decode=22 fail=0 decode_avg=41.543 decode_max=51.505 cb=22 cb_avg=10.239 cb_max=12.922 copy_avg=9.856 copy_max=12.689 sync_avg=0.372 sync_max=1.746
+[pipe-prof] chn=2 elapsed_ms=1532.1 pop=21 send=21 send_fail=0 load=21 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=9 in_kb=195.2 out_kb=195.3 popwait_avg=31.307 popwait_max=646.807 send_avg=41.097 send_max=51.562 get_avg=0.001 get_max=0.002 load_avg=0.241 load_max=1.769 loop_avg=72.941 loop_max=683.785
+[render-prof] elapsed_ms=1010.4 draws=75 draw_avg=1.259 draw_max=5.411 swap_avg=0.472 swap_max=1.142 finish_avg=11.558 finish_max=15.933 total_avg=13.464 total_max=20.466
+[vdec-prof] chn=3 bypass=0 elapsed_ms=1030.6 decode=27 fail=0 decode_avg=33.961 decode_max=40.249 cb=27 cb_avg=9.101 cb_max=11.682 copy_avg=8.813 copy_max=11.358 sync_avg=0.279 sync_max=0.992
+[vdec-prof] chn=0 bypass=0 elapsed_ms=1001.9 decode=28 fail=0 decode_avg=34.897 decode_max=49.786 cb=28 cb_avg=9.074 cb_max=10.761 copy_avg=8.832 copy_max=10.510 sync_avg=0.232 sync_max=0.292
+[pipe-prof] chn=0 elapsed_ms=1001.9 pop=28 send=28 send_fail=0 load=28 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=5 in_kb=204.7 out_kb=204.9 popwait_avg=0.615 popwait_max=17.092 send_avg=34.921 send_max=50.104 get_avg=0.001 get_max=0.002 load_avg=0.010 load_max=0.018 loop_avg=35.779 loop_max=50.284
+[pipe-prof] chn=3 elapsed_ms=1033.1 pop=25 send=25 send_fail=0 load=25 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=1 in_kb=271.3 out_kb=271.5 popwait_avg=7.762 popwait_max=68.772 send_avg=33.174 send_max=40.600 get_avg=0.001 get_max=0.003 load_avg=0.012 load_max=0.027 loop_avg=41.315 loop_max=99.213
+[queue] overflow flush chn=1 depth=10 max=10 incoming_nal=1 incoming_size=963 isIDR=0 isSpsOrPps=0 isSei=0 pts=2260644
+[vdec-prof] chn=1 bypass=0 elapsed_ms=1243.9 decode=24 fail=0 decode_avg=34.212 decode_max=48.561 cb=24 cb_avg=9.185 cb_max=10.104 copy_avg=8.941 copy_max=9.882 sync_avg=0.231 sync_max=0.362
+[pipe-prof] chn=1 elapsed_ms=1244.0 pop=24 send=24 send_fail=0 load=24 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=9 in_kb=141.9 out_kb=142.0 popwait_avg=17.159 popwait_max=411.698 send_avg=34.464 send_max=48.582 get_avg=0.001 get_max=0.002 load_avg=0.013 load_max=0.024 loop_avg=51.828 loop_max=452.149
+[vdec-prof] chn=2 bypass=0 elapsed_ms=1012.3 decode=23 fail=0 decode_avg=31.491 decode_max=43.419 cb=23 cb_avg=9.060 cb_max=11.740 copy_avg=8.800 copy_max=11.492 sync_avg=0.249 sync_max=0.605
+[pipe-prof] chn=2 elapsed_ms=1012.3 pop=23 send=23 send_fail=0 load=23 null=0 drop_pre=0 drop_resync=0 idr=0 qmax=2 in_kb=232.0 out_kb=232.1 popwait_avg=11.722 popwait_max=98.701 send_avg=31.862 send_max=45.749 get_avg=0.001 get_max=0.002 load_avg=0.117 load_max=1.602 loop_avg=44.010 loop_max=116.813
+[render-prof] elapsed_ms=1012.6 draws=76 draw_avg=1.104 draw_max=8.457 swap_avg=0.376 swap_max=0.645 finish_avg=10.742 finish_max=16.035 total_avg=13.317 total_max=37.536
+[vdec-prof] chn=3 bypass=0 elapsed_ms=1029.6 decode=26 fail=0 decode_avg=31.821 decode_max=48.371 cb=26 cb_avg=9.378 cb_max=11.112 copy_avg=9.104 copy_max=10.860 sync_avg=0.263 sync_max=0.496
+[vdec-prof] chn=0 bypass=0 elapsed_ms=1027.0 decode=27 fail=0 decode_avg=31.775 decode_max=47.455 cb=27 cb_avg=8.849 cb_max=10.554 copy_avg=8.594 copy_max=10.162 sync_avg=0.245 sync_max=0.388
+[pipe-prof] chn=0 elapsed_ms=1027.1 pop=27 send=27 send_fail=0 load=27 null=0 drop_pre=0 drop_resync=0 idr=0 qmax=2 in_kb=187.6 out_kb=187.7 popwait_avg=5.933 popwait_max=102.177 send_avg=31.901 send_max=47.590 get_avg=0.001 get_max=0.003 load_avg=0.011 load_max=0.015 loop_avg=38.037 loop_max=121.460
+[queue] resync chn=1 dropped=14 incoming_size=89452 pts=2261338
+[pipe-prof] chn=3 elapsed_ms=1029.5 pop=26 send=26 send_fail=0 load=26 null=0 drop_pre=0 drop_resync=0 idr=0 qmax=1 in_kb=228.1 out_kb=228.2 popwait_avg=4.377 popwait_max=46.265 send_avg=34.969 send_max=53.623 get_avg=0.001 get_max=0.003 load_avg=0.012 load_max=0.034 loop_avg=39.582 loop_max=83.843
+[queue] overflow flush chn=1 depth=10 max=10 incoming_nal=1 incoming_size=964 isIDR=0 isSpsOrPps=0 isSei=0 pts=2261692
+[vdec-prof] chn=1 bypass=0 elapsed_ms=1060.2 decode=8 fail=0 decode_avg=45.093 decode_max=52.258 cb=8 cb_avg=9.940 cb_max=10.487 copy_avg=9.616 copy_max=10.267 sync_avg=0.313 sync_max=0.756
+[pipe-prof] chn=1 elapsed_ms=1060.1 pop=8 send=8 send_fail=0 load=8 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=9 in_kb=101.1 out_kb=101.1 popwait_avg=84.142 popwait_max=673.093 send_avg=47.934 send_max=61.125 get_avg=0.001 get_max=0.003 load_avg=0.016 load_max=0.019 loop_avg=132.504 loop_max=722.597
+[vdec-prof] chn=2 bypass=0 elapsed_ms=1034.4 decode=27 fail=0 decode_avg=37.430 decode_max=61.025 cb=27 cb_avg=10.036 cb_max=11.715 copy_avg=9.754 copy_max=11.505 sync_avg=0.269 sync_max=0.764
+[pipe-prof] chn=2 elapsed_ms=1034.3 pop=27 send=27 send_fail=0 load=27 null=0 drop_pre=0 drop_resync=0 idr=2 qmax=3 in_kb=282.6 out_kb=282.8 popwait_avg=0.005 popwait_max=0.011 send_avg=37.700 send_max=61.139 get_avg=0.001 get_max=0.004 load_avg=0.170 load_max=1.469 loop_avg=38.302 loop_max=61.430
+[render-prof] elapsed_ms=1004.0 draws=81 draw_avg=1.046 draw_max=1.772 swap_avg=0.374 swap_max=0.649 finish_avg=10.795 finish_max=14.834 total_avg=12.388 total_max=17.862
+[vdec-prof] chn=3 bypass=0 elapsed_ms=1000.4 decode=26 fail=0 decode_avg=34.855 decode_max=53.446 cb=26 cb_avg=8.644 cb_max=11.364 copy_avg=8.395 copy_max=11.137 sync_avg=0.240 sync_max=0.402
+[vdec-prof] chn=0 bypass=0 elapsed_ms=1025.7 decode=25 fail=0 decode_avg=37.972 decode_max=61.668 cb=25 cb_avg=8.825 cb_max=10.791 copy_avg=8.577 copy_max=10.539 sync_avg=0.237 sync_max=0.312
+[pipe-prof] chn=0 elapsed_ms=1025.6 pop=25 send=25 send_fail=0 load=25 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=3 in_kb=174.2 out_kb=174.3 popwait_avg=2.666 popwait_max=66.529 send_avg=38.131 send_max=61.697 get_avg=0.001 get_max=0.003 load_avg=0.014 load_max=0.041 loop_avg=41.018 loop_max=91.292
+[queue] resync chn=1 dropped=7 incoming_size=88845 pts=2262367
+[pipe-prof] chn=3 elapsed_ms=1045.8 pop=26 send=26 send_fail=0 load=26 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=2 in_kb=261.7 out_kb=261.8 popwait_avg=6.487 popwait_max=32.913 send_avg=33.398 send_max=51.809 get_avg=0.001 get_max=0.003 load_avg=0.074 load_max=1.584 loop_avg=40.210 loop_max=73.490
+[queue] overflow flush chn=1 depth=10 max=10 incoming_nal=1 incoming_size=1356 isIDR=0 isSpsOrPps=0 isSei=0 pts=2262623
+[vdec-prof] chn=2 bypass=0 elapsed_ms=1014.7 decode=26 fail=0 decode_avg=35.727 decode_max=60.680 cb=26 cb_avg=10.330 cb_max=12.715 copy_avg=10.013 copy_max=12.463 sync_avg=0.305 sync_max=1.856
+[pipe-prof] chn=2 elapsed_ms=1016.3 pop=26 send=26 send_fail=0 load=26 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=3 in_kb=268.3 out_kb=268.4 popwait_avg=2.544 popwait_max=41.544 send_avg=35.911 send_max=61.630 get_avg=0.001 get_max=0.003 load_avg=0.138 load_max=1.693 loop_avg=39.082 loop_max=67.009
+[render-prof] elapsed_ms=1007.3 draws=78 draw_avg=1.085 draw_max=1.678 swap_avg=0.400 swap_max=0.968 finish_avg=10.921 finish_max=14.265 total_avg=12.909 total_max=33.693
+[vdec-prof] chn=3 bypass=0 elapsed_ms=1003.3 decode=25 fail=0 decode_avg=33.452 decode_max=51.685 cb=25 cb_avg=9.578 cb_max=11.773 copy_avg=9.312 copy_max=11.547 sync_avg=0.256 sync_max=0.625
+[queue] resync chn=1 dropped=9 incoming_size=103245 pts=2263270
+[vdec-prof] chn=1 bypass=0 elapsed_ms=1579.0 decode=7 fail=0 decode_avg=46.403 decode_max=61.101 cb=7 cb_avg=10.000 cb_max=10.528 copy_avg=9.763 copy_max=10.304 sync_avg=0.226 sync_max=0.260
+[pipe-prof] chn=1 elapsed_ms=1579.0 pop=7 send=7 send_fail=0 load=7 null=0 drop_pre=0 drop_resync=0 idr=2 qmax=9 in_kb=197.7 out_kb=197.8 popwait_avg=182.700 popwait_max=642.107 send_avg=42.342 send_max=50.531 get_avg=0.001 get_max=0.002 load_avg=0.015 load_max=0.022 loop_avg=225.567 loop_max=670.694
+[vdec-prof] chn=0 bypass=0 elapsed_ms=1010.3 decode=26 fail=0 decode_avg=36.758 decode_max=59.875 cb=26 cb_avg=9.341 cb_max=10.624 copy_avg=9.087 copy_max=10.381 sync_avg=0.241 sync_max=0.381
+[pipe-prof] chn=0 elapsed_ms=1010.4 pop=26 send=26 send_fail=0 load=26 null=0 drop_pre=0 drop_resync=0 idr=0 qmax=3 in_kb=184.3 out_kb=184.4 popwait_avg=1.396 popwait_max=19.588 send_avg=37.247 send_max=60.094 get_avg=0.001 get_max=0.003 load_avg=0.011 load_max=0.021 loop_avg=38.858 loop_max=63.489
+[pipe-prof] chn=3 elapsed_ms=1044.5 pop=26 send=26 send_fail=0 load=26 null=0 drop_pre=0 drop_resync=0 idr=0 qmax=2 in_kb=232.5 out_kb=232.6 popwait_avg=2.571 popwait_max=33.491 send_avg=37.347 send_max=51.701 get_avg=0.001 get_max=0.003 load_avg=0.012 load_max=0.020 loop_avg=40.161 loop_max=57.841
+[vdec-prof] chn=2 bypass=0 elapsed_ms=1021.3 decode=22 fail=0 decode_avg=44.703 decode_max=52.236 cb=22 cb_avg=10.841 cb_max=12.358 copy_avg=10.599 copy_max=12.117 sync_avg=0.231 sync_max=0.355
+[pipe-prof] chn=2 elapsed_ms=1019.8 pop=22 send=22 send_fail=0 load=22 null=0 drop_pre=0 drop_resync=0 idr=0 qmax=4 in_kb=207.3 out_kb=207.4 popwait_avg=0.103 popwait_max=2.140 send_avg=45.580 send_max=52.363 get_avg=0.001 get_max=0.003 load_avg=0.329 load_max=2.151 loop_avg=46.343 loop_max=52.652
+[render-prof] elapsed_ms=1010.6 draws=79 draw_avg=1.211 draw_max=1.871 swap_avg=0.449 swap_max=0.890 finish_avg=10.988 finish_max=13.809 total_avg=12.786 total_max=17.958
+[vdec-prof] chn=3 bypass=0 elapsed_ms=1036.5 decode=21 fail=0 decode_avg=47.018 decode_max=51.909 cb=21 cb_avg=9.670 cb_max=11.210 copy_avg=9.396 copy_max=10.976 sync_avg=0.266 sync_max=0.784
+[vdec-prof] chn=1 bypass=0 elapsed_ms=1039.6 decode=21 fail=0 decode_avg=48.199 decode_max=52.101 cb=21 cb_avg=9.318 cb_max=11.640 copy_avg=9.072 copy_max=11.345 sync_avg=0.228 sync_max=0.287
+[pipe-prof] chn=1 elapsed_ms=1039.7 pop=21 send=21 send_fail=0 load=21 null=0 drop_pre=0 drop_resync=0 idr=0 qmax=9 in_kb=26.0 out_kb=26.1 popwait_avg=0.004 popwait_max=0.011 send_avg=49.370 send_max=55.973 get_avg=0.001 get_max=0.003 load_avg=0.011 load_max=0.021 loop_avg=49.504 loop_max=56.101
+[queue] overflow flush chn=1 depth=10 max=10 incoming_nal=1 incoming_size=1988 isIDR=0 isSpsOrPps=0 isSei=0 pts=2264346
+[vdec-prof] chn=0 bypass=0 elapsed_ms=1045.8 decode=21 fail=0 decode_avg=49.258 decode_max=51.855 cb=21 cb_avg=9.375 cb_max=10.977 copy_avg=9.131 copy_max=10.633 sync_avg=0.235 sync_max=0.432
+[pipe-prof] chn=0 elapsed_ms=1045.7 pop=21 send=21 send_fail=0 load=21 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=5 in_kb=125.1 out_kb=125.2 popwait_avg=0.005 popwait_max=0.010 send_avg=49.556 send_max=51.882 get_avg=0.001 get_max=0.002 load_avg=0.011 load_max=0.021 loop_avg=49.791 loop_max=52.000
+[pipe-prof] chn=3 elapsed_ms=1019.1 pop=23 send=23 send_fail=0 load=23 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=5 in_kb=240.3 out_kb=240.4 popwait_avg=0.004 popwait_max=0.010 send_avg=43.999 send_max=52.077 get_avg=0.001 get_max=0.003 load_avg=0.017 load_max=0.068 loop_avg=44.253 loop_max=52.333
+[render-prof] elapsed_ms=1005.0 draws=79 draw_avg=1.069 draw_max=1.862 swap_avg=0.419 swap_max=3.098 finish_avg=10.919 finish_max=12.274 total_avg=12.717 total_max=20.482
+[vdec-prof] chn=2 bypass=0 elapsed_ms=1018.6 decode=25 fail=0 decode_avg=40.444 decode_max=55.697 cb=25 cb_avg=9.824 cb_max=12.255 copy_avg=9.550 copy_max=11.996 sync_avg=0.256 sync_max=0.413
+[pipe-prof] chn=2 elapsed_ms=1020.0 pop=25 send=25 send_fail=0 load=25 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=7 in_kb=269.1 out_kb=269.2 popwait_avg=0.005 popwait_max=0.016 send_avg=40.196 send_max=57.672 get_avg=0.001 get_max=0.002 load_avg=0.319 load_max=1.682 loop_avg=40.793 loop_max=57.927
+[vdec-prof] chn=3 bypass=0 elapsed_ms=1001.1 decode=27 fail=0 decode_avg=37.773 decode_max=51.167 cb=27 cb_avg=9.496 cb_max=12.280 copy_avg=9.232 copy_max=12.009 sync_avg=0.241 sync_max=0.382
+[queue] resync chn=1 dropped=17 incoming_size=106831 pts=2265311
+[vdec-prof] chn=1 bypass=0 elapsed_ms=1021.5 decode=2 fail=0 decode_avg=49.302 decode_max=55.902 cb=2 cb_avg=9.123 cb_max=9.804 copy_avg=8.760 copy_max=9.323 sync_avg=0.351 sync_max=0.472
+[pipe-prof] chn=1 elapsed_ms=1021.5 pop=2 send=2 send_fail=0 load=2 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=7 in_kb=105.8 out_kb=105.8 popwait_avg=462.036 popwait_max=924.067 send_avg=47.859 send_max=52.983 get_avg=0.002 get_max=0.002 load_avg=0.015 load_max=0.017 loop_avg=510.712 loop_max=978.561
+[vdec-prof] chn=0 bypass=0 elapsed_ms=1003.7 decode=26 fail=0 decode_avg=38.145 decode_max=53.072 cb=26 cb_avg=9.384 cb_max=10.719 copy_avg=9.133 copy_max=10.492 sync_avg=0.241 sync_max=0.328
+[pipe-prof] chn=0 elapsed_ms=1003.9 pop=26 send=26 send_fail=0 load=26 null=0 drop_pre=0 drop_resync=0 idr=0 qmax=6 in_kb=127.2 out_kb=127.3 popwait_avg=0.005 popwait_max=0.014 send_avg=38.402 send_max=53.095 get_avg=0.001 get_max=0.003 load_avg=0.013 load_max=0.028 loop_avg=38.608 loop_max=53.241
+[queue] overflow flush chn=1 depth=10 max=10 incoming_nal=1 incoming_size=1316 isIDR=0 isSpsOrPps=0 isSei=0 pts=2265561
+[pipe-prof] chn=3 elapsed_ms=1019.9 pop=27 send=27 send_fail=0 load=27 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=4 in_kb=300.3 out_kb=300.4 popwait_avg=0.004 popwait_max=0.011 send_avg=37.454 send_max=54.970 get_avg=0.001 get_max=0.003 load_avg=0.032 load_max=0.510 loop_avg=37.759 loop_max=55.179
+[render-prof] elapsed_ms=1006.9 draws=80 draw_avg=1.042 draw_max=1.696 swap_avg=0.389 swap_max=0.757 finish_avg=10.917 finish_max=14.068 total_avg=12.580 total_max=15.969
+[vdec-prof] chn=2 bypass=0 elapsed_ms=1000.6 decode=25 fail=0 decode_avg=40.013 decode_max=59.150 cb=25 cb_avg=9.805 cb_max=11.387 copy_avg=9.502 copy_max=10.907 sync_avg=0.270 sync_max=0.563
+[pipe-prof] chn=2 elapsed_ms=1031.6 pop=26 send=26 send_fail=0 load=26 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=7 in_kb=259.1 out_kb=259.2 popwait_avg=0.005 popwait_max=0.014 send_avg=39.359 send_max=59.271 get_avg=0.001 get_max=0.002 load_avg=0.065 load_max=1.404 loop_avg=39.670 loop_max=59.664
+[vdec-prof] chn=3 bypass=0 elapsed_ms=1006.7 decode=27 fail=0 decode_avg=36.247 decode_max=54.863 cb=27 cb_avg=9.399 cb_max=11.629 copy_avg=9.106 copy_max=11.394 sync_avg=0.265 sync_max=1.074
+[queue] resync chn=1 dropped=10 incoming_size=89676 pts=2266377
+[vdec-prof] chn=1 bypass=0 elapsed_ms=1052.1 decode=5 fail=0 decode_avg=51.028 decode_max=61.624 cb=5 cb_avg=9.547 cb_max=10.354 copy_avg=9.266 copy_max=10.128 sync_avg=0.271 sync_max=0.407
+[pipe-prof] chn=1 elapsed_ms=1052.1 pop=5 send=5 send_fail=0 load=5 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=9 in_kb=93.9 out_kb=94.0 popwait_avg=161.759 popwait_max=808.784 send_avg=48.285 send_max=62.006 get_avg=0.001 get_max=0.001 load_avg=0.011 load_max=0.015 loop_avg=210.417 loop_max=848.673
+[vdec-prof] chn=0 bypass=0 elapsed_ms=1029.3 decode=26 fail=0 decode_avg=39.453 decode_max=61.460 cb=26 cb_avg=9.335 cb_max=10.721 copy_avg=9.078 copy_max=10.473 sync_avg=0.246 sync_max=0.412
+[pipe-prof] chn=0 elapsed_ms=1029.1 pop=26 send=26 send_fail=0 load=26 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=7 in_kb=182.4 out_kb=182.6 popwait_avg=0.006 popwait_max=0.011 send_avg=39.328 send_max=61.673 get_avg=0.001 get_max=0.002 load_avg=0.016 load_max=0.074 loop_avg=39.574 loop_max=61.844
+[queue] overflow flush chn=1 depth=10 max=10 incoming_nal=1 incoming_size=1601 isIDR=0 isSpsOrPps=0 isSei=0 pts=2266572
+[pipe-prof] chn=3 elapsed_ms=1020.3 pop=27 send=27 send_fail=0 load=27 null=0 drop_pre=0 drop_resync=0 idr=0 qmax=3 in_kb=279.8 out_kb=279.9 popwait_avg=0.735 popwait_max=19.725 send_avg=36.756 send_max=55.612 get_avg=0.001 get_max=0.003 load_avg=0.079 load_max=1.776 loop_avg=37.776 loop_max=63.745
+[render-prof] elapsed_ms=1003.8 draws=79 draw_avg=1.145 draw_max=1.706 swap_avg=0.434 swap_max=0.774 finish_avg=10.898 finish_max=14.265 total_avg=12.699 total_max=17.583
+[vdec-prof] chn=2 bypass=0 elapsed_ms=1002.7 decode=26 fail=0 decode_avg=37.492 decode_max=54.599 cb=26 cb_avg=10.341 cb_max=12.474 copy_avg=9.948 copy_max=12.210 sync_avg=0.361 sync_max=1.839
+[pipe-prof] chn=2 elapsed_ms=1003.9 pop=26 send=26 send_fail=0 load=26 null=0 drop_pre=0 drop_resync=0 idr=2 qmax=7 in_kb=276.9 out_kb=277.1 popwait_avg=0.063 popwait_max=1.505 send_avg=38.118 send_max=54.749 get_avg=0.006 get_max=0.116 load_avg=0.065 load_max=1.408 loop_avg=38.550 loop_max=55.002
+[queue] resync chn=1 dropped=11 incoming_size=90159 pts=2267246
+[vdec-prof] chn=3 bypass=0 elapsed_ms=1009.0 decode=26 fail=0 decode_avg=35.975 decode_max=55.467 cb=26 cb_avg=9.694 cb_max=11.837 copy_avg=9.311 copy_max=11.619 sync_avg=0.355 sync_max=1.489
+[vdec-prof] chn=1 bypass=0 elapsed_ms=1019.9 decode=7 fail=0 decode_avg=47.911 decode_max=62.430 cb=7 cb_avg=9.566 cb_max=11.114 copy_avg=9.283 copy_max=10.861 sync_avg=0.271 sync_max=0.373
+[pipe-prof] chn=1 elapsed_ms=1019.8 pop=7 send=7 send_fail=0 load=7 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=8 in_kb=99.1 out_kb=99.1 popwait_avg=95.771 popwait_max=670.361 send_avg=49.595 send_max=62.464 get_avg=0.001 get_max=0.001 load_avg=0.013 load_max=0.017 loop_avg=145.676 loop_max=717.391
+[vdec-prof] chn=0 bypass=0 elapsed_ms=1016.8 decode=26 fail=0 decode_avg=38.513 decode_max=63.135 cb=26 cb_avg=8.992 cb_max=10.452 copy_avg=8.748 copy_max=10.217 sync_avg=0.234 sync_max=0.459
+[pipe-prof] chn=0 elapsed_ms=1016.8 pop=26 send=26 send_fail=0 load=26 null=0 drop_pre=0 drop_resync=0 idr=0 qmax=6 in_kb=157.4 out_kb=157.5 popwait_avg=0.008 popwait_max=0.071 send_avg=38.910 send_max=63.282 get_avg=0.001 get_max=0.002 load_avg=0.010 load_max=0.019 loop_avg=39.104 loop_max=63.418
+[pipe-prof] chn=3 elapsed_ms=1019.2 pop=25 send=25 send_fail=0 load=25 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=2 in_kb=240.9 out_kb=241.0 popwait_avg=2.185 popwait_max=33.290 send_avg=38.344 send_max=55.332 get_avg=0.001 get_max=0.002 load_avg=0.014 load_max=0.035 loop_avg=40.750 loop_max=59.798
+[queue] overflow flush chn=1 depth=10 max=10 incoming_nal=1 incoming_size=851 isIDR=0 isSpsOrPps=0 isSei=0 pts=2267803
+[render-prof] elapsed_ms=1000.8 draws=79 draw_avg=1.122 draw_max=1.693 swap_avg=0.423 swap_max=0.719 finish_avg=10.940 finish_max=13.366 total_avg=12.662 total_max=15.742
+[vdec-prof] chn=2 bypass=0 elapsed_ms=1024.9 decode=24 fail=0 decode_avg=41.610 decode_max=64.505 cb=24 cb_avg=10.603 cb_max=12.170 copy_avg=10.263 copy_max=11.876 sync_avg=0.310 sync_max=1.721
+[pipe-prof] chn=2 elapsed_ms=1040.0 pop=24 send=24 send_fail=0 load=24 null=0 drop_pre=0 drop_resync=0 idr=0 qmax=7 in_kb=231.0 out_kb=231.1 popwait_avg=0.004 popwait_max=0.011 send_avg=42.550 send_max=64.636 get_avg=0.001 get_max=0.002 load_avg=0.428 load_max=1.577 loop_avg=43.322 loop_max=64.862
+[vdec-prof] chn=3 bypass=0 elapsed_ms=1018.0 decode=25 fail=0 decode_avg=39.803 decode_max=55.190 cb=25 cb_avg=9.619 cb_max=11.543 copy_avg=9.302 copy_max=11.298 sync_avg=0.289 sync_max=1.130
+[queue] resync chn=1 dropped=4 incoming_size=89741 pts=2268372
+[vdec-prof] chn=1 bypass=0 elapsed_ms=1011.6 decode=9 fail=0 decode_avg=49.202 decode_max=66.983 cb=9 cb_avg=9.516 cb_max=10.482 copy_avg=9.249 copy_max=10.247 sync_avg=0.254 sync_max=0.426
+[pipe-prof] chn=1 elapsed_ms=1011.7 pop=9 send=9 send_fail=0 load=9 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=9 in_kb=104.3 out_kb=104.3 popwait_avg=62.971 popwait_max=566.696 send_avg=49.138 send_max=67.011 get_avg=0.001 get_max=0.002 load_avg=0.015 load_max=0.020 loop_avg=112.399 loop_max=593.961
+[vdec-prof] chn=0 bypass=0 elapsed_ms=1013.1 decode=24 fail=0 decode_avg=41.840 decode_max=67.034 cb=24 cb_avg=9.219 cb_max=11.424 copy_avg=8.945 copy_max=11.211 sync_avg=0.260 sync_max=0.655
+[pipe-prof] chn=0 elapsed_ms=1013.1 pop=24 send=24 send_fail=0 load=24 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=7 in_kb=148.4 out_kb=148.6 popwait_avg=0.005 popwait_max=0.017 send_avg=42.002 send_max=67.054 get_avg=0.001 get_max=0.003 load_avg=0.011 load_max=0.022 loop_avg=42.207 loop_max=67.154
+[queue] overflow flush chn=1 depth=10 max=10 incoming_nal=1 incoming_size=1325 isIDR=0 isSpsOrPps=0 isSei=0 pts=2268546
+[pipe-prof] chn=3 elapsed_ms=1032.5 pop=26 send=26 send_fail=0 load=26 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=3 in_kb=266.2 out_kb=266.3 popwait_avg=1.564 popwait_max=38.772 send_avg=37.825 send_max=50.821 get_avg=0.001 get_max=0.002 load_avg=0.072 load_max=1.015 loop_avg=39.700 loop_max=82.211
+[render-prof] elapsed_ms=1005.2 draws=79 draw_avg=1.113 draw_max=1.537 swap_avg=0.406 swap_max=0.720 finish_avg=10.999 finish_max=13.884 total_avg=12.717 total_max=16.554
+[vdec-prof] chn=2 bypass=0 elapsed_ms=1026.8 decode=27 fail=0 decode_avg=37.317 decode_max=50.043 cb=27 cb_avg=10.176 cb_max=11.965 copy_avg=9.874 copy_max=11.681 sync_avg=0.272 sync_max=0.654
+[pipe-prof] chn=2 elapsed_ms=1014.3 pop=27 send=27 send_fail=0 load=27 null=0 drop_pre=0 drop_resync=0 idr=2 qmax=6 in_kb=304.1 out_kb=304.3 popwait_avg=0.005 popwait_max=0.012 send_avg=37.035 send_max=50.214 get_avg=0.001 get_max=0.003 load_avg=0.281 load_max=1.571 loop_avg=37.551 loop_max=50.462
+[vdec-prof] chn=3 bypass=0 elapsed_ms=1023.9 decode=26 fail=0 decode_avg=35.043 decode_max=49.430 cb=26 cb_avg=9.980 cb_max=11.830 copy_avg=9.706 copy_max=11.600 sync_avg=0.245 sync_max=0.359
+[queue] resync chn=1 dropped=11 incoming_size=89293 pts=2269482
+[vdec-prof] chn=0 bypass=0 elapsed_ms=1033.0 decode=28 fail=0 decode_avg=37.082 decode_max=54.493 cb=28 cb_avg=9.500 cb_max=11.210 copy_avg=9.226 copy_max=10.968 sync_avg=0.246 sync_max=0.492
+[pipe-prof] chn=0 elapsed_ms=1032.9 pop=28 send=28 send_fail=0 load=28 null=0 drop_pre=0 drop_resync=0 idr=0 qmax=6 in_kb=138.5 out_kb=138.7 popwait_avg=0.005 popwait_max=0.012 send_avg=36.714 send_max=54.517 get_avg=0.001 get_max=0.002 load_avg=0.011 load_max=0.021 loop_avg=36.886 loop_max=54.628
+[vdec-prof] chn=1 bypass=0 elapsed_ms=1073.0 decode=3 fail=0 decode_avg=46.265 decode_max=53.155 cb=3 cb_avg=9.605 cb_max=10.431 copy_avg=9.360 copy_max=10.196 sync_avg=0.236 sync_max=0.251
+[pipe-prof] chn=1 elapsed_ms=1073.3 pop=3 send=3 send_fail=0 load=3 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=8 in_kb=91.1 out_kb=91.2 popwait_avg=314.316 popwait_max=933.967 send_avg=42.829 send_max=53.187 get_avg=0.002 get_max=0.003 load_avg=0.017 load_max=0.027 loop_avg=357.745 loop_max=973.982
+[queue] overflow flush chn=1 depth=10 max=10 incoming_nal=1 incoming_size=2083 isIDR=0 isSpsOrPps=0 isSei=0 pts=2269583
+[pipe-prof] chn=3 elapsed_ms=1007.1 pop=26 send=26 send_fail=0 load=26 null=0 drop_pre=0 drop_resync=0 idr=0 qmax=1 in_kb=259.4 out_kb=259.5 popwait_avg=3.720 popwait_max=19.558 send_avg=34.757 send_max=50.452 get_avg=0.001 get_max=0.002 load_avg=0.013 load_max=0.026 loop_avg=38.709 loop_max=51.573
+[render-prof] elapsed_ms=1001.9 draws=79 draw_avg=1.109 draw_max=1.983 swap_avg=0.385 swap_max=0.661 finish_avg=10.964 finish_max=14.785 total_avg=12.676 total_max=16.311
+[vdec-prof] chn=2 bypass=0 elapsed_ms=1024.8 decode=27 fail=0 decode_avg=36.105 decode_max=54.787 cb=27 cb_avg=10.019 cb_max=12.022 copy_avg=9.705 copy_max=11.709 sync_avg=0.281 sync_max=0.715
+[pipe-prof] chn=2 elapsed_ms=1011.9 pop=27 send=27 send_fail=0 load=27 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=4 in_kb=280.4 out_kb=280.5 popwait_avg=1.130 popwait_max=30.353 send_avg=35.706 send_max=54.861 get_avg=0.001 get_max=0.003 load_avg=0.202 load_max=1.800 loop_avg=37.383 loop_max=65.509
+[queue] resync chn=1 dropped=12 incoming_size=87405 pts=2270335
+[vdec-prof] chn=3 bypass=0 elapsed_ms=1021.3 decode=26 fail=0 decode_avg=33.219 decode_max=50.332 cb=26 cb_avg=9.484 cb_max=11.362 copy_avg=9.149 copy_max=11.115 sync_avg=0.308 sync_max=1.719
+[vdec-prof] chn=0 bypass=0 elapsed_ms=1020.8 decode=28 fail=0 decode_avg=34.890 decode_max=52.272 cb=28 cb_avg=8.828 cb_max=10.851 copy_avg=8.546 copy_max=10.482 sync_avg=0.251 sync_max=0.463
+[pipe-prof] chn=0 elapsed_ms=1020.8 pop=28 send=28 send_fail=0 load=28 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=4 in_kb=156.1 out_kb=156.2 popwait_avg=0.925 popwait_max=14.976 send_avg=35.351 send_max=52.362 get_avg=0.001 get_max=0.003 load_avg=0.013 load_max=0.037 loop_avg=36.453 loop_max=52.555
+[vdec-prof] chn=1 bypass=0 elapsed_ms=1006.3 decode=6 fail=0 decode_avg=44.621 decode_max=49.475 cb=6 cb_avg=8.901 cb_max=10.261 copy_avg=8.643 copy_max=10.031 sync_avg=0.247 sync_max=0.330
+[pipe-prof] chn=1 elapsed_ms=1005.9 pop=6 send=6 send_fail=0 load=6 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=9 in_kb=96.2 out_kb=96.3 popwait_avg=120.072 popwait_max=720.410 send_avg=47.237 send_max=53.932 get_avg=0.001 get_max=0.002 load_avg=0.011 load_max=0.017 loop_avg=167.640 loop_max=764.610
+[queue] overflow flush chn=1 depth=10 max=10 incoming_nal=1 incoming_size=1249 isIDR=0 isSpsOrPps=0 isSei=0 pts=2270635
+[pipe-prof] chn=3 elapsed_ms=1019.1 pop=25 send=25 send_fail=0 load=25 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=1 in_kb=245.4 out_kb=245.5 popwait_avg=5.339 popwait_max=47.052 send_avg=35.178 send_max=50.354 get_avg=0.001 get_max=0.003 load_avg=0.011 load_max=0.035 loop_avg=40.749 loop_max=73.281
+[render-prof] elapsed_ms=1009.3 draws=79 draw_avg=1.114 draw_max=5.375 swap_avg=0.390 swap_max=0.682 finish_avg=11.034 finish_max=16.376 total_avg=12.769 total_max=23.677
+[vdec-prof] chn=2 bypass=0 elapsed_ms=1023.6 decode=26 fail=0 decode_avg=35.839 decode_max=50.940 cb=26 cb_avg=9.682 cb_max=12.155 copy_avg=9.405 copy_max=11.873 sync_avg=0.248 sync_max=0.428
+[pipe-prof] chn=2 elapsed_ms=1002.4 pop=25 send=25 send_fail=0 load=25 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=5 in_kb=248.3 out_kb=248.4 popwait_avg=3.163 popwait_max=48.271 send_avg=36.113 send_max=51.049 get_avg=0.001 get_max=0.003 load_avg=0.406 load_max=2.066 loop_avg=40.080 loop_max=77.699
+[vdec-prof] chn=3 bypass=0 elapsed_ms=1007.5 decode=25 fail=0 decode_avg=35.777 decode_max=50.190 cb=25 cb_avg=8.922 cb_max=11.420 copy_avg=8.652 copy_max=11.178 sync_avg=0.242 sync_max=0.385
+[queue] resync chn=1 dropped=9 incoming_size=87528 pts=2271380
+[vdec-prof] chn=0 bypass=0 elapsed_ms=1020.6 decode=25 fail=0 decode_avg=37.111 decode_max=62.108 cb=25 cb_avg=8.902 cb_max=10.550 copy_avg=8.628 copy_max=10.313 sync_avg=0.246 sync_max=0.468
+[pipe-prof] chn=0 elapsed_ms=1020.6 pop=25 send=25 send_fail=0 load=25 null=0 drop_pre=0 drop_resync=0 idr=0 qmax=2 in_kb=172.4 out_kb=172.5 popwait_avg=3.408 popwait_max=84.804 send_avg=37.211 send_max=62.203 get_avg=0.001 get_max=0.003 load_avg=0.011 load_max=0.026 loop_avg=40.819 loop_max=110.630
+[vdec-prof] chn=1 bypass=0 elapsed_ms=1034.3 decode=6 fail=0 decode_avg=48.734 decode_max=60.502 cb=6 cb_avg=9.321 cb_max=10.715 copy_avg=9.047 copy_max=10.431 sync_avg=0.263 sync_max=0.339
+[pipe-prof] chn=1 elapsed_ms=1034.3 pop=6 send=6 send_fail=0 load=6 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=9 in_kb=94.9 out_kb=95.0 popwait_avg=123.373 popwait_max=740.204 send_avg=48.670 send_max=60.529 get_avg=0.001 get_max=0.001 load_avg=0.011 load_max=0.016 loop_avg=172.371 loop_max=785.336
+[queue] overflow flush chn=1 depth=10 max=10 incoming_nal=1 incoming_size=2688 isIDR=0 isSpsOrPps=0 isSei=0 pts=2271715
+[pipe-prof] chn=3 elapsed_ms=1001.9 pop=25 send=25 send_fail=0 load=25 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=2 in_kb=261.0 out_kb=261.1 popwait_avg=4.702 popwait_max=36.838 send_avg=35.086 send_max=54.888 get_avg=0.001 get_max=0.003 load_avg=0.048 load_max=0.884 loop_avg=40.064 loop_max=61.425
+[render-prof] elapsed_ms=1006.0 draws=79 draw_avg=1.026 draw_max=1.520 swap_avg=0.381 swap_max=0.780 finish_avg=10.733 finish_max=13.143 total_avg=12.728 total_max=39.987
+[vdec-prof] chn=2 bypass=0 elapsed_ms=1027.1 decode=25 fail=0 decode_avg=36.064 decode_max=59.716 cb=25 cb_avg=9.470 cb_max=11.316 copy_avg=9.195 copy_max=11.044 sync_avg=0.242 sync_max=0.385
+[pipe-prof] chn=2 elapsed_ms=1025.2 pop=25 send=25 send_fail=0 load=25 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=6 in_kb=256.7 out_kb=256.8 popwait_avg=3.803 popwait_max=42.538 send_avg=36.724 send_max=61.544 get_avg=0.001 get_max=0.003 load_avg=0.194 load_max=1.908 loop_avg=40.998 loop_max=76.082
+[vdec-prof] chn=3 bypass=0 elapsed_ms=1026.0 decode=25 fail=0 decode_avg=35.903 decode_max=54.758 cb=25 cb_avg=9.317 cb_max=11.430 copy_avg=9.050 copy_max=11.157 sync_avg=0.239 sync_max=0.354
+[queue] resync chn=1 dropped=8 incoming_size=101715 pts=2272471
+[vdec-prof] chn=0 bypass=0 elapsed_ms=1001.0 decode=25 fail=0 decode_avg=35.235 decode_max=59.284 cb=25 cb_avg=9.163 cb_max=10.747 copy_avg=8.892 copy_max=10.506 sync_avg=0.243 sync_max=0.450
+[pipe-prof] chn=0 elapsed_ms=1001.0 pop=25 send=25 send_fail=0 load=25 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=3 in_kb=197.0 out_kb=197.1 popwait_avg=4.451 popwait_max=81.554 send_avg=35.382 send_max=59.442 get_avg=0.001 get_max=0.003 load_avg=0.011 load_max=0.020 loop_avg=40.037 loop_max=96.853
+[queue] overflow flush chn=1 depth=10 max=10 incoming_nal=1 incoming_size=1235 isIDR=0 isSpsOrPps=0 isSei=0 pts=2272543
+[vdec-prof] chn=1 bypass=0 elapsed_ms=1012.5 decode=5 fail=0 decode_avg=52.860 decode_max=62.726 cb=5 cb_avg=9.335 cb_max=9.914 copy_avg=9.099 copy_max=9.682 sync_avg=0.228 sync_max=0.271
+[pipe-prof] chn=1 elapsed_ms=1012.5 pop=5 send=5 send_fail=0 load=5 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=9 in_kb=106.5 out_kb=106.6 popwait_avg=149.809 popwait_max=749.030 send_avg=52.286 send_max=62.843 get_avg=0.001 get_max=0.002 load_avg=0.018 load_max=0.023 loop_avg=202.486 loop_max=798.841
+[pipe-prof] chn=3 elapsed_ms=1027.2 pop=26 send=26 send_fail=0 load=26 null=0 drop_pre=0 drop_resync=0 idr=0 qmax=2 in_kb=250.2 out_kb=250.3 popwait_avg=4.036 popwait_max=26.795 send_avg=35.226 send_max=50.714 get_avg=0.001 get_max=0.003 load_avg=0.016 load_max=0.075 loop_avg=39.494 loop_max=57.874
+[render-prof] elapsed_ms=1003.8 draws=80 draw_avg=1.050 draw_max=1.441 swap_avg=0.379 swap_max=0.624 finish_avg=10.827 finish_max=11.923 total_avg=12.541 total_max=19.733
+[vdec-prof] chn=2 bypass=0 elapsed_ms=1067.7 decode=27 fail=0 decode_avg=32.595 decode_max=50.227 cb=27 cb_avg=9.245 cb_max=11.482 copy_avg=8.961 copy_max=11.225 sync_avg=0.254 sync_max=0.612
+[pipe-prof] chn=2 elapsed_ms=1068.6 pop=27 send=27 send_fail=0 load=27 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=3 in_kb=273.6 out_kb=273.7 popwait_avg=6.615 popwait_max=121.074 send_avg=32.138 send_max=50.383 get_avg=0.001 get_max=0.003 load_avg=0.495 load_max=1.935 loop_avg=39.573 loop_max=138.922
+[queue] resync chn=1 dropped=13 incoming_size=88542 pts=2273402
+[vdec-prof] chn=3 bypass=0 elapsed_ms=1064.0 decode=26 fail=0 decode_avg=33.297 decode_max=50.556 cb=26 cb_avg=8.972 cb_max=11.143 copy_avg=8.715 copy_max=10.863 sync_avg=0.232 sync_max=0.318
+[vdec-prof] chn=0 bypass=0 elapsed_ms=1029.7 decode=26 fail=0 decode_avg=33.789 decode_max=50.842 cb=26 cb_avg=9.049 cb_max=10.644 copy_avg=8.790 copy_max=10.388 sync_avg=0.232 sync_max=0.259
+[pipe-prof] chn=0 elapsed_ms=1029.6 pop=26 send=26 send_fail=0 load=26 null=0 drop_pre=0 drop_resync=0 idr=0 qmax=2 in_kb=165.3 out_kb=165.4 popwait_avg=5.708 popwait_max=98.746 send_avg=33.703 send_max=49.795 get_avg=0.001 get_max=0.002 load_avg=0.015 load_max=0.121 loop_avg=39.595 loop_max=114.440
+[vdec-prof] chn=1 bypass=0 elapsed_ms=1039.8 decode=5 fail=0 decode_avg=39.417 decode_max=50.054 cb=5 cb_avg=8.290 cb_max=9.160 copy_avg=8.055 copy_max=8.914 sync_avg=0.224 sync_max=0.237
+[pipe-prof] chn=1 elapsed_ms=1039.9 pop=5 send=5 send_fail=0 load=5 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=9 in_kb=94.6 out_kb=94.6 popwait_avg=166.154 popwait_max=827.209 send_avg=41.414 send_max=59.785 get_avg=0.001 get_max=0.002 load_avg=0.012 load_max=0.014 loop_avg=207.975 loop_max=851.842
+[queue] overflow flush chn=1 depth=10 max=10 incoming_nal=1 incoming_size=1855 isIDR=0 isSpsOrPps=0 isSei=0 pts=2273654
+[pipe-prof] chn=3 elapsed_ms=1025.7 pop=25 send=25 send_fail=0 load=25 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=2 in_kb=259.5 out_kb=259.6 popwait_avg=6.942 popwait_max=80.198 send_avg=33.828 send_max=56.703 get_avg=0.001 get_max=0.003 load_avg=0.014 load_max=0.032 loop_avg=41.010 loop_max=92.502
+[render-prof] elapsed_ms=1007.1 draws=76 draw_avg=1.063 draw_max=2.298 swap_avg=0.376 swap_max=0.611 finish_avg=10.701 finish_max=12.795 total_avg=13.244 total_max=57.332
+[vdec-prof] chn=2 bypass=0 elapsed_ms=1021.2 decode=26 fail=0 decode_avg=35.872 decode_max=51.036 cb=26 cb_avg=9.801 cb_max=11.448 copy_avg=9.472 copy_max=11.213 sync_avg=0.300 sync_max=1.995
+[pipe-prof] chn=2 elapsed_ms=1020.1 pop=26 send=26 send_fail=0 load=26 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=6 in_kb=266.3 out_kb=266.4 popwait_avg=2.258 popwait_max=42.143 send_avg=36.309 send_max=51.152 get_avg=0.001 get_max=0.002 load_avg=0.188 load_max=1.676 loop_avg=39.228 loop_max=80.837
+[vdec-prof] chn=3 bypass=0 elapsed_ms=1015.1 decode=26 fail=0 decode_avg=34.180 decode_max=56.584 cb=26 cb_avg=9.087 cb_max=12.285 copy_avg=8.823 copy_max=12.000 sync_avg=0.238 sync_max=0.367
+[queue] resync chn=1 dropped=9 incoming_size=88567 pts=2274506
+[queue] overflow flush chn=1 depth=10 max=10 incoming_nal=1 incoming_size=1035 isIDR=0 isSpsOrPps=0 isSei=0 pts=2274585
+[vdec-prof] chn=0 bypass=0 elapsed_ms=1035.1 decode=26 fail=0 decode_avg=36.348 decode_max=60.705 cb=26 cb_avg=8.923 cb_max=10.084 copy_avg=8.640 copy_max=9.796 sync_avg=0.254 sync_max=0.480
+[pipe-prof] chn=0 elapsed_ms=1035.1 pop=26 send=26 send_fail=0 load=26 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=3 in_kb=186.0 out_kb=186.1 popwait_avg=3.069 popwait_max=22.540 send_avg=36.541 send_max=60.731 get_avg=0.001 get_max=0.003 load_avg=0.011 load_max=0.033 loop_avg=39.806 loop_max=60.812
+[vdec-prof] chn=1 bypass=0 elapsed_ms=1006.3 decode=4 fail=0 decode_avg=44.754 decode_max=59.748 cb=4 cb_avg=8.862 cb_max=9.658 copy_avg=8.623 copy_max=9.399 sync_avg=0.229 sync_max=0.247
+[pipe-prof] chn=1 elapsed_ms=1006.2 pop=4 send=4 send_fail=0 load=4 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=9 in_kb=93.0 out_kb=93.0 popwait_avg=210.192 popwait_max=840.752 send_avg=40.874 send_max=49.992 get_avg=0.001 get_max=0.002 load_avg=0.012 load_max=0.017 loop_avg=251.542 loop_max=862.851
+[pipe-prof] chn=3 elapsed_ms=1006.5 pop=26 send=26 send_fail=0 load=26 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=2 in_kb=268.7 out_kb=268.8 popwait_avg=5.434 popwait_max=28.622 send_avg=33.028 send_max=49.475 get_avg=0.001 get_max=0.003 load_avg=0.016 load_max=0.094 loop_avg=38.704 loop_max=66.369
+[queue] resync chn=1 dropped=12 incoming_size=101589 pts=2275168
+[render-prof] elapsed_ms=1002.8 draws=79 draw_avg=1.067 draw_max=1.587 swap_avg=0.395 swap_max=0.693 finish_avg=11.011 finish_max=16.699 total_avg=12.687 total_max=18.091
+[vdec-prof] chn=2 bypass=0 elapsed_ms=1021.5 decode=26 fail=0 decode_avg=36.101 decode_max=60.544 cb=26 cb_avg=10.136 cb_max=12.199 copy_avg=9.808 copy_max=11.914 sync_avg=0.298 sync_max=1.714
+[pipe-prof] chn=2 elapsed_ms=1021.4 pop=26 send=26 send_fail=0 load=26 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=3 in_kb=249.7 out_kb=249.9 popwait_avg=1.718 popwait_max=41.058 send_avg=37.020 send_max=60.627 get_avg=0.001 get_max=0.004 load_avg=0.129 load_max=1.594 loop_avg=39.280 loop_max=61.479
+[vdec-prof] chn=3 bypass=0 elapsed_ms=1003.2 decode=25 fail=0 decode_avg=36.167 decode_max=51.437 cb=25 cb_avg=10.213 cb_max=13.345 copy_avg=9.890 copy_max=13.085 sync_avg=0.295 sync_max=1.406
+[vdec-prof] chn=0 bypass=0 elapsed_ms=1038.7 decode=25 fail=0 decode_avg=40.994 decode_max=60.918 cb=25 cb_avg=9.318 cb_max=10.972 copy_avg=9.039 copy_max=10.727 sync_avg=0.236 sync_max=0.302
+[pipe-prof] chn=0 elapsed_ms=1038.6 pop=25 send=25 send_fail=0 load=25 null=0 drop_pre=0 drop_resync=0 idr=0 qmax=2 in_kb=153.7 out_kb=153.8 popwait_avg=0.286 popwait_max=6.909 send_avg=41.067 send_max=61.016 get_avg=0.001 get_max=0.002 load_avg=0.012 load_max=0.040 loop_avg=41.541 loop_max=61.213
+[vdec-prof] chn=1 bypass=0 elapsed_ms=1045.6 decode=10 fail=0 decode_avg=48.930 decode_max=61.671 cb=10 cb_avg=8.500 cb_max=9.072 copy_avg=8.258 copy_max=8.818 sync_avg=0.232 sync_max=0.298
+[pipe-prof] chn=1 elapsed_ms=1045.5 pop=10 send=10 send_fail=0 load=10 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=6 in_kb=112.1 out_kb=112.2 popwait_avg=54.683 popwait_max=546.768 send_avg=49.569 send_max=61.698 get_avg=0.001 get_max=0.002 load_avg=0.011 load_max=0.016 loop_avg=104.541 loop_max=584.417
+[pipe-prof] chn=3 elapsed_ms=1035.5 pop=24 send=24 send_fail=0 load=24 null=0 drop_pre=0 drop_resync=0 idr=0 qmax=2 in_kb=224.8 out_kb=224.9 popwait_avg=1.858 popwait_max=21.049 send_avg=41.017 send_max=53.005 get_avg=0.001 get_max=0.002 load_avg=0.039 load_max=0.642 loop_avg=43.127 loop_max=58.694
+[render-prof] elapsed_ms=1005.7 draws=79 draw_avg=1.140 draw_max=1.882 swap_avg=0.441 swap_max=1.531 finish_avg=10.945 finish_max=13.078 total_avg=12.724 total_max=15.960
+[vdec-prof] chn=2 bypass=0 elapsed_ms=1054.8 decode=20 fail=0 decode_avg=51.066 decode_max=62.526 cb=20 cb_avg=9.895 cb_max=11.326 copy_avg=9.630 copy_max=11.091 sync_avg=0.236 sync_max=0.295
+[pipe-prof] chn=2 elapsed_ms=1055.0 pop=20 send=20 send_fail=0 load=20 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=7 in_kb=215.4 out_kb=215.5 popwait_avg=0.005 popwait_max=0.013 send_avg=51.920 send_max=62.609 get_avg=0.001 get_max=0.002 load_avg=0.432 load_max=1.494 loop_avg=52.741 loop_max=64.131
+[queue] overflow flush chn=1 depth=10 max=10 incoming_nal=1 incoming_size=1716 isIDR=0 isSpsOrPps=0 isSei=0 pts=2276477
+[vdec-prof] chn=3 bypass=0 elapsed_ms=1048.1 decode=25 fail=0 decode_avg=41.482 decode_max=55.074 cb=25 cb_avg=7.645 cb_max=12.559 copy_avg=7.392 copy_max=12.267 sync_avg=0.226 sync_max=0.300
+[vdec-prof] chn=0 bypass=0 elapsed_ms=1008.6 decode=20 fail=0 decode_avg=50.731 decode_max=64.298 cb=20 cb_avg=9.508 cb_max=10.777 copy_avg=9.225 copy_max=10.534 sync_avg=0.248 sync_max=0.581
+[pipe-prof] chn=0 elapsed_ms=1008.7 pop=20 send=20 send_fail=0 load=20 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=8 in_kb=159.8 out_kb=159.9 popwait_avg=0.004 popwait_max=0.008 send_avg=50.228 send_max=64.358 get_avg=0.001 get_max=0.003 load_avg=0.012 load_max=0.018 loop_avg=50.432 loop_max=64.440
+[pipe-prof] chn=3 elapsed_ms=1030.4 pop=27 send=27 send_fail=0 load=27 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=3 in_kb=252.0 out_kb=252.1 popwait_avg=0.004 popwait_max=0.012 send_avg=37.893 send_max=55.255 get_avg=0.001 get_max=0.002 load_avg=0.013 load_max=0.041 loop_avg=38.148 loop_max=56.049
+[render-prof] elapsed_ms=1005.3 draws=80 draw_avg=1.044 draw_max=1.527 swap_avg=0.395 swap_max=0.666 finish_avg=10.834 finish_max=16.288 total_avg=12.560 total_max=19.033
+[queue] resync chn=1 dropped=14 incoming_size=89069 pts=2277320
+[vdec-prof] chn=1 bypass=0 elapsed_ms=1710.4 decode=17 fail=0 decode_avg=52.640 decode_max=65.164 cb=17 cb_avg=8.868 cb_max=9.922 copy_avg=8.638 copy_max=9.688 sync_avg=0.221 sync_max=0.260
+[pipe-prof] chn=1 elapsed_ms=1710.5 pop=17 send=17 send_fail=0 load=17 null=0 drop_pre=0 drop_resync=0 idr=2 qmax=10 in_kb=196.0 out_kb=196.1 popwait_avg=47.221 popwait_max=802.686 send_avg=53.050 send_max=65.195 get_avg=0.001 get_max=0.003 load_avg=0.015 load_max=0.024 loop_avg=100.613 loop_max=859.779
+[vdec-prof] chn=2 bypass=0 elapsed_ms=1033.7 decode=28 fail=0 decode_avg=36.573 decode_max=58.652 cb=28 cb_avg=9.971 cb_max=12.259 copy_avg=9.625 copy_max=11.996 sync_avg=0.310 sync_max=1.754
+[pipe-prof] chn=2 elapsed_ms=1033.6 pop=28 send=28 send_fail=0 load=28 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=9 in_kb=281.9 out_kb=282.1 popwait_avg=0.005 popwait_max=0.010 send_avg=36.251 send_max=48.475 get_avg=0.001 get_max=0.002 load_avg=0.339 load_max=1.707 loop_avg=36.907 loop_max=48.659
+[vdec-prof] chn=3 bypass=0 elapsed_ms=1024.1 decode=26 fail=0 decode_avg=35.142 decode_max=55.021 cb=26 cb_avg=9.160 cb_max=10.952 copy_avg=8.874 copy_max=10.717 sync_avg=0.259 sync_max=0.458
+[queue] overflow flush chn=1 depth=10 max=10 incoming_nal=1 incoming_size=1122 isIDR=0 isSpsOrPps=0 isSei=0 pts=2277641
+[vdec-prof] chn=0 bypass=0 elapsed_ms=1043.6 decode=26 fail=0 decode_avg=39.367 decode_max=55.744 cb=26 cb_avg=9.242 cb_max=10.184 copy_avg=8.979 copy_max=9.943 sync_avg=0.237 sync_max=0.310
+[pipe-prof] chn=0 elapsed_ms=1043.5 pop=26 send=26 send_fail=0 load=26 null=0 drop_pre=0 drop_resync=0 idr=0 qmax=8 in_kb=169.0 out_kb=169.1 popwait_avg=0.005 popwait_max=0.012 send_avg=39.938 send_max=55.806 get_avg=0.001 get_max=0.002 load_avg=0.011 load_max=0.020 loop_avg=40.128 loop_max=55.971
+[pipe-prof] chn=3 elapsed_ms=1031.0 pop=26 send=26 send_fail=0 load=26 null=0 drop_pre=0 drop_resync=0 idr=0 qmax=3 in_kb=248.0 out_kb=248.1 popwait_avg=3.728 popwait_max=38.795 send_avg=35.625 send_max=55.083 get_avg=0.001 get_max=0.002 load_avg=0.076 load_max=1.619 loop_avg=39.638 loop_max=81.028
+[render-prof] elapsed_ms=1003.0 draws=79 draw_avg=1.126 draw_max=1.981 swap_avg=0.428 swap_max=0.832 finish_avg=11.002 finish_max=15.085 total_avg=12.689 total_max=17.996
+[queue] resync chn=1 dropped=8 incoming_size=101550 pts=2278429
+[vdec-prof] chn=1 bypass=0 elapsed_ms=1094.2 decode=7 fail=0 decode_avg=47.618 decode_max=55.607 cb=7 cb_avg=8.890 cb_max=10.041 copy_avg=8.633 copy_max=9.808 sync_avg=0.246 sync_max=0.356
+[pipe-prof] chn=1 elapsed_ms=1094.3 pop=7 send=7 send_fail=0 load=7 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=9 in_kb=111.6 out_kb=111.7 popwait_avg=110.400 popwait_max=772.773 send_avg=45.584 send_max=51.284 get_avg=0.001 get_max=0.003 load_avg=0.010 load_max=0.016 loop_avg=156.318 loop_max=815.246
+[queue] overflow flush chn=1 depth=10 max=10 incoming_nal=1 incoming_size=1200 isIDR=0 isSpsOrPps=0 isSei=0 pts=2278479
+[vdec-prof] chn=2 bypass=0 elapsed_ms=1032.9 decode=27 fail=0 decode_avg=37.385 decode_max=51.283 cb=27 cb_avg=10.358 cb_max=11.942 copy_avg=10.057 copy_max=11.587 sync_avg=0.268 sync_max=0.851
+[pipe-prof] chn=2 elapsed_ms=1032.8 pop=27 send=27 send_fail=0 load=27 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=8 in_kb=268.5 out_kb=268.6 popwait_avg=0.005 popwait_max=0.016 send_avg=37.775 send_max=51.374 get_avg=0.001 get_max=0.002 load_avg=0.064 load_max=1.423 loop_avg=38.246 loop_max=51.571
+[vdec-prof] chn=3 bypass=0 elapsed_ms=1008.7 decode=26 fail=0 decode_avg=36.971 decode_max=52.256 cb=26 cb_avg=9.636 cb_max=12.110 copy_avg=9.381 copy_max=11.811 sync_avg=0.229 sync_max=0.273
+[vdec-prof] chn=0 bypass=0 elapsed_ms=1025.5 decode=27 fail=0 decode_avg=38.143 decode_max=52.881 cb=27 cb_avg=9.582 cb_max=10.803 copy_avg=9.317 copy_max=10.541 sync_avg=0.237 sync_max=0.393
+[pipe-prof] chn=0 elapsed_ms=1025.5 pop=27 send=27 send_fail=0 load=27 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=8 in_kb=144.9 out_kb=145.1 popwait_avg=0.004 popwait_max=0.007 send_avg=37.795 send_max=52.913 get_avg=0.001 get_max=0.002 load_avg=0.010 load_max=0.017 loop_avg=37.977 loop_max=53.029
+[pipe-prof] chn=3 elapsed_ms=1014.7 pop=26 send=26 send_fail=0 load=26 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=1 in_kb=251.1 out_kb=251.3 popwait_avg=1.475 popwait_max=14.238 send_avg=37.307 send_max=51.895 get_avg=0.001 get_max=0.003 load_avg=0.016 load_max=0.058 loop_avg=39.015 loop_max=52.106
+[render-prof] elapsed_ms=1002.2 draws=78 draw_avg=1.126 draw_max=2.131 swap_avg=0.435 swap_max=1.429 finish_avg=11.018 finish_max=12.323 total_avg=12.841 total_max=16.425
+[queue] resync chn=1 dropped=13 incoming_size=100203 pts=2279408
+[vdec-prof] chn=1 bypass=0 elapsed_ms=1030.3 decode=3 fail=0 decode_avg=45.748 decode_max=55.483 cb=3 cb_avg=9.044 cb_max=10.365 copy_avg=8.813 copy_max=10.133 sync_avg=0.221 sync_max=0.223
+[pipe-prof] chn=1 elapsed_ms=1030.4 pop=3 send=3 send_fail=0 load=3 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=9 in_kb=99.8 out_kb=99.8 popwait_avg=293.727 popwait_max=881.172 send_avg=49.072 send_max=55.508 get_avg=0.001 get_max=0.001 load_avg=0.073 load_max=0.191 loop_avg=343.440 loop_max=923.631
+[queue] overflow flush chn=1 depth=10 max=10 incoming_nal=1 incoming_size=1211 isIDR=0 isSpsOrPps=0 isSei=0 pts=2279509
+[vdec-prof] chn=2 bypass=0 elapsed_ms=1035.4 decode=27 fail=0 decode_avg=37.062 decode_max=60.406 cb=27 cb_avg=9.912 cb_max=11.646 copy_avg=9.627 copy_max=11.340 sync_avg=0.255 sync_max=0.365
+[pipe-prof] chn=2 elapsed_ms=1035.6 pop=27 send=27 send_fail=0 load=27 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=6 in_kb=295.0 out_kb=295.1 popwait_avg=0.417 popwait_max=7.953 send_avg=37.132 send_max=60.491 get_avg=0.003 get_max=0.036 load_avg=0.453 load_max=1.573 loop_avg=38.348 loop_max=60.696
+[vdec-prof] chn=3 bypass=0 elapsed_ms=1031.1 decode=25 fail=0 decode_avg=37.643 decode_max=58.815 cb=25 cb_avg=10.127 cb_max=11.272 copy_avg=9.853 copy_max=11.030 sync_avg=0.231 sync_max=0.281
+[vdec-prof] chn=0 bypass=0 elapsed_ms=1016.7 decode=28 fail=0 decode_avg=36.320 decode_max=50.819 cb=28 cb_avg=9.546 cb_max=11.017 copy_avg=9.274 copy_max=10.764 sync_avg=0.245 sync_max=0.420
+[pipe-prof] chn=0 elapsed_ms=1016.7 pop=28 send=28 send_fail=0 load=28 null=0 drop_pre=0 drop_resync=0 idr=0 qmax=6 in_kb=128.2 out_kb=128.3 popwait_avg=0.005 popwait_max=0.011 send_avg=36.138 send_max=50.846 get_avg=0.001 get_max=0.002 load_avg=0.011 load_max=0.020 loop_avg=36.307 loop_max=50.979
+[pipe-prof] chn=3 elapsed_ms=1019.8 pop=26 send=26 send_fail=0 load=26 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=1 in_kb=249.6 out_kb=249.7 popwait_avg=3.307 popwait_max=34.880 send_avg=35.653 send_max=58.936 get_avg=0.001 get_max=0.002 load_avg=0.015 load_max=0.080 loop_avg=39.212 loop_max=64.126
+[render-prof] elapsed_ms=1002.7 draws=79 draw_avg=1.099 draw_max=2.867 swap_avg=0.396 swap_max=0.697 finish_avg=10.895 finish_max=16.004 total_avg=12.685 total_max=17.939
+[queue] resync chn=1 dropped=12 incoming_size=89307 pts=2280447
+[queue] overflow flush chn=1 depth=10 max=10 incoming_nal=1 incoming_size=1281 isIDR=0 isSpsOrPps=0 isSei=0 pts=2280519
+[vdec-prof] chn=1 bypass=0 elapsed_ms=1019.3 decode=3 fail=0 decode_avg=43.461 decode_max=50.733 cb=3 cb_avg=8.891 cb_max=9.225 copy_avg=8.653 copy_max=8.981 sync_avg=0.226 sync_max=0.236
+[pipe-prof] chn=1 elapsed_ms=1019.0 pop=3 send=3 send_fail=0 load=3 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=9 in_kb=90.0 out_kb=90.0 popwait_avg=300.393 popwait_max=901.173 send_avg=38.632 send_max=43.684 get_avg=0.001 get_max=0.002 load_avg=0.011 load_max=0.012 loop_avg=339.657 loop_max=938.737
+[vdec-prof] chn=2 bypass=0 elapsed_ms=1009.7 decode=24 fail=0 decode_avg=32.429 decode_max=51.346 cb=24 cb_avg=9.424 cb_max=11.463 copy_avg=9.085 copy_max=10.864 sync_avg=0.310 sync_max=1.686
+[pipe-prof] chn=2 elapsed_ms=1009.5 pop=24 send=24 send_fail=0 load=24 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=5 in_kb=249.8 out_kb=249.9 popwait_avg=8.942 popwait_max=106.483 send_avg=32.438 send_max=51.463 get_avg=0.008 get_max=0.161 load_avg=0.373 load_max=1.581 loop_avg=42.059 loop_max=125.201
+[vdec-prof] chn=3 bypass=0 elapsed_ms=1023.1 decode=27 fail=0 decode_avg=28.259 decode_max=44.684 cb=27 cb_avg=8.677 cb_max=12.445 copy_avg=8.400 copy_max=12.190 sync_avg=0.251 sync_max=0.952
+[vdec-prof] chn=0 bypass=0 elapsed_ms=1016.7 decode=23 fail=0 decode_avg=32.130 decode_max=50.903 cb=23 cb_avg=8.336 cb_max=10.326 copy_avg=8.076 copy_max=10.076 sync_avg=0.234 sync_max=0.331
+[pipe-prof] chn=0 elapsed_ms=1016.7 pop=23 send=23 send_fail=0 load=23 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=6 in_kb=183.4 out_kb=183.5 popwait_avg=11.626 popwait_max=142.420 send_avg=32.371 send_max=51.073 get_avg=0.003 get_max=0.061 load_avg=0.010 load_max=0.016 loop_avg=44.199 loop_max=151.876
+[pipe-prof] chn=3 elapsed_ms=1029.7 pop=26 send=26 send_fail=0 load=26 null=0 drop_pre=0 drop_resync=0 idr=0 qmax=1 in_kb=277.9 out_kb=278.0 popwait_avg=10.423 popwait_max=35.515 send_avg=28.858 send_max=39.560 get_avg=0.001 get_max=0.002 load_avg=0.107 load_max=1.372 loop_avg=39.594 loop_max=73.447
+[render-prof] elapsed_ms=1005.4 draws=73 draw_avg=1.052 draw_max=1.900 swap_avg=0.396 swap_max=0.850 finish_avg=10.744 finish_max=14.562 total_avg=13.766 total_max=47.177
+[queue] resync chn=1 dropped=13 incoming_size=105041 pts=2281428
+[queue] overflow flush chn=1 depth=10 max=10 incoming_nal=1 incoming_size=1635 isIDR=0 isSpsOrPps=0 isSei=0 pts=2281497
+[vdec-prof] chn=1 bypass=0 elapsed_ms=1003.0 decode=2 fail=0 decode_avg=36.090 decode_max=36.166 cb=2 cb_avg=7.780 cb_max=8.515 copy_avg=7.542 copy_max=8.275 sync_avg=0.211 sync_max=0.212
+[pipe-prof] chn=1 elapsed_ms=1003.1 pop=2 send=2 send_fail=0 load=2 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=5 in_kb=103.5 out_kb=103.5 popwait_avg=456.649 popwait_max=913.292 send_avg=43.953 send_max=51.863 get_avg=0.001 get_max=0.001 load_avg=0.011 load_max=0.012 loop_avg=501.506 loop_max=951.026
+[vdec-prof] chn=2 bypass=0 elapsed_ms=1029.8 decode=29 fail=0 decode_avg=33.572 decode_max=51.286 cb=29 cb_avg=10.160 cb_max=11.786 copy_avg=9.813 copy_max=11.505 sync_avg=0.316 sync_max=1.761
+[pipe-prof] chn=2 elapsed_ms=1029.9 pop=29 send=29 send_fail=0 load=29 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=5 in_kb=282.4 out_kb=282.5 popwait_avg=1.242 popwait_max=35.880 send_avg=33.622 send_max=51.367 get_avg=0.001 get_max=0.003 load_avg=0.259 load_max=1.485 loop_avg=35.510 loop_max=61.176
+[vdec-prof] chn=3 bypass=0 elapsed_ms=1031.7 decode=25 fail=0 decode_avg=34.618 decode_max=51.382 cb=25 cb_avg=9.728 cb_max=12.126 copy_avg=9.457 copy_max=11.898 sync_avg=0.245 sync_max=0.552
+[vdec-prof] chn=0 bypass=0 elapsed_ms=1031.8 decode=29 fail=0 decode_avg=34.659 decode_max=51.223 cb=29 cb_avg=9.059 cb_max=10.781 copy_avg=8.788 copy_max=10.548 sync_avg=0.244 sync_max=0.443
+[pipe-prof] chn=0 elapsed_ms=1032.0 pop=29 send=29 send_fail=0 load=29 null=0 drop_pre=0 drop_resync=0 idr=0 qmax=6 in_kb=179.2 out_kb=179.3 popwait_avg=0.556 popwait_max=16.006 send_avg=34.850 send_max=51.254 get_avg=0.001 get_max=0.003 load_avg=0.011 load_max=0.035 loop_avg=35.580 loop_max=51.372
+[pipe-prof] chn=3 elapsed_ms=1002.9 pop=25 send=25 send_fail=0 load=25 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=1 in_kb=282.7 out_kb=282.8 popwait_avg=6.080 popwait_max=40.828 send_avg=33.767 send_max=51.552 get_avg=0.001 get_max=0.002 load_avg=0.013 load_max=0.025 loop_avg=40.102 loop_max=68.733
+[queue] resync chn=1 dropped=13 incoming_size=20863 pts=2282053
+[render-prof] elapsed_ms=1009.2 draws=79 draw_avg=1.192 draw_max=3.361 swap_avg=0.432 swap_max=0.710 finish_avg=10.945 finish_max=13.288 total_avg=12.768 total_max=19.699
+[vdec-prof] chn=1 bypass=0 elapsed_ms=1038.7 decode=11 fail=0 decode_avg=46.143 decode_max=51.837 cb=11 cb_avg=9.267 cb_max=10.558 copy_avg=8.929 copy_max=10.310 sync_avg=0.312 sync_max=1.011
+[pipe-prof] chn=1 elapsed_ms=1038.6 pop=11 send=11 send_fail=0 load=11 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=3 in_kb=79.7 out_kb=79.7 popwait_avg=48.146 popwait_max=529.559 send_avg=46.072 send_max=51.185 get_avg=0.001 get_max=0.002 load_avg=0.013 load_max=0.025 loop_avg=94.411 loop_max=558.305
+[vdec-prof] chn=2 bypass=0 elapsed_ms=1012.1 decode=25 fail=0 decode_avg=39.006 decode_max=60.474 cb=25 cb_avg=10.391 cb_max=12.052 copy_avg=10.101 copy_max=11.791 sync_avg=0.240 sync_max=0.290
+[pipe-prof] chn=2 elapsed_ms=1013.5 pop=25 send=25 send_fail=0 load=25 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=2 in_kb=252.5 out_kb=252.6 popwait_avg=0.400 popwait_max=9.881 send_avg=39.698 send_max=60.577 get_avg=0.001 get_max=0.002 load_avg=0.186 load_max=1.536 loop_avg=40.536 loop_max=60.791
+[vdec-prof] chn=3 bypass=0 elapsed_ms=1020.8 decode=23 fail=0 decode_avg=40.283 decode_max=58.495 cb=23 cb_avg=9.509 cb_max=11.348 copy_avg=9.246 copy_max=11.122 sync_avg=0.236 sync_max=0.382
+[vdec-prof] chn=0 bypass=0 elapsed_ms=1046.6 decode=24 fail=0 decode_avg=42.320 decode_max=60.767 cb=24 cb_avg=9.259 cb_max=10.989 copy_avg=8.984 copy_max=10.710 sync_avg=0.244 sync_max=0.339
+[pipe-prof] chn=0 elapsed_ms=1046.6 pop=24 send=24 send_fail=0 load=24 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=3 in_kb=211.8 out_kb=212.0 popwait_avg=0.421 popwait_max=9.976 send_avg=42.934 send_max=60.872 get_avg=0.001 get_max=0.003 load_avg=0.011 load_max=0.022 loop_avg=43.603 loop_max=61.085
+[pipe-prof] chn=3 elapsed_ms=1021.7 pop=21 send=21 send_fail=0 load=21 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=4 in_kb=200.7 out_kb=200.8 popwait_avg=3.027 popwait_max=34.516 send_avg=45.342 send_max=58.557 get_avg=0.001 get_max=0.002 load_avg=0.020 load_max=0.102 loop_avg=48.640 loop_max=58.739
+[render-prof] elapsed_ms=1008.4 draws=79 draw_avg=1.113 draw_max=1.892 swap_avg=0.404 swap_max=0.718 finish_avg=10.978 finish_max=14.141 total_avg=12.757 total_max=16.686
+[vdec-prof] chn=1 bypass=0 elapsed_ms=1037.3 decode=21 fail=0 decode_avg=49.023 decode_max=62.363 cb=21 cb_avg=9.178 cb_max=10.634 copy_avg=8.905 copy_max=10.370 sync_avg=0.236 sync_max=0.303
+[pipe-prof] chn=1 elapsed_ms=1037.3 pop=21 send=21 send_fail=0 load=21 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=6 in_kb=150.6 out_kb=150.7 popwait_avg=0.005 popwait_max=0.015 send_avg=49.171 send_max=62.531 get_avg=0.001 get_max=0.002 load_avg=0.013 load_max=0.023 loop_avg=49.391 loop_max=62.943
+[vdec-prof] chn=2 bypass=0 elapsed_ms=1049.5 decode=22 fail=0 decode_avg=47.141 decode_max=62.785 cb=22 cb_avg=10.093 cb_max=11.860 copy_avg=9.734 copy_max=11.567 sync_avg=0.320 sync_max=1.876
+[pipe-prof] chn=2 elapsed_ms=1049.5 pop=22 send=22 send_fail=0 load=22 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=6 in_kb=226.2 out_kb=226.4 popwait_avg=0.005 popwait_max=0.013 send_avg=47.149 send_max=62.891 get_avg=0.001 get_max=0.003 load_avg=0.159 load_max=1.711 loop_avg=47.698 loop_max=63.121
+[vdec-prof] chn=3 bypass=0 elapsed_ms=1028.1 decode=22 fail=0 decode_avg=46.207 decode_max=54.948 cb=22 cb_avg=9.699 cb_max=12.039 copy_avg=9.338 copy_max=11.672 sync_avg=0.331 sync_max=1.719
+[vdec-prof] chn=0 bypass=0 elapsed_ms=1038.1 decode=21 fail=0 decode_avg=49.409 decode_max=63.839 cb=21 cb_avg=9.695 cb_max=11.033 copy_avg=9.427 copy_max=10.775 sync_avg=0.241 sync_max=0.410
+[pipe-prof] chn=0 elapsed_ms=1038.0 pop=21 send=21 send_fail=0 load=21 null=0 drop_pre=0 drop_resync=0 idr=0 qmax=9 in_kb=131.2 out_kb=131.3 popwait_avg=0.004 popwait_max=0.007 send_avg=49.234 send_max=64.004 get_avg=0.001 get_max=0.002 load_avg=0.011 load_max=0.020 loop_avg=49.424 loop_max=64.264
+[pipe-prof] chn=3 elapsed_ms=1026.4 pop=22 send=22 send_fail=0 load=22 null=0 drop_pre=0 drop_resync=0 idr=0 qmax=8 in_kb=187.7 out_kb=187.7 popwait_avg=0.004 popwait_max=0.008 send_avg=46.104 send_max=55.093 get_avg=0.001 get_max=0.002 load_avg=0.342 load_max=5.376 loop_avg=46.640 loop_max=56.922
+[queue] overflow flush chn=0 depth=10 max=10 incoming_nal=1 incoming_size=10127 isIDR=0 isSpsOrPps=0 isSei=0 pts=2284098
+[render-prof] elapsed_ms=1007.0 draws=79 draw_avg=1.170 draw_max=1.742 swap_avg=0.433 swap_max=0.656 finish_avg=10.927 finish_max=12.658 total_avg=12.740 total_max=18.272
+[vdec-prof] chn=1 bypass=0 elapsed_ms=1022.5 decode=24 fail=0 decode_avg=42.834 decode_max=63.564 cb=24 cb_avg=9.303 cb_max=10.403 copy_avg=9.028 copy_max=10.153 sync_avg=0.245 sync_max=0.373
+[pipe-prof] chn=1 elapsed_ms=1022.6 pop=24 send=24 send_fail=0 load=24 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=9 in_kb=175.0 out_kb=175.1 popwait_avg=0.005 popwait_max=0.015 send_avg=42.384 send_max=63.662 get_avg=0.001 get_max=0.004 load_avg=0.013 load_max=0.019 loop_avg=42.602 loop_max=63.846
+[vdec-prof] chn=2 bypass=0 elapsed_ms=1010.8 decode=24 fail=0 decode_avg=41.914 decode_max=64.980 cb=24 cb_avg=10.455 cb_max=11.984 copy_avg=10.185 copy_max=11.733 sync_avg=0.235 sync_max=0.291
+[pipe-prof] chn=2 elapsed_ms=1009.6 pop=24 send=24 send_fail=0 load=24 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=7 in_kb=252.6 out_kb=252.7 popwait_avg=0.005 popwait_max=0.019 send_avg=41.652 send_max=65.187 get_avg=0.001 get_max=0.004 load_avg=0.074 load_max=1.490 loop_avg=42.056 loop_max=66.977
+[vdec-prof] chn=3 bypass=0 elapsed_ms=1029.8 decode=26 fail=0 decode_avg=39.611 decode_max=51.290 cb=26 cb_avg=9.654 cb_max=11.700 copy_avg=9.353 copy_max=11.454 sync_avg=0.272 sync_max=1.201
+[pipe-prof] chn=3 elapsed_ms=1006.2 pop=27 send=27 send_fail=0 load=27 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=8 in_kb=280.0 out_kb=280.1 popwait_avg=0.005 popwait_max=0.012 send_avg=37.009 send_max=50.355 get_avg=0.001 get_max=0.003 load_avg=0.012 load_max=0.018 loop_avg=37.255 loop_max=50.538
+[render-prof] elapsed_ms=1008.1 draws=79 draw_avg=1.175 draw_max=1.673 swap_avg=0.458 swap_max=1.447 finish_avg=11.071 finish_max=15.700 total_avg=12.753 total_max=17.434
+[vdec-prof] chn=1 bypass=0 elapsed_ms=1021.5 decode=28 fail=0 decode_avg=36.113 decode_max=39.445 cb=28 cb_avg=9.575 cb_max=11.167 copy_avg=9.304 copy_max=10.918 sync_avg=0.232 sync_max=0.421
+[pipe-prof] chn=1 elapsed_ms=1021.3 pop=28 send=28 send_fail=0 load=28 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=9 in_kb=200.0 out_kb=200.1 popwait_avg=0.005 popwait_max=0.013 send_avg=36.272 send_max=39.588 get_avg=0.001 get_max=0.003 load_avg=0.012 load_max=0.029 loop_avg=36.472 loop_max=39.822
+[vdec-prof] chn=2 bypass=0 elapsed_ms=1021.9 decode=28 fail=0 decode_avg=35.763 decode_max=39.493 cb=28 cb_avg=10.517 cb_max=12.538 copy_avg=10.102 copy_max=11.560 sync_avg=0.380 sync_max=2.277
+[pipe-prof] chn=2 elapsed_ms=1023.1 pop=28 send=28 send_fail=0 load=28 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=8 in_kb=287.7 out_kb=287.8 popwait_avg=0.011 popwait_max=0.144 send_avg=35.927 send_max=39.642 get_avg=0.001 get_max=0.004 load_avg=0.172 load_max=1.560 loop_avg=36.533 loop_max=41.416
+[vdec-prof] chn=3 bypass=0 elapsed_ms=1023.3 decode=28 fail=0 decode_avg=36.064 decode_max=40.200 cb=28 cb_avg=9.781 cb_max=11.220 copy_avg=9.508 copy_max=10.966 sync_avg=0.245 sync_max=0.439
+[pipe-prof] chn=3 elapsed_ms=1034.4 pop=28 send=28 send_fail=0 load=28 null=0 drop_pre=0 drop_resync=0 idr=0 qmax=5 in_kb=279.3 out_kb=279.4 popwait_avg=0.005 popwait_max=0.011 send_avg=36.643 send_max=40.272 get_avg=0.001 get_max=0.003 load_avg=0.015 load_max=0.042 loop_avg=36.929 loop_max=40.591
+[queue] resync chn=0 dropped=48 incoming_size=31232 pts=2286116
+[vdec-prof] chn=0 bypass=0 elapsed_ms=2297.9 decode=6 fail=0 decode_avg=47.753 decode_max=50.206 cb=6 cb_avg=8.863 cb_max=9.839 copy_avg=8.582 copy_max=9.603 sync_avg=0.249 sync_max=0.322
+[pipe-prof] chn=0 elapsed_ms=2298.1 pop=6 send=6 send_fail=0 load=6 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=9 in_kb=38.3 out_kb=38.4 popwait_avg=334.192 popwait_max=2005.125 send_avg=48.622 send_max=50.229 get_avg=0.001 get_max=0.002 load_avg=0.012 load_max=0.016 loop_avg=383.002 loop_max=2055.143
+[render-prof] elapsed_ms=1000.6 draws=78 draw_avg=1.122 draw_max=1.470 swap_avg=0.418 swap_max=0.695 finish_avg=11.064 finish_max=14.153 total_avg=12.821 total_max=15.446
+[vdec-prof] chn=1 bypass=0 elapsed_ms=1018.0 decode=24 fail=0 decode_avg=41.332 decode_max=52.687 cb=24 cb_avg=9.513 cb_max=11.125 copy_avg=9.248 copy_max=10.854 sync_avg=0.239 sync_max=0.365
+[pipe-prof] chn=1 elapsed_ms=1018.2 pop=24 send=24 send_fail=0 load=24 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=8 in_kb=161.4 out_kb=161.5 popwait_avg=0.005 popwait_max=0.009 send_avg=42.226 send_max=58.328 get_avg=0.001 get_max=0.003 load_avg=0.011 load_max=0.018 loop_avg=42.420 loop_max=58.525
+[vdec-prof] chn=2 bypass=0 elapsed_ms=1025.9 decode=25 fail=0 decode_avg=40.225 decode_max=52.139 cb=25 cb_avg=9.950 cb_max=11.718 copy_avg=9.679 copy_max=11.455 sync_avg=0.238 sync_max=0.289
+[pipe-prof] chn=2 elapsed_ms=1024.5 pop=25 send=25 send_fail=0 load=25 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=6 in_kb=256.1 out_kb=256.2 popwait_avg=0.006 popwait_max=0.018 send_avg=40.614 send_max=52.227 get_avg=0.002 get_max=0.004 load_avg=0.014 load_max=0.054 loop_avg=40.970 loop_max=52.443
+[vdec-prof] chn=3 bypass=0 elapsed_ms=1041.8 decode=24 fail=0 decode_avg=42.605 decode_max=56.161 cb=24 cb_avg=9.624 cb_max=11.063 copy_avg=9.352 copy_max=10.718 sync_avg=0.242 sync_max=0.329
+[queue] overflow flush chn=1 depth=10 max=10 incoming_nal=5 incoming_size=14555 isIDR=1 isSpsOrPps=0 isSei=0 pts=2287002
+[queue] resync chn=1 dropped=0 incoming_size=14555 pts=2287002
+[pipe-prof] chn=3 elapsed_ms=1013.7 pop=21 send=21 send_fail=0 load=21 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=8 in_kb=212.0 out_kb=212.1 popwait_avg=0.007 popwait_max=0.056 send_avg=48.002 send_max=63.726 get_avg=0.001 get_max=0.003 load_avg=0.011 load_max=0.020 loop_avg=48.255 loop_max=63.983
+[vdec-prof] chn=0 bypass=0 elapsed_ms=1037.2 decode=21 fail=0 decode_avg=48.605 decode_max=61.231 cb=21 cb_avg=9.180 cb_max=10.913 copy_avg=8.906 copy_max=10.626 sync_avg=0.239 sync_max=0.354
+[pipe-prof] chn=0 elapsed_ms=1037.2 pop=21 send=21 send_fail=0 load=21 null=0 drop_pre=0 drop_resync=0 idr=0 qmax=7 in_kb=150.6 out_kb=150.7 popwait_avg=0.005 popwait_max=0.012 send_avg=49.186 send_max=61.399 get_avg=0.001 get_max=0.002 load_avg=0.013 load_max=0.023 loop_avg=49.383 loop_max=61.656
+[render-prof] elapsed_ms=1012.9 draws=80 draw_avg=1.154 draw_max=1.946 swap_avg=0.423 swap_max=0.667 finish_avg=10.958 finish_max=16.792 total_avg=12.655 total_max=18.074
+[queue] overflow flush chn=0 depth=10 max=10 incoming_nal=1 incoming_size=10588 isIDR=0 isSpsOrPps=0 isSei=0 pts=2287446
+[queue] overflow flush chn=2 depth=10 max=10 incoming_nal=1 incoming_size=8141 isIDR=0 isSpsOrPps=0 isSei=0 pts=2287465
+[vdec-prof] chn=1 bypass=0 elapsed_ms=1010.2 decode=23 fail=0 decode_avg=44.218 decode_max=63.527 cb=23 cb_avg=9.277 cb_max=10.412 copy_avg=8.998 copy_max=10.151 sync_avg=0.233 sync_max=0.294
+[pipe-prof] chn=1 elapsed_ms=1010.1 pop=23 send=23 send_fail=0 load=23 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=9 in_kb=111.9 out_kb=112.1 popwait_avg=0.889 popwait_max=20.027 send_avg=42.857 send_max=63.557 get_avg=0.001 get_max=0.003 load_avg=0.012 load_max=0.019 loop_avg=43.914 loop_max=63.744
+[vdec-prof] chn=3 bypass=0 elapsed_ms=1017.7 decode=29 fail=0 decode_avg=35.335 decode_max=63.604 cb=29 cb_avg=8.837 cb_max=11.371 copy_avg=8.587 copy_max=11.103 sync_avg=0.225 sync_max=0.298
+[queue] resync chn=2 dropped=12 incoming_size=38804 pts=2288028
+[vdec-prof] chn=2 bypass=0 elapsed_ms=1351.4 decode=17 fail=0 decode_avg=48.131 decode_max=62.296 cb=17 cb_avg=9.333 cb_max=10.773 copy_avg=9.059 copy_max=10.514 sync_avg=0.243 sync_max=0.363
+[pipe-prof] chn=2 elapsed_ms=1351.3 pop=17 send=17 send_fail=0 load=17 null=0 drop_pre=0 drop_resync=0 idr=2 qmax=9 in_kb=205.9 out_kb=206.0 popwait_avg=31.879 popwait_max=541.861 send_avg=46.787 send_max=62.417 get_avg=0.001 get_max=0.003 load_avg=0.367 load_max=1.546 loop_avg=79.484 loop_max=560.814
+[pipe-prof] chn=3 elapsed_ms=1015.3 pop=34 send=34 send_fail=0 load=34 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=9 in_kb=345.8 out_kb=345.9 popwait_avg=3.214 popwait_max=69.429 send_avg=26.369 send_max=48.144 get_avg=0.001 get_max=0.003 load_avg=0.077 load_max=1.284 loop_avg=29.854 loop_max=84.402
+[queue] resync chn=0 dropped=13 incoming_size=26462 pts=2288111
+[vdec-prof] chn=0 bypass=0 elapsed_ms=1002.6 decode=9 fail=0 decode_avg=42.797 decode_max=64.207 cb=9 cb_avg=8.300 cb_max=10.187 copy_avg=8.035 copy_max=9.897 sync_avg=0.239 sync_max=0.282
+[pipe-prof] chn=0 elapsed_ms=1002.5 pop=9 send=9 send_fail=0 load=9 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=9 in_kb=63.9 out_kb=63.9 popwait_avg=70.809 popwait_max=635.567 send_avg=40.381 send_max=64.237 get_avg=0.001 get_max=0.002 load_avg=0.011 load_max=0.019 loop_avg=111.378 loop_max=647.608
+[render-prof] elapsed_ms=1018.4 draws=71 draw_avg=1.115 draw_max=1.677 swap_avg=0.437 swap_max=0.719 finish_avg=10.841 finish_max=17.542 total_avg=14.337 total_max=57.925
+[vdec-prof] chn=1 bypass=0 elapsed_ms=1032.4 decode=23 fail=0 decode_avg=33.337 decode_max=65.482 cb=23 cb_avg=8.653 cb_max=10.448 copy_avg=8.391 copy_max=10.171 sync_avg=0.234 sync_max=0.283
+[pipe-prof] chn=1 elapsed_ms=1032.4 pop=23 send=23 send_fail=0 load=23 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=3 in_kb=166.8 out_kb=166.9 popwait_avg=10.218 popwait_max=54.829 send_avg=34.482 send_max=65.585 get_avg=0.001 get_max=0.005 load_avg=0.014 load_max=0.021 loop_avg=44.882 loop_max=65.795
+[vdec-prof] chn=3 bypass=0 elapsed_ms=1006.0 decode=27 fail=0 decode_avg=30.789 decode_max=51.688 cb=27 cb_avg=7.296 cb_max=10.853 copy_avg=7.050 copy_max=10.638 sync_avg=0.223 sync_max=0.314
+[vdec-prof] chn=2 bypass=0 elapsed_ms=1047.1 decode=18 fail=0 decode_avg=48.970 decode_max=66.134 cb=18 cb_avg=9.877 cb_max=11.326 copy_avg=9.500 copy_max=10.503 sync_avg=0.345 sync_max=1.919
+[pipe-prof] chn=2 elapsed_ms=1047.3 pop=18 send=18 send_fail=0 load=18 null=0 drop_pre=0 drop_resync=0 idr=0 qmax=8 in_kb=168.7 out_kb=168.8 popwait_avg=6.965 popwait_max=125.280 send_avg=50.904 send_max=66.232 get_avg=0.001 get_max=0.003 load_avg=0.092 load_max=1.454 loop_avg=58.179 loop_max=170.970
+[pipe-prof] chn=3 elapsed_ms=1037.4 pop=23 send=23 send_fail=0 load=23 null=0 drop_pre=0 drop_resync=0 idr=0 qmax=3 in_kb=230.3 out_kb=230.4 popwait_avg=2.554 popwait_max=27.386 send_avg=42.263 send_max=51.791 get_avg=0.001 get_max=0.002 load_avg=0.080 load_max=1.506 loop_avg=45.092 loop_max=60.268
+[vdec-prof] chn=0 bypass=0 elapsed_ms=1011.6 decode=20 fail=0 decode_avg=49.754 decode_max=66.538 cb=20 cb_avg=9.250 cb_max=10.973 copy_avg=8.949 copy_max=10.367 sync_avg=0.262 sync_max=0.583
+[pipe-prof] chn=0 elapsed_ms=1011.8 pop=20 send=20 send_fail=0 load=20 null=0 drop_pre=0 drop_resync=0 idr=0 qmax=6 in_kb=116.5 out_kb=116.6 popwait_avg=0.005 popwait_max=0.011 send_avg=50.384 send_max=66.634 get_avg=0.001 get_max=0.002 load_avg=0.013 load_max=0.026 loop_avg=50.582 loop_max=66.884
+[render-prof] elapsed_ms=1006.7 draws=79 draw_avg=1.083 draw_max=1.619 swap_avg=0.457 swap_max=4.241 finish_avg=11.016 finish_max=15.234 total_avg=12.737 total_max=16.978
+[queue] overflow flush chn=2 depth=10 max=10 incoming_nal=1 incoming_size=9560 isIDR=0 isSpsOrPps=0 isSei=0 pts=2289340
+[vdec-prof] chn=1 bypass=0 elapsed_ms=1033.6 decode=24 fail=0 decode_avg=43.286 decode_max=62.041 cb=24 cb_avg=9.093 cb_max=10.434 copy_avg=8.830 copy_max=10.182 sync_avg=0.232 sync_max=0.295
+[pipe-prof] chn=1 elapsed_ms=1033.6 pop=24 send=24 send_fail=0 load=24 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=6 in_kb=174.1 out_kb=174.3 popwait_avg=0.005 popwait_max=0.011 send_avg=42.853 send_max=62.085 get_avg=0.001 get_max=0.003 load_avg=0.013 load_max=0.020 loop_avg=43.060 loop_max=62.258
+[vdec-prof] chn=3 bypass=0 elapsed_ms=1008.2 decode=24 fail=0 decode_avg=40.941 decode_max=51.453 cb=24 cb_avg=10.393 cb_max=11.952 copy_avg=10.075 copy_max=11.681 sync_avg=0.288 sync_max=1.221
+[queue] resync chn=2 dropped=16 incoming_size=52330 pts=2290052
+[vdec-prof] chn=2 bypass=0 elapsed_ms=1002.9 decode=6 fail=0 decode_avg=49.416 decode_max=50.805 cb=6 cb_avg=9.332 cb_max=10.184 copy_avg=8.924 copy_max=9.766 sync_avg=0.378 sync_max=0.941
+[pipe-prof] chn=2 elapsed_ms=1002.7 pop=6 send=6 send_fail=0 load=6 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=9 in_kb=98.1 out_kb=98.1 popwait_avg=118.394 popwait_max=710.340 send_avg=48.387 send_max=49.792 get_avg=0.001 get_max=0.001 load_avg=0.012 load_max=0.015 loop_avg=167.103 loop_max=755.188
+[pipe-prof] chn=3 elapsed_ms=1002.2 pop=26 send=26 send_fail=0 load=26 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=4 in_kb=248.7 out_kb=248.9 popwait_avg=0.006 popwait_max=0.026 send_avg=38.254 send_max=52.266 get_avg=0.001 get_max=0.002 load_avg=0.014 load_max=0.034 loop_avg=38.533 loop_max=52.483
+[vdec-prof] chn=0 bypass=0 elapsed_ms=1043.9 decode=27 fail=0 decode_avg=38.325 decode_max=51.063 cb=27 cb_avg=9.224 cb_max=10.721 copy_avg=8.939 copy_max=10.174 sync_avg=0.245 sync_max=0.524
+[pipe-prof] chn=0 elapsed_ms=1043.7 pop=27 send=27 send_fail=0 load=27 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=8 in_kb=159.7 out_kb=159.9 popwait_avg=0.005 popwait_max=0.012 send_avg=38.468 send_max=51.115 get_avg=0.001 get_max=0.002 load_avg=0.013 load_max=0.033 loop_avg=38.652 loop_max=51.275
+[render-prof] elapsed_ms=1003.2 draws=75 draw_avg=1.249 draw_max=2.025 swap_avg=0.486 swap_max=0.936 finish_avg=11.453 finish_max=17.152 total_avg=13.369 total_max=19.117
+[vdec-prof] chn=1 bypass=0 elapsed_ms=1026.2 decode=23 fail=0 decode_avg=43.729 decode_max=64.760 cb=23 cb_avg=9.084 cb_max=10.505 copy_avg=8.821 copy_max=10.241 sync_avg=0.231 sync_max=0.253
+[pipe-prof] chn=1 elapsed_ms=1026.2 pop=23 send=23 send_fail=0 load=23 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=8 in_kb=153.3 out_kb=153.4 popwait_avg=0.005 popwait_max=0.011 send_avg=44.416 send_max=64.829 get_avg=0.001 get_max=0.003 load_avg=0.014 load_max=0.029 loop_avg=44.614 loop_max=64.965
+[vdec-prof] chn=3 bypass=0 elapsed_ms=1035.7 decode=25 fail=0 decode_avg=40.519 decode_max=52.146 cb=25 cb_avg=9.136 cb_max=12.376 copy_avg=8.808 copy_max=10.979 sync_avg=0.299 sync_max=1.577
+[queue] overflow flush chn=0 depth=10 max=10 incoming_nal=1 incoming_size=3193 isIDR=0 isSpsOrPps=0 isSei=0 pts=2290912
+[vdec-prof] chn=2 bypass=0 elapsed_ms=1037.6 decode=21 fail=0 decode_avg=46.740 decode_max=64.804 cb=21 cb_avg=9.826 cb_max=11.867 copy_avg=9.559 copy_max=11.591 sync_avg=0.234 sync_max=0.267
+[pipe-prof] chn=2 elapsed_ms=1037.8 pop=21 send=21 send_fail=0 load=21 null=0 drop_pre=0 drop_resync=0 idr=0 qmax=8 in_kb=188.7 out_kb=188.8 popwait_avg=2.188 popwait_max=45.855 send_avg=46.595 send_max=64.921 get_avg=0.001 get_max=0.002 load_avg=0.153 load_max=1.499 loop_avg=49.413 loop_max=90.615
+[pipe-prof] chn=3 elapsed_ms=1027.5 pop=24 send=24 send_fail=0 load=24 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=4 in_kb=264.0 out_kb=264.1 popwait_avg=0.004 popwait_max=0.011 send_avg=42.513 send_max=54.203 get_avg=0.001 get_max=0.003 load_avg=0.014 load_max=0.028 loop_avg=42.750 loop_max=54.390
+[render-prof] elapsed_ms=1002.6 draws=78 draw_avg=1.122 draw_max=1.656 swap_avg=0.412 swap_max=0.666 finish_avg=11.009 finish_max=15.415 total_avg=12.847 total_max=21.372
+[vdec-prof] chn=1 bypass=0 elapsed_ms=1028.3 decode=26 fail=0 decode_avg=39.775 decode_max=53.532 cb=26 cb_avg=9.457 cb_max=11.655 copy_avg=9.200 copy_max=11.417 sync_avg=0.231 sync_max=0.468
+[pipe-prof] chn=1 elapsed_ms=1028.2 pop=26 send=26 send_fail=0 load=26 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=9 in_kb=86.6 out_kb=86.7 popwait_avg=0.004 popwait_max=0.008 send_avg=39.399 send_max=53.633 get_avg=0.001 get_max=0.002 load_avg=0.012 load_max=0.026 loop_avg=39.541 loop_max=53.836
+[vdec-prof] chn=3 bypass=0 elapsed_ms=1007.4 decode=26 fail=0 decode_avg=38.659 decode_max=54.103 cb=26 cb_avg=10.082 cb_max=11.709 copy_avg=9.768 copy_max=11.467 sync_avg=0.278 sync_max=1.002
+[queue] resync chn=0 dropped=26 incoming_size=24461 pts=2292106
+[vdec-prof] chn=0 bypass=0 elapsed_ms=1888.9 decode=14 fail=0 decode_avg=50.802 decode_max=64.696 cb=14 cb_avg=9.788 cb_max=10.628 copy_avg=9.483 copy_max=10.384 sync_avg=0.270 sync_max=0.418
+[pipe-prof] chn=0 elapsed_ms=1888.9 pop=14 send=14 send_fail=0 load=14 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=9 in_kb=74.7 out_kb=74.8 popwait_avg=84.336 popwait_max=1180.639 send_avg=50.401 send_max=64.799 get_avg=0.001 get_max=0.002 load_avg=0.013 load_max=0.020 loop_avg=134.918 loop_max=1224.607
+[pipe-prof] chn=3 elapsed_ms=1002.0 pop=26 send=26 send_fail=0 load=26 null=0 drop_pre=0 drop_resync=0 idr=0 qmax=4 in_kb=258.2 out_kb=258.3 popwait_avg=0.004 popwait_max=0.017 send_avg=38.187 send_max=50.392 get_avg=0.001 get_max=0.003 load_avg=0.011 load_max=0.021 loop_avg=38.528 loop_max=50.589
+[vdec-prof] chn=2 bypass=0 elapsed_ms=1041.5 decode=27 fail=0 decode_avg=37.648 decode_max=39.920 cb=27 cb_avg=11.065 cb_max=12.828 copy_avg=10.708 copy_max=12.579 sync_avg=0.325 sync_max=1.857
+[pipe-prof] chn=2 elapsed_ms=1041.5 pop=27 send=27 send_fail=0 load=27 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=8 in_kb=285.0 out_kb=285.1 popwait_avg=0.006 popwait_max=0.014 send_avg=38.145 send_max=48.586 get_avg=0.001 get_max=0.003 load_avg=0.067 load_max=1.437 loop_avg=38.569 loop_max=50.333
+[render-prof] elapsed_ms=1002.2 draws=78 draw_avg=1.253 draw_max=1.655 swap_avg=0.471 swap_max=0.746 finish_avg=11.061 finish_max=12.001 total_avg=12.841 total_max=13.755
+[queue] overflow flush chn=1 depth=10 max=10 incoming_nal=1 incoming_size=3091 isIDR=0 isSpsOrPps=0 isSei=0 pts=2292566
+[vdec-prof] chn=3 bypass=0 elapsed_ms=1005.1 decode=24 fail=0 decode_avg=41.373 decode_max=52.401 cb=24 cb_avg=9.895 cb_max=11.601 copy_avg=9.618 copy_max=11.353 sync_avg=0.249 sync_max=0.416
+[vdec-prof] chn=0 bypass=0 elapsed_ms=1025.5 decode=24 fail=0 decode_avg=40.243 decode_max=53.140 cb=24 cb_avg=9.154 cb_max=10.968 copy_avg=8.887 copy_max=10.674 sync_avg=0.236 sync_max=0.322
+[pipe-prof] chn=0 elapsed_ms=1025.5 pop=24 send=24 send_fail=0 load=24 null=0 drop_pre=0 drop_resync=0 idr=0 qmax=6 in_kb=113.5 out_kb=113.6 popwait_avg=2.475 popwait_max=37.508 send_avg=40.068 send_max=53.227 get_avg=0.001 get_max=0.003 load_avg=0.011 load_max=0.018 loop_avg=42.723 loop_max=76.375
+[queue] resync chn=1 dropped=10 incoming_size=49498 pts=2293181
+[pipe-prof] chn=3 elapsed_ms=1026.2 pop=25 send=25 send_fail=0 load=25 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=5 in_kb=237.1 out_kb=237.3 popwait_avg=0.004 popwait_max=0.011 send_avg=40.778 send_max=52.432 get_avg=0.001 get_max=0.003 load_avg=0.020 load_max=0.246 loop_avg=41.035 loop_max=53.062
+[vdec-prof] chn=2 bypass=0 elapsed_ms=1026.4 decode=25 fail=0 decode_avg=40.935 decode_max=52.872 cb=25 cb_avg=10.606 cb_max=12.738 copy_avg=10.210 copy_max=12.450 sync_avg=0.367 sync_max=1.907
+[pipe-prof] chn=2 elapsed_ms=1026.3 pop=25 send=25 send_fail=0 load=25 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=8 in_kb=229.1 out_kb=229.2 popwait_avg=0.007 popwait_max=0.066 send_avg=40.554 send_max=52.911 get_avg=0.001 get_max=0.002 load_avg=0.141 load_max=1.654 loop_avg=41.046 loop_max=54.686
+[vdec-prof] chn=1 bypass=0 elapsed_ms=1435.2 decode=19 fail=0 decode_avg=43.096 decode_max=51.520 cb=19 cb_avg=9.420 cb_max=10.967 copy_avg=9.168 copy_max=10.730 sync_avg=0.225 sync_max=0.339
+[pipe-prof] chn=1 elapsed_ms=1435.2 pop=19 send=19 send_fail=0 load=19 null=0 drop_pre=0 drop_resync=0 idr=2 qmax=9 in_kb=150.2 out_kb=150.3 popwait_avg=31.767 popwait_max=603.482 send_avg=43.561 send_max=51.579 get_avg=0.001 get_max=0.003 load_avg=0.011 load_max=0.020 loop_avg=75.530 loop_max=650.175
+[render-prof] elapsed_ms=1001.0 draws=78 draw_avg=1.202 draw_max=1.945 swap_avg=0.452 swap_max=1.189 finish_avg=11.061 finish_max=13.849 total_avg=12.825 total_max=15.718
+[queue] overflow flush chn=2 depth=10 max=10 incoming_nal=1 incoming_size=4283 isIDR=0 isSpsOrPps=0 isSei=0 pts=2293735
+[vdec-prof] chn=3 bypass=0 elapsed_ms=1014.3 decode=24 fail=0 decode_avg=41.654 decode_max=65.438 cb=24 cb_avg=9.235 cb_max=11.645 copy_avg=8.941 copy_max=10.948 sync_avg=0.265 sync_max=0.791
+[queue] resync chn=2 dropped=5 incoming_size=60251 pts=2294123
+[vdec-prof] chn=0 bypass=0 elapsed_ms=1015.2 decode=22 fail=0 decode_avg=45.308 decode_max=64.243 cb=22 cb_avg=9.151 cb_max=10.305 copy_avg=8.865 copy_max=10.054 sync_avg=0.256 sync_max=0.438
+[pipe-prof] chn=0 elapsed_ms=1015.3 pop=22 send=22 send_fail=0 load=22 null=0 drop_pre=0 drop_resync=0 idr=0 qmax=9 in_kb=57.9 out_kb=58.0 popwait_avg=0.004 popwait_max=0.009 send_avg=45.982 send_max=64.298 get_avg=0.001 get_max=0.002 load_avg=0.013 load_max=0.051 loop_avg=46.145 loop_max=64.440
+[vdec-prof] chn=2 bypass=0 elapsed_ms=1013.0 decode=13 fail=0 decode_avg=47.690 decode_max=63.346 cb=13 cb_avg=10.121 cb_max=12.251 copy_avg=9.852 copy_max=11.978 sync_avg=0.240 sync_max=0.365
+[pipe-prof] chn=2 elapsed_ms=1013.1 pop=13 send=13 send_fail=0 load=13 null=0 drop_pre=0 drop_resync=0 idr=2 qmax=9 in_kb=227.7 out_kb=227.8 popwait_avg=27.913 popwait_max=362.811 send_avg=48.757 send_max=63.514 get_avg=0.001 get_max=0.003 load_avg=0.612 load_max=1.715 loop_avg=77.920 loop_max=406.372
+[pipe-prof] chn=3 elapsed_ms=1038.2 pop=24 send=24 send_fail=0 load=24 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=6 in_kb=269.7 out_kb=269.8 popwait_avg=0.004 popwait_max=0.010 send_avg=42.759 send_max=65.552 get_avg=0.001 get_max=0.003 load_avg=0.264 load_max=1.610 loop_avg=43.249 loop_max=65.725
+[vdec-prof] chn=1 bypass=0 elapsed_ms=1029.6 decode=22 fail=0 decode_avg=46.310 decode_max=64.982 cb=22 cb_avg=9.348 cb_max=10.663 copy_avg=9.076 copy_max=10.376 sync_avg=0.229 sync_max=0.334
+[pipe-prof] chn=1 elapsed_ms=1029.7 pop=22 send=22 send_fail=0 load=22 null=0 drop_pre=0 drop_resync=0 idr=0 qmax=9 in_kb=69.4 out_kb=69.5 popwait_avg=0.004 popwait_max=0.008 send_avg=46.652 send_max=65.027 get_avg=0.001 get_max=0.002 load_avg=0.013 load_max=0.022 loop_avg=46.800 loop_max=65.153
+[render-prof] elapsed_ms=1005.5 draws=77 draw_avg=1.232 draw_max=2.261 swap_avg=0.462 swap_max=0.872 finish_avg=10.987 finish_max=13.830 total_avg=13.051 total_max=18.034
+^C[pipe-prof] chn=1 elapsed_ms=341.9 pop=7 send=7 send_fail=0 load=7 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=8 in_kb=84.7 out_kb=84.8 popwait_avg=0.006 popwait_max=0.011 send_avg=48.550 send_max=52.361 get_avg=0.001 get_max=0.001 load_avg=0.010 load_max=0.013 loop_avg=48.832 loop_max=52.484
+[pipe-prof] chn=2 elapsed_ms=393.0 pop=8 send=8 send_fail=0 load=8 null=0 drop_pre=0 drop_resync=0 idr=0 qmax=4 in_kb=71.7 out_kb=71.7 popwait_avg=0.006 popwait_max=0.007 send_avg=48.876 send_max=52.187 get_avg=0.001 get_max=0.002 load_avg=0.012 load_max=0.014 loop_avg=49.120 loop_max=52.470
+[pipe-prof] chn=3 elapsed_ms=389.5 pop=8 send=8 send_fail=0 load=8 null=0 drop_pre=0 drop_resync=0 idr=0 qmax=6 in_kb=47.7 out_kb=47.7 popwait_avg=0.005 popwait_max=0.010 send_avg=48.458 send_max=52.709 get_avg=0.001 get_max=0.003 load_avg=0.011 load_max=0.014 loop_avg=48.659 loop_max=53.025
+[pipe-prof] chn=0 elapsed_ms=432.8 pop=9 send=9 send_fail=0 load=9 null=0 drop_pre=0 drop_resync=0 idr=1 qmax=6 in_kb=92.5 out_kb=92.6 popwait_avg=0.006 popwait_max=0.018 send_avg=47.710 send_max=53.476 get_avg=0.001 get_max=0.004 load_avg=0.014 load_max=0.047 loop_avg=48.076 loop_max=53.640
