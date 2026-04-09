@@ -1,31 +1,99 @@
-#include <stdio.h>
-#include <stdint.h>
+﻿#include <algorithm>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <ctime>
+#include <deque>
+#include <memory>
+#include <mutex>
+#include <vector>
+
 #include <unistd.h>
-#include <stdlib.h>
-#include <string.h>
-#include <fcntl.h>
-#include <math.h>
-#include <unistd.h>
-#include <sys/types.h>
-#include <sys/ipc.h>
-#include <sys/shm.h>
-#include <sys/msg.h>
-#include <sys/vfs.h>
-#include <pthread.h>
-#include <error.h>
-#include <errno.h>
 
 #include "t507_vdec.h"
-#include "g2d_driver_enh.h"
-#include <sys/ioctl.h>
+#include "common.h"
+#include "framework/libcedarc/include/veInterface.h"
 
-#define ALIGN_16B(x) (((x) + (15)) & ~(15))
-
-using namespace awvideodecoder;
+#define ALIGN_16B(x) (((x) + 15) & ~15)
 
 namespace {
 constexpr size_t kRetainedInputSafetyCount = 256;
 constexpr size_t kRetainedInputMaxBytes = 128 * 1024 * 1024;
+constexpr size_t kDisplayHoldCount = 2;
+
+struct DecoderInterfaceShadow;
+
+struct VideoEngineShadow
+{
+    VConfig                 vconfig;
+    VideoStreamInfo         videoStreamInfo;
+    void*                   pLibHandle;
+    DecoderInterfaceShadow* pDecoderInterface;
+    int                     bIsSoftwareDecoder;
+    VideoFbmInfo            fbmInfo;
+    u8                      nResetVeMode;
+    VeOpsS*                 veOpsS;
+    void*                   pVeOpsSelf;
+};
+
+struct VideoDecoderContextShadow
+{
+    VConfig             vconfig;
+    VideoStreamInfo     videoStreamInfo;
+    VideoEngineShadow*  pVideoEngine;
+};
+
+static VideoDecoderContextShadow* getDecoderContextShadow(VideoDecoder* decoder)
+{
+    return reinterpret_cast<VideoDecoderContextShadow*>(decoder);
+}
+
+static bool syncDecoderVeContext(VideoDecoder* decoder, VConfig* videoConf, int chn, bool verbose)
+{
+    VideoDecoderContextShadow* decoderCtx = getDecoderContextShadow(decoder);
+    if (decoderCtx == nullptr || decoderCtx->pVideoEngine == nullptr)
+    {
+        if (verbose)
+        {
+            std::printf("[vdec-extbuf] chn=%d sync ve context skipped decoderCtx=%p engine=%p\n",
+                        chn,
+                        reinterpret_cast<void*>(decoderCtx),
+                        decoderCtx != nullptr ? reinterpret_cast<void*>(decoderCtx->pVideoEngine) : nullptr);
+        }
+        return false;
+    }
+
+    VeOpsS* engineOps = decoderCtx->pVideoEngine->veOpsS;
+    void* engineSelf = decoderCtx->pVideoEngine->pVeOpsSelf;
+    VeOpsS* cfgOps = decoderCtx->vconfig.veOpsS;
+    void* cfgSelf = decoderCtx->vconfig.pVeOpsSelf;
+
+    if (engineOps != cfgOps || engineSelf != cfgSelf)
+    {
+        decoderCtx->vconfig.veOpsS = engineOps;
+        decoderCtx->vconfig.pVeOpsSelf = engineSelf;
+        if (videoConf != nullptr)
+        {
+            videoConf->veOpsS = engineOps;
+            videoConf->pVeOpsSelf = engineSelf;
+        }
+        std::printf("[vdec-extbuf] chn=%d sync ve context cfg(%p,%p) <- engine(%p,%p)\n",
+                    chn,
+                    reinterpret_cast<void*>(cfgOps),
+                    cfgSelf,
+                    reinterpret_cast<void*>(engineOps),
+                    engineSelf);
+    }
+    else if (verbose)
+    {
+        std::printf("[vdec-extbuf] chn=%d sync ve context unchanged cfg(%p,%p)\n",
+                    chn,
+                    reinterpret_cast<void*>(cfgOps),
+                    cfgSelf);
+    }
+
+    return engineOps != nullptr && engineSelf != nullptr;
+}
 
 static uint64_t monotonicTimeUs()
 {
@@ -41,113 +109,6 @@ static void accumulatePerfDuration(uint64_t elapsedUs, uint64_t& totalUs, uint64
     {
         maxUs = elapsedUs;
     }
-}
-}
-
-static void splitAddr64(uint64_t addr, __u32* low, __u32* high)
-{
-    if (low != nullptr)
-    {
-        *low = static_cast<__u32>(addr & 0xffffffffULL);
-    }
-    if (high != nullptr)
-    {
-        *high = static_cast<__u32>((addr >> 32) & 0xffffffffULL);
-    }
-}
-
-static void initG2dImagePhy(g2d_image_enh* image,
-                            g2d_fmt_enh format,
-                            uint64_t yAddr,
-                            uint64_t cAddr,
-                            uint64_t vAddr,
-                            __u32 width,
-                            __u32 height,
-                            __u32 clipW,
-                            __u32 clipH)
-{
-    memset(image, 0, sizeof(*image));
-    image->format = format;
-    image->width = width;
-    image->height = height;
-    image->align[0] = 0;
-    image->align[1] = 0;
-    image->align[2] = 0;
-    image->clip_rect.x = 0;
-    image->clip_rect.y = 0;
-    image->clip_rect.w = clipW;
-    image->clip_rect.h = clipH;
-    image->use_phy_addr = 1;
-
-    splitAddr64(yAddr, &image->laddr[0], &image->haddr[0]);
-    splitAddr64(cAddr, &image->laddr[1], &image->haddr[1]);
-    splitAddr64(vAddr, &image->laddr[2], &image->haddr[2]);
-}
-
-static void initG2dImageFd(g2d_image_enh* image,
-                           g2d_fmt_enh format,
-                           int fd,
-                           __u32 width,
-                           __u32 height,
-                           __u32 clipW,
-                           __u32 clipH)
-{
-    memset(image, 0, sizeof(*image));
-    image->format = format;
-    image->width = width;
-    image->height = height;
-    image->align[0] = 0;
-    image->align[1] = 0;
-    image->align[2] = 0;
-    image->clip_rect.x = 0;
-    image->clip_rect.y = 0;
-    image->clip_rect.w = clipW;
-    image->clip_rect.h = clipH;
-    image->fd = fd;
-    image->use_phy_addr = 0;
-}
-
-static int g2dBlitNv21ToFd(int g2dFd,
-                           uint64_t srcY,
-                           uint64_t srcC,
-                           __u32 srcWidth,
-                           __u32 srcHeight,
-                           __u32 srcCropW,
-                           __u32 srcCropH,
-                           int dstFd,
-                           __u32 dstWidth,
-                           __u32 dstHeight,
-                           __u32 dstCropW,
-                           __u32 dstCropH)
-{
-    if (g2dFd < 0 || srcY == 0 || srcC == 0 || dstFd < 0)
-    {
-        errno = EINVAL;
-        return -1;
-    }
-
-    g2d_blt_h blitPara;
-    memset(&blitPara, 0, sizeof(blitPara));
-    blitPara.flag_h = G2D_ROT_0;
-
-    initG2dImagePhy(&blitPara.src_image_h,
-                    G2D_FORMAT_YUV420UVC_V1U1V0U0,
-                    srcY,
-                    srcC,
-                    0,
-                    srcWidth,
-                    srcHeight,
-                    srcCropW,
-                    srcCropH);
-    initG2dImageFd(&blitPara.dst_image_h,
-                   G2D_FORMAT_YUV420UVC_V1U1V0U0,
-                   dstFd,
-                   dstWidth,
-                   dstHeight,
-                   dstCropW,
-                   dstCropH);
-
-    return ioctl(g2dFd, G2D_CMD_BITBLT_H, &blitPara);
 }
 
 static bool findStartCode(const uint8_t* data, size_t len, size_t* scLen)
@@ -165,8 +126,7 @@ static bool findStartCode(const uint8_t* data, size_t len, size_t* scLen)
     return false;
 }
 
-
-unsigned int Ue(unsigned char *pBuff, unsigned int nLen, unsigned int &nStartBit)
+static unsigned int readUe(unsigned char* pBuff, unsigned int nLen, unsigned int& nStartBit)
 {
     unsigned int nZeroNum = 0;
     while (nStartBit < nLen * 8)
@@ -175,364 +135,151 @@ unsigned int Ue(unsigned char *pBuff, unsigned int nLen, unsigned int &nStartBit
         {
             break;
         }
-        nZeroNum++;
-        nStartBit++;
+        ++nZeroNum;
+        ++nStartBit;
     }
-    nStartBit++;
+    ++nStartBit;
 
     unsigned long dwRet = 0;
-    for (unsigned int i = 0; i < nZeroNum; i++)
+    for (unsigned int i = 0; i < nZeroNum; ++i)
     {
         dwRet <<= 1;
         if (pBuff[nStartBit / 8] & (0x80 >> (nStartBit % 8)))
         {
             dwRet += 1;
         }
-        nStartBit++;
+        ++nStartBit;
     }
     return (1 << nZeroNum) - 1 + dwRet;
 }
 
-int Se(unsigned char *pBuff, unsigned int nLen, unsigned int &nStartBit)
-{
-    int UeVal = Ue(pBuff, nLen, nStartBit);
-    double k = UeVal;
-    int nValue = ceil(k / 2);
-    if (UeVal % 2 == 0)
-        nValue = -nValue;
-    return nValue;
-}
-
-unsigned long u(unsigned int BitCount, unsigned char *buf, unsigned int &nStartBit)
-{
-    unsigned long dwRet = 0;
-    for (unsigned int i = 0; i < BitCount; i++)
-    {
-        dwRet <<= 1;
-        if (buf[nStartBit / 8] & (0x80 >> (nStartBit % 8)))
-        {
-            dwRet += 1;
-        }
-        nStartBit++;
-    }
-    return dwRet;
-}
-
-
 static FrameType parseH264FrameType(const uint8_t* data, size_t len)
 {
     size_t scLen = 0;
-    if (!findStartCode(data, len, &scLen)) return FRAME_UNKNOWN;
-    if (len <= scLen) return FRAME_UNKNOWN;
+    if (!findStartCode(data, len, &scLen) || len <= scLen)
+    {
+        return FRAME_UNKNOWN;
+    }
 
-    uint8_t nalHdr = data[scLen];
-    uint8_t nalType = nalHdr & 0x1f;
-    if (nalType == 5) return FRAME_I; // IDR
+    const uint8_t nalType = data[scLen] & 0x1f;
+    if (nalType == 5)
+    {
+        return FRAME_I;
+    }
+    if (nalType != 1 || len <= scLen + 1)
+    {
+        return FRAME_UNKNOWN;
+    }
 
-    if (nalType != 1) return FRAME_UNKNOWN; // �� slice
-
-
-    const uint8_t* p = data + scLen + 1;
+    const uint8_t* payload = data + scLen + 1;
     size_t payloadLen = len - scLen - 1;
     std::vector<uint8_t> rbsp;
     rbsp.reserve(payloadLen);
 
     for (size_t i = 0; i < payloadLen; ++i)
     {
-        if (i + 2 < payloadLen && p[i] == 0x00 && p[i + 1] == 0x00 && p[i + 2] == 0x03)
+        if (i + 2 < payloadLen && payload[i] == 0x00 && payload[i + 1] == 0x00 && payload[i + 2] == 0x03)
         {
             rbsp.push_back(0x00);
             rbsp.push_back(0x00);
             i += 2;
             continue;
         }
-        rbsp.push_back(p[i]);
+        rbsp.push_back(payload[i]);
+    }
+
+    if (rbsp.empty())
+    {
+        return FRAME_UNKNOWN;
     }
 
     unsigned int bit = 0;
-    Ue(rbsp.data(), rbsp.size(), bit); // first_mb_in_slice
-    unsigned int slice_type = Ue(rbsp.data(), rbsp.size(), bit);
+    readUe(rbsp.data(), static_cast<unsigned int>(rbsp.size()), bit);
+    const unsigned int sliceType = readUe(rbsp.data(), static_cast<unsigned int>(rbsp.size()), bit);
 
-    switch (slice_type % 5)
+    switch (sliceType % 5)
     {
-        case 2: return FRAME_I; // I
-        case 0: return FRAME_P; // P
-        case 1: return FRAME_B; // B
-        default: return FRAME_UNKNOWN;
+        case 2:
+            return FRAME_I;
+        case 0:
+            return FRAME_P;
+        case 1:
+            return FRAME_B;
+        default:
+            return FRAME_UNKNOWN;
     }
 }
-
-int h264_decode_sps(unsigned char *buf, unsigned int nLen, int *width, int *height)
-{
-    unsigned int StartBit = 0;
-    int profile_idc = u(8, buf, StartBit);
-    int constraint_set0_flag = u(1, buf, StartBit); //(buf[1] & 0x80)>>7;
-    int constraint_set1_flag = u(1, buf, StartBit); //(buf[1] & 0x40)>>6;
-    int constraint_set2_flag = u(1, buf, StartBit); //(buf[1] & 0x20)>>5;
-    int constraint_set3_flag = u(1, buf, StartBit); //(buf[1] & 0x10)>>4;
-    int reserved_zero_4bits = u(4, buf, StartBit);
-    int level_idc = u(8, buf, StartBit);
-    int seq_parameter_set_id = Ue(buf, nLen, StartBit);
-
-    if (profile_idc == 100 || profile_idc == 110 || profile_idc == 122 || profile_idc == 144)
-    {
-        int chroma_format_idc = Ue(buf, nLen, StartBit);
-        if (chroma_format_idc == 3)
-            int residual_colour_transform_flag = u(1, buf, StartBit);
-        int bit_depth_luma_minus8 = Ue(buf, nLen, StartBit);
-        int bit_depth_chroma_minus8 = Ue(buf, nLen, StartBit);
-        int qpprime_y_zero_transform_bypass_flag = u(1, buf, StartBit);
-        int seq_scaling_matrix_present_flag = u(1, buf, StartBit);
-
-        int seq_scaling_list_present_flag[8];
-        if (seq_scaling_matrix_present_flag)
-        {
-            for (int i = 0; i < 8; i++)
-                seq_scaling_list_present_flag[i] = u(1, buf, StartBit);
-        }
-    }
-
-    int log2_max_frame_num_minus4 = Ue(buf, nLen, StartBit);
-    int pic_order_cnt_type = Ue(buf, nLen, StartBit);
-    if (pic_order_cnt_type == 0)
-        int log2_max_pic_order_cnt_lsb_minus4 = Ue(buf, nLen, StartBit);
-    else if (pic_order_cnt_type == 1)
-    {
-        int delta_pic_order_always_zero_flag = u(1, buf, StartBit);
-        int offset_for_non_ref_pic = Se(buf, nLen, StartBit);
-        int offset_for_top_to_bottom_field = Se(buf, nLen, StartBit);
-        int num_ref_frames_in_pic_order_cnt_cycle = Ue(buf, nLen, StartBit);
-
-        int *offset_for_ref_frame = new int[num_ref_frames_in_pic_order_cnt_cycle];
-        for (int i = 0; i < num_ref_frames_in_pic_order_cnt_cycle; i++)
-            offset_for_ref_frame[i] = Se(buf, nLen, StartBit);
-        delete[] offset_for_ref_frame;
-    }
-    int num_ref_frames = Ue(buf, nLen, StartBit);
-    int gaps_in_frame_num_value_allowed_flag = u(1, buf, StartBit);
-    int pic_width_in_mbs_minus1 = Ue(buf, nLen, StartBit);
-    int pic_height_in_map_units_minus1 = Ue(buf, nLen, StartBit);
-
-    // width=(pic_width_in_mbs_minus1+1)*16;
-    // height=(pic_height_in_map_units_minus1+1)*16;
-
-    int frame_mbs_only_flag = u(1, buf, StartBit);
-    if (!frame_mbs_only_flag)
-        int mb_adaptive_frame_field_flag = u(1, buf, StartBit);
-
-    int direct_8x8_inference_flag = u(1, buf, StartBit);
-    int frame_cropping_flag = u(1, buf, StartBit);
-    int frame_crop_left_offset = 0;
-    int frame_crop_right_offset = 0;
-    int frame_crop_top_offset = 0;
-    int frame_crop_bottom_offset = 0;
-    if (frame_cropping_flag)
-    {
-        frame_crop_left_offset = Ue(buf, nLen, StartBit);
-        frame_crop_right_offset = Ue(buf, nLen, StartBit);
-        frame_crop_top_offset = Ue(buf, nLen, StartBit);
-        frame_crop_bottom_offset = Ue(buf, nLen, StartBit);
-    }
-
-    *width = ((pic_width_in_mbs_minus1 + 1) * 16) - frame_crop_left_offset * 2 - frame_crop_right_offset * 2;
-    *height = ((2 - frame_mbs_only_flag) * (pic_height_in_map_units_minus1 + 1) * 16) - (frame_crop_top_offset * 2) - (frame_crop_bottom_offset * 2);
-    return true;
-}
+} // namespace
 
 t507_vdec_node::t507_vdec_node(int chn)
+    : m_bCreated(false),
+      m_memOpsOpened(false),
+      m_chn(chn),
+      m_decoder(nullptr),
+      m_bOutEn(true),
+      m_count(0),
+      m_width(IMAGEWIDTH),
+      m_height(IMAGEHEIGHT),
+      m_bufferWidth(IMAGEWIDTH),
+      m_bufferHeight(ALIGN_16B(IMAGEHEIGHT)),
+      m_currentFrameIndex(-1),
+      m_gpuBufferModeEnabled(false),
+      m_gpuBufferSwitchAttempts(0),
+      m_registeredBufferCount(0),
+      m_externalReleaseModeArmed(false),
+      m_pendingPicture(nullptr),
+      m_displayPicture(nullptr),
+      m_retainedInputBytes(0),
+      m_decodeFailStreak(0),
+      m_decodeFailCount(0),
+      m_perfWindowStartUs(0),
+      m_perfDecodeCalls(0),
+      m_perfDecodeFails(0),
+      m_perfDecodeUsTotal(0),
+      m_perfDecodeUsMax(0),
+      m_perfCallbackCalls(0),
+      m_perfCallbackUsTotal(0),
+      m_perfCallbackUsMax(0),
+      m_perfCopyUsTotal(0),
+      m_perfCopyUsMax(0),
+      m_perfSyncUsTotal(0),
+      m_perfSyncUsMax(0),
+      m_perfCallbackInsideDecodeCalls(0),
+      m_perfCallbackOutsideDecodeCalls(0),
+      m_perfDecodeOnlyUsTotal(0),
+      m_perfDecodeOnlyUsMax(0),
+      m_perfDecodeNestedCallbackUsTotal(0),
+      m_perfDecodeNestedCallbackUsMax(0)
 {
-    m_chn = chn;
-    m_bCreated = false;
-
-    m_decoder = nullptr;
-
-    m_bOutEn = true;
-
-    // m_width = 1280;
-    // m_height = 720;
-
-    m_width = IMAGEWIDTH;
-    m_height = IMAGEHEIGHT;
-
-    m_count = 0;
-
-    m_curFrame = 0;
-    m_retainedInputBytes = 0;
-    m_decodeFailStreak = 0;
-    m_decodeFailCount = 0;
-    m_perfWindowStartUs = 0;
-    m_perfDecodeCalls = 0;
-    m_perfDecodeFails = 0;
-    m_perfDecodeUsTotal = 0;
-    m_perfDecodeUsMax = 0;
-    m_perfCallbackCalls = 0;
-    m_perfCallbackUsTotal = 0;
-    m_perfCallbackUsMax = 0;
-    m_perfCopyUsTotal = 0;
-    m_perfCopyUsMax = 0;
-    m_perfSyncUsTotal = 0;
-    m_perfSyncUsMax = 0;
-    m_perfCallbackInsideDecodeCalls = 0;
-    m_perfCallbackOutsideDecodeCalls = 0;
-    m_perfDecodeOnlyUsTotal = 0;
-    m_perfDecodeOnlyUsMax = 0;
-    m_perfDecodeNestedCallbackUsTotal = 0;
-    m_perfDecodeNestedCallbackUsMax = 0;
-    m_decodeTimingActive = false;
-    m_decodeTimingCallbackUs = 0;
-    const char *bypassEnv = getenv("RTSPPULL_BYPASS_VDEC_COPY");
-    m_bypassCopyProbe = (bypassEnv != nullptr && bypassEnv[0] != '\0' && strcmp(bypassEnv, "0") != 0);
-    m_bypassCopyFrameCount = 0;
-    const char *g2dEnv = getenv("RTSPPULL_USE_G2D_COPY");
-    m_useG2dCopy = !(g2dEnv != nullptr && g2dEnv[0] != '\0' && strcmp(g2dEnv, "0") == 0);
-    m_g2dHandle = -1;
-    m_perfG2dCalls = 0;
-    m_perfG2dFails = 0;
-    m_perfG2dUsTotal = 0;
-    m_perfG2dUsMax = 0;
-    if (m_bypassCopyProbe)
-    {
-        printf("[vdec-probe] chn=%d bypass copy/Ion enabled via RTSPPULL_BYPASS_VDEC_COPY\n", m_chn);
-    }
-
-    for (int i = 0; i < T507_PLAYBACK_BUF_NUM; i++)
-    {
-        m_frame[i] = new frame_shell();
-    }
-
-    // create();
+    std::memset(&m_streamInfo, 0, sizeof(m_streamInfo));
+    std::memset(&m_videoConf, 0, sizeof(m_videoConf));
+    std::memset(&m_memopsParam, 0, sizeof(m_memopsParam));
+    std::memset(&m_fbmBufInfo, 0, sizeof(m_fbmBufInfo));
 }
 
 t507_vdec_node::~t507_vdec_node()
 {
+    destroy();
 }
 
-char *t507_vdec_node::getFrameTypeName(FrameType t)
+bool t507_vdec_node::isCreated()
+{
+    return m_bCreated;
+}
+
+char* t507_vdec_node::getFrameTypeName(FrameType t)
 {
     switch (t)
     {
         case FRAME_I:
-            return "I";
+            return const_cast<char*>("I");
         case FRAME_P:
-            return "P";
+            return const_cast<char*>("P");
         case FRAME_B:
-            return "B";
+            return const_cast<char*>("B");
         default:
-            return "U";
+            return const_cast<char*>("U");
     }
-}
-
-int t507_vdec_node::create()
-{
-    int ret;
-    DecodeParam param;
-    memset(&param, 0, sizeof(DecodeParam));
-    param.codecType = CODEC_H264;
-    param.pixelFormat = PIXEL_NV21;
-    param.srcW = m_width;  // If you don't know, set 0.
-    param.srcH = m_height; // If you don't know, set 0.
-    param.scaleRatio = ScaleNone;
-    param.rotation = Angle_0;
-    m_decoder = AWVideoDecoder::create();
-    ret = m_decoder->init(&param, this);
-    if (ret < 0 && ret > -100)
-    // if (ret < 0)
-    {
-        logError("Decoder init fail:%d \n", ret);
-        return -1;
-    }
-    else
-        logInfo("decoder init success. \n");
-
-    const char *g2dEnv = getenv("RTSPPULL_USE_G2D_COPY");
-    printf("[vdec-g2d] chn=%d requested=%d env=%s\n",
-           m_chn,
-           m_useG2dCopy ? 1 : 0,
-           g2dEnv != nullptr ? g2dEnv : "<unset>");
-    fflush(stdout);
-
-    if (m_useG2dCopy)
-    {
-        m_g2dHandle = open("/dev/g2d", O_RDWR | O_CLOEXEC);
-        if (m_g2dHandle < 0)
-        {
-            m_useG2dCopy = false;
-            printf("[vdec-g2d] chn=%d open /dev/g2d failed errno=%d(%s), fallback to memcpy\n",
-                   m_chn,
-                   errno,
-                   strerror(errno));
-            fflush(stdout);
-        }
-        else
-        {
-            printf("[vdec-g2d] chn=%d enabled fd=%d\n", m_chn, m_g2dHandle);
-            fflush(stdout);
-        }
-    }
-    else
-    {
-        printf("[vdec-g2d] chn=%d disabled by RTSPPULL_USE_G2D_COPY\n", m_chn);
-        fflush(stdout);
-    }
-
-    m_bCreated = true;
-    m_decodeFailStreak = 0;
-    {
-        std::lock_guard<std::mutex> perfLock(m_perfMutex);
-        m_perfWindowStartUs = 0;
-        m_perfDecodeCalls = 0;
-        m_perfDecodeFails = 0;
-        m_perfDecodeUsTotal = 0;
-        m_perfDecodeUsMax = 0;
-        m_perfCallbackCalls = 0;
-        m_perfCallbackUsTotal = 0;
-        m_perfCallbackUsMax = 0;
-        m_perfCopyUsTotal = 0;
-        m_perfCopyUsMax = 0;
-        m_perfSyncUsTotal = 0;
-        m_perfSyncUsMax = 0;
-        m_perfCallbackInsideDecodeCalls = 0;
-        m_perfCallbackOutsideDecodeCalls = 0;
-        m_perfDecodeOnlyUsTotal = 0;
-        m_perfDecodeOnlyUsMax = 0;
-        m_perfDecodeNestedCallbackUsTotal = 0;
-        m_perfDecodeNestedCallbackUsMax = 0;
-        m_decodeTimingActive = false;
-        m_decodeTimingCallbackUs = 0;
-        m_perfG2dCalls = 0;
-        m_perfG2dFails = 0;
-        m_perfG2dUsTotal = 0;
-        m_perfG2dUsMax = 0;
-    }
-    return 0;
-}
-
-int t507_vdec_node::destroy()
-{
-    if (m_decoder != NULL)
-    {
-        m_bCreated = false;
-        usleep(100 * 1000);
-        if (m_g2dHandle >= 0)
-        {
-            close(m_g2dHandle);
-            m_g2dHandle = -1;
-        }
-        AWVideoDecoder::destroy(m_decoder);
-
-        m_decoder = NULL;
-        m_g2dHandle = -1;
-    }
-    else
-        logWarn("vdec had been destoryed already. \n");
-
-    {
-        std::lock_guard<std::mutex> lock(m_retainedInputsMutex);
-        m_retainedInputs.clear();
-        m_retainedInputBytes = 0;
-    }
-
-    return 0;
 }
 
 void t507_vdec_node::maybeLogPerfWindowLocked(uint64_t nowUs, bool force)
@@ -561,35 +308,27 @@ void t507_vdec_node::maybeLogPerfWindowLocked(uint64_t nowUs, bool force)
     const double copyMaxMs = static_cast<double>(m_perfCopyUsMax) / 1000.0;
     const double syncAvgMs = m_perfCallbackCalls > 0 ? static_cast<double>(m_perfSyncUsTotal) / static_cast<double>(m_perfCallbackCalls) / 1000.0 : 0.0;
     const double syncMaxMs = static_cast<double>(m_perfSyncUsMax) / 1000.0;
-    const double g2dAvgMs = m_perfG2dCalls > 0 ? static_cast<double>(m_perfG2dUsTotal) / static_cast<double>(m_perfG2dCalls) / 1000.0 : 0.0;
-    const double g2dMaxMs = static_cast<double>(m_perfG2dUsMax) / 1000.0;
 
-    printf("[vdec-prof] chn=%d bypass=%d g2d=%d elapsed_ms=%.1f decode=%lu fail=%lu decode_avg=%.3f decode_max=%.3f decode_only_avg=%.3f decode_only_max=%.3f in_decode_cb_avg=%.3f in_decode_cb_max=%.3f cb=%lu cb_in=%lu cb_out=%lu cb_avg=%.3f cb_max=%.3f copy_avg=%.3f copy_max=%.3f sync_avg=%.3f sync_max=%.3f g2d_calls=%lu g2d_fail=%lu g2d_avg=%.3f g2d_max=%.3f\n",
-           m_chn,
-           m_bypassCopyProbe ? 1 : 0,
-           m_useG2dCopy ? 1 : 0,
-           elapsedMs,
-           m_perfDecodeCalls,
-           m_perfDecodeFails,
-           decodeAvgMs,
-           decodeMaxMs,
-           decodeOnlyAvgMs,
-           decodeOnlyMaxMs,
-           inDecodeCbAvgMs,
-           inDecodeCbMaxMs,
-           m_perfCallbackCalls,
-           m_perfCallbackInsideDecodeCalls,
-           m_perfCallbackOutsideDecodeCalls,
-           cbAvgMs,
-           cbMaxMs,
-           copyAvgMs,
-           copyMaxMs,
-           syncAvgMs,
-           syncMaxMs,
-           m_perfG2dCalls,
-           m_perfG2dFails,
-           g2dAvgMs,
-           g2dMaxMs);
+    std::printf("[vdec-prof] chn=%d extbuf=1 elapsed_ms=%.1f decode=%lu fail=%lu decode_avg=%.3f decode_max=%.3f decode_only_avg=%.3f decode_only_max=%.3f in_decode_cb_avg=%.3f in_decode_cb_max=%.3f cb=%lu cb_in=%lu cb_out=%lu cb_avg=%.3f cb_max=%.3f copy_avg=%.3f copy_max=%.3f sync_avg=%.3f sync_max=%.3f\n",
+                m_chn,
+                elapsedMs,
+                m_perfDecodeCalls,
+                m_perfDecodeFails,
+                decodeAvgMs,
+                decodeMaxMs,
+                decodeOnlyAvgMs,
+                decodeOnlyMaxMs,
+                inDecodeCbAvgMs,
+                inDecodeCbMaxMs,
+                m_perfCallbackCalls,
+                m_perfCallbackInsideDecodeCalls,
+                m_perfCallbackOutsideDecodeCalls,
+                cbAvgMs,
+                cbMaxMs,
+                copyAvgMs,
+                copyMaxMs,
+                syncAvgMs,
+                syncMaxMs);
 
     m_perfWindowStartUs = nowUs;
     m_perfDecodeCalls = 0;
@@ -609,101 +348,757 @@ void t507_vdec_node::maybeLogPerfWindowLocked(uint64_t nowUs, bool force)
     m_perfDecodeOnlyUsMax = 0;
     m_perfDecodeNestedCallbackUsTotal = 0;
     m_perfDecodeNestedCallbackUsMax = 0;
-    m_decodeTimingActive = false;
-    m_decodeTimingCallbackUs = 0;
-    const char* bypassEnv = getenv("RTSPPULL_BYPASS_VDEC_COPY");
-    m_bypassCopyProbe = (bypassEnv != nullptr && bypassEnv[0] != '\0' && strcmp(bypassEnv, "0") != 0);
-    m_bypassCopyFrameCount = 0;
-    m_perfG2dCalls = 0;
-    m_perfG2dFails = 0;
-    m_perfG2dUsTotal = 0;
-    m_perfG2dUsMax = 0;
-    if (m_bypassCopyProbe)
+}
+
+int t507_vdec_node::registerExternalBuffers()
+{
+    FbmBufInfo* info = GetVideoFbmBufInfo(m_decoder);
+    if (info == nullptr)
     {
-        printf("[vdec-probe] chn=%d bypass copy/Ion enabled via RTSPPULL_BYPASS_VDEC_COPY\n", m_chn);
+        std::printf("[vdec-extbuf] chn=%d fbm info not ready yet\n", m_chn);
+        return 1;
+    }
+
+    m_fbmBufInfo = *info;
+    m_bufferWidth = m_fbmBufInfo.nBufWidth;
+    m_bufferHeight = m_fbmBufInfo.nBufHeight;
+    syncDecoderVeContext(m_decoder, &m_videoConf, m_chn, true);
+
+    const size_t availableBuffers = static_cast<size_t>(T507_PREVIEW_BUF_NUM + T507_PLAYBACK_BUF_NUM);
+    const size_t requiredBuffers = static_cast<size_t>(m_fbmBufInfo.nBufNum);
+    if (requiredBuffers == 0)
+    {
+        std::printf("[vdec-extbuf] chn=%d invalid fbm buffer count 0\n", m_chn);
+        return -1;
+    }
+    if (requiredBuffers > availableBuffers)
+    {
+        std::printf("[vdec-extbuf] chn=%d insufficient external buffers need=%zu have=%zu\n",
+                    m_chn,
+                    requiredBuffers,
+                    availableBuffers);
+        return -1;
+    }
+
+    const size_t yPlaneSize = static_cast<size_t>(m_bufferWidth) * static_cast<size_t>(m_bufferHeight);
+    const size_t cPlaneSize = yPlaneSize / 2;
+    m_outputBuffers.clear();
+    m_outputBuffers.resize(requiredBuffers);
+    m_registeredBufferCount = 0;
+
+    std::printf("[vdec-extbuf] chn=%d fbm num=%d buf=%dx%d align=%d fmt=%d crop(l=%d,t=%d,r=%d,b=%d)\n",
+                m_chn,
+                m_fbmBufInfo.nBufNum,
+                m_fbmBufInfo.nBufWidth,
+                m_fbmBufInfo.nBufHeight,
+                m_fbmBufInfo.nAlignValue,
+                m_fbmBufInfo.ePixelFormat,
+                m_fbmBufInfo.nLeftOffset,
+                m_fbmBufInfo.nTopOffset,
+                m_fbmBufInfo.nRightOffset,
+                m_fbmBufInfo.nBottomOffset);
+
+    for (size_t i = 0; i < requiredBuffers; ++i)
+    {
+        ion_mem mem{};
+        if (my_buffer::getInstance()->getVideobuffer(m_chn, static_cast<int>(i), &mem) != 0)
+        {
+            std::printf("[vdec-extbuf] chn=%d failed to fetch video buffer idx=%zu\n", m_chn, i);
+            return -1;
+        }
+
+        ExternalOutputBuffer& out = m_outputBuffers[i];
+        out.mem = mem;
+        out.frame = std::make_unique<frame_shell>();
+        std::memset(&out.picture, 0, sizeof(out.picture));
+        out.picture.ePixelFormat = m_fbmBufInfo.ePixelFormat;
+        out.picture.nWidth = m_fbmBufInfo.nBufWidth;
+        out.picture.nHeight = m_fbmBufInfo.nBufHeight;
+        out.picture.nLineStride = m_fbmBufInfo.nBufWidth;
+        out.picture.nTopOffset = m_fbmBufInfo.nTopOffset;
+        out.picture.nBottomOffset = m_fbmBufInfo.nBottomOffset;
+        out.picture.nLeftOffset = m_fbmBufInfo.nLeftOffset;
+        out.picture.nRightOffset = m_fbmBufInfo.nRightOffset;
+        out.picture.pData0 = reinterpret_cast<char*>(out.mem.virt);
+        out.picture.pData1 = reinterpret_cast<char*>(out.mem.virt + yPlaneSize);
+        out.picture.pData2 = nullptr;
+        out.picture.phyYBufAddr = static_cast<size_addr>(out.mem.phy);
+        out.picture.phyCBufAddr = static_cast<size_addr>(out.mem.phy + yPlaneSize);
+        out.picture.nBufId = static_cast<int>(i);
+        out.picture.nBufFd = out.mem.dmafd;
+        out.picture.nBufSize = static_cast<int>(yPlaneSize + cPlaneSize);
+        out.picture.nBufStatus = 0;
+        out.picture.pPrivate = nullptr;
+
+        VideoDecoderContextShadow* decoderCtx = getDecoderContextShadow(m_decoder);
+        VeOpsS* veOps = nullptr;
+        void* veSelf = nullptr;
+        if (decoderCtx != nullptr)
+        {
+            if (decoderCtx->pVideoEngine != nullptr && decoderCtx->pVideoEngine->veOpsS != nullptr)
+            {
+                veOps = decoderCtx->pVideoEngine->veOpsS;
+                veSelf = decoderCtx->pVideoEngine->pVeOpsSelf;
+            }
+            else
+            {
+                veOps = decoderCtx->vconfig.veOpsS;
+                veSelf = decoderCtx->vconfig.pVeOpsSelf;
+            }
+        }
+        if (veOps != nullptr && veSelf != nullptr && out.mem.dmafd >= 0)
+        {
+            struct user_iommu_param iommuBuf{};
+            iommuBuf.fd = out.mem.dmafd;
+            const int iommuRet = CdcVeGetIommuAddr(veOps, veSelf, &iommuBuf);
+            if (iommuRet == 0 && iommuBuf.iommu_addr != 0)
+            {
+                const unsigned int phyOffset = CdcVeGetPhyOffset(veOps, veSelf);
+                out.picture.phyYBufAddr = static_cast<size_addr>(iommuBuf.iommu_addr - phyOffset);
+                out.picture.phyCBufAddr = static_cast<size_addr>(out.picture.phyYBufAddr + yPlaneSize);
+                std::printf("[vdec-extbuf] chn=%d idx=%zu iommu=0x%lx phyOff=0x%x y=0x%lx c=0x%lx fd=%d\n",
+                            m_chn,
+                            i,
+                            static_cast<unsigned long>(iommuBuf.iommu_addr),
+                            phyOffset,
+                            static_cast<unsigned long>(out.picture.phyYBufAddr),
+                            static_cast<unsigned long>(out.picture.phyCBufAddr),
+                            out.mem.dmafd);
+            }
+            else
+            {
+                std::printf("[vdec-extbuf] chn=%d idx=%zu iommu map failed ret=%d, fallback phy y=0x%lx c=0x%lx fd=%d\n",
+                            m_chn,
+                            i,
+                            iommuRet,
+                            static_cast<unsigned long>(out.picture.phyYBufAddr),
+                            static_cast<unsigned long>(out.picture.phyCBufAddr),
+                            out.mem.dmafd);
+            }
+        }
+        else
+        {
+            std::printf("[vdec-extbuf] chn=%d idx=%zu iommu skipped veOps=%p veSelf=%p fd=%d\n",
+                        m_chn,
+                        i,
+                        reinterpret_cast<void*>(veOps),
+                        veSelf,
+                        out.mem.dmafd);
+        }
+
+        std::printf("[vdec-extbuf] chn=%d idx=%zu virt=%p phy=0x%lx c=0x%lx fd=%d size=%d\n",
+                    m_chn,
+                    i,
+                    reinterpret_cast<void*>(out.mem.virt),
+                    static_cast<unsigned long>(out.picture.phyYBufAddr),
+                    static_cast<unsigned long>(out.picture.phyCBufAddr),
+                    out.mem.dmafd,
+                    out.picture.nBufSize);
+
+        VideoPicture* registered = SetVideoFbmBufAddress(m_decoder, &out.picture, 0);
+        if (registered == nullptr)
+        {
+            std::printf("[vdec-extbuf] chn=%d SetVideoFbmBufAddress failed idx=%zu\n", m_chn, i);
+            return -1;
+        }
+
+        out.registered = true;
+        ++m_registeredBufferCount;
+    }
+
+    std::printf("[vdec-extbuf] chn=%d registered %zu external fbm buffers\n", m_chn, m_registeredBufferCount);
+    return 0;
+}
+
+int t507_vdec_node::reopenDecoderWithGpuBuffers(bool enable)
+{
+    if (m_decoder == nullptr)
+    {
+        return -1;
+    }
+
+    returnDecoderPicture(m_pendingPicture);
+    returnDecoderPicture(m_displayPicture);
+    while (!m_displayHoldQueue.empty())
+    {
+        VideoPicture* picture = m_displayHoldQueue.front();
+        m_displayHoldQueue.pop_front();
+        returnDecoderPicture(picture);
+    }
+
+    m_outputBuffers.clear();
+    m_registeredBufferCount = 0;
+    m_gpuBufferModeEnabled = false;
+    m_gpuBufferSwitchAttempts = 0;
+    m_externalReleaseModeArmed = false;
+    m_currentFrameIndex = -1;
+
+    VConfig reopenedConf = m_videoConf;
+    reopenedConf.bGpuBufValid = enable ? 1 : 0;
+    const int ret = ReopenVideoEngine(m_decoder, &reopenedConf, &m_streamInfo);
+    if (ret != 0)
+    {
+        std::printf("[vdec-extbuf] chn=%d ReopenVideoEngine gpu=%d failed ret=%d\n",
+                    m_chn,
+                    enable ? 1 : 0,
+                    ret);
+        return -1;
+    }
+
+    m_videoConf = reopenedConf;
+    m_gpuBufferModeEnabled = enable;
+    syncDecoderVeContext(m_decoder, &m_videoConf, m_chn, true);
+    std::printf("[vdec-extbuf] chn=%d reopened decoder gpu=%d\n", m_chn, enable ? 1 : 0);
+    return 0;
+}
+
+ t507_vdec_node::ExternalOutputBuffer* t507_vdec_node::findOutputBuffer(VideoPicture* picture)
+{
+    if (picture == nullptr)
+    {
+        return nullptr;
+    }
+
+    const int idx = picture->nBufId;
+    if (idx < 0 || idx >= static_cast<int>(m_outputBuffers.size()))
+    {
+        return nullptr;
+    }
+
+    ExternalOutputBuffer& out = m_outputBuffers[static_cast<size_t>(idx)];
+    return out.registered ? &out : nullptr;
+}
+
+const t507_vdec_node::ExternalOutputBuffer* t507_vdec_node::findOutputBuffer(const VideoPicture* picture) const
+{
+    if (picture == nullptr)
+    {
+        return nullptr;
+    }
+
+    const int idx = picture->nBufId;
+    if (idx < 0 || idx >= static_cast<int>(m_outputBuffers.size()))
+    {
+        return nullptr;
+    }
+
+    const ExternalOutputBuffer& out = m_outputBuffers[static_cast<size_t>(idx)];
+    return out.registered ? &out : nullptr;
+}
+
+int t507_vdec_node::armExternalBufferReleaseMode()
+{
+    if (m_decoder == nullptr || m_registeredBufferCount == 0)
+    {
+        return -1;
+    }
+    if (m_externalReleaseModeArmed)
+    {
+        return 0;
+    }
+
+    const int releaseRet = SetVideoFbmBufRelease(m_decoder);
+    if (releaseRet != 0)
+    {
+        std::printf("[vdec-extbuf] chn=%d SetVideoFbmBufRelease failed ret=%d\n", m_chn, releaseRet);
+        return -1;
+    }
+
+    const size_t yPlaneSize = static_cast<size_t>(m_bufferWidth) * static_cast<size_t>(m_bufferHeight);
+    size_t recycled = 0;
+    for (size_t guard = 0; guard < m_registeredBufferCount; ++guard)
+    {
+        VideoPicture* released = RequestReleasePicture(m_decoder);
+        if (released == nullptr)
+        {
+            break;
+        }
+
+        ExternalOutputBuffer* out = findOutputBuffer(released);
+        if (out == nullptr)
+        {
+            std::printf("[vdec-extbuf] chn=%d release queue returned unknown buffer id=%d pic=%p\n",
+                        m_chn,
+                        released->nBufId,
+                        released);
+            if (ReturnRelasePicture(m_decoder, released, 0) == nullptr)
+            {
+                return -1;
+            }
+            ++recycled;
+            continue;
+        }
+
+        released->ePixelFormat = m_fbmBufInfo.ePixelFormat;
+        released->nWidth = m_bufferWidth;
+        released->nHeight = m_bufferHeight;
+        released->nLineStride = m_bufferWidth;
+        released->nTopOffset = m_fbmBufInfo.nTopOffset;
+        released->nBottomOffset = m_fbmBufInfo.nBottomOffset;
+        released->nLeftOffset = m_fbmBufInfo.nLeftOffset;
+        released->nRightOffset = m_fbmBufInfo.nRightOffset;
+        released->pData0 = reinterpret_cast<char*>(out->mem.virt);
+        released->pData1 = reinterpret_cast<char*>(out->mem.virt + yPlaneSize);
+        released->pData2 = released->pData1 + yPlaneSize / 4;
+        released->nBufFd = out->mem.dmafd;
+        released->nBufStatus = 0;
+        released->pPrivate = reinterpret_cast<void*>(out->mem.virt);
+
+        std::printf("[vdec-extbuf] chn=%d ReturnRelasePicture begin idx=%d fd=%d\n", m_chn, released->nBufId, released->nBufFd);
+        std::fflush(stdout);
+        VideoPicture* requeued = ReturnRelasePicture(m_decoder, released, 0);
+        if (requeued == nullptr)
+        {
+            std::printf("[vdec-extbuf] chn=%d ReturnRelasePicture failed idx=%d\n", m_chn, out->picture.nBufId);
+            return -1;
+        }
+
+        ++recycled;
+        std::printf("[vdec-extbuf] chn=%d recycle idx=%d y=0x%lx c=0x%lx fd=%d\n",
+                    m_chn,
+                    requeued->nBufId,
+                    static_cast<unsigned long>(requeued->phyYBufAddr),
+                    static_cast<unsigned long>(requeued->phyCBufAddr),
+                    requeued->nBufFd);
+        std::fflush(stdout);
+    }
+
+    if (recycled == 0)
+    {
+        std::printf("[vdec-extbuf] chn=%d release queue not ready yet\n", m_chn);
+        return 1;
+    }
+
+    m_externalReleaseModeArmed = true;
+    std::printf("[vdec-extbuf] chn=%d armed release mode recycled=%zu\n", m_chn, recycled);
+    std::fflush(stdout);
+    return 0;
+}
+
+void t507_vdec_node::returnDecoderPicture(VideoPicture*& picture)
+{
+    if (picture == nullptr || m_decoder == nullptr)
+    {
+        picture = nullptr;
+        return;
+    }
+
+    const int ret = ReturnPicture(m_decoder, picture);
+    if (ret != 0)
+    {
+        std::printf("[vdec-extbuf] chn=%d ReturnPicture failed ret=%d pic=%p id=%d buf=%d\n",
+                    m_chn,
+                    ret,
+                    picture,
+                    picture->nID,
+                    picture->nBufId);
+    }
+    picture = nullptr;
+}
+
+void t507_vdec_node::releaseHeldPictures()
+{
+    while (m_displayHoldQueue.size() > kDisplayHoldCount)
+    {
+        VideoPicture* picture = m_displayHoldQueue.front();
+        m_displayHoldQueue.pop_front();
+        returnDecoderPicture(picture);
     }
 }
 
-int t507_vdec_node::sendFrame(media_frame *frame)
+void t507_vdec_node::drainDecodedPictures()
 {
-    int ret;
-    AVPacket pkt;
-    struct timespec time;
-    const unsigned char CODE_SPS[5] = {0x00, 0x00, 0x00, 0x01, 0x67};
-    int newW, newH;
-
-    if (!m_bCreated)
+    if (m_decoder == nullptr)
     {
-        logError("vdec[%d] have not been created. \n", m_chn);
-        usleep(50 * 1000);
+        return;
+    }
+
+    for (int guard = 0; guard < 64; ++guard)
+    {
+        const int validNum = ValidPictureNum(m_decoder, 0);
+        if (validNum <= 0)
+        {
+            break;
+        }
+
+        VideoPicture* picture = RequestPicture(m_decoder, 0);
+        if (picture == nullptr)
+        {
+            break;
+        }
+
+        if (m_pendingPicture != nullptr)
+        {
+            VideoPicture* stale = m_pendingPicture;
+            m_pendingPicture = nullptr;
+            returnDecoderPicture(stale);
+        }
+
+        m_pendingPicture = picture;
+    }
+}
+
+bool t507_vdec_node::promotePendingPicture()
+{
+    if (m_pendingPicture == nullptr)
+    {
+        return false;
+    }
+
+    if (m_displayPicture != nullptr)
+    {
+        m_displayHoldQueue.push_back(m_displayPicture);
+    }
+
+    m_displayPicture = m_pendingPicture;
+    m_pendingPicture = nullptr;
+    releaseHeldPictures();
+
+    ExternalOutputBuffer* out = findOutputBuffer(m_displayPicture);
+    if (out == nullptr)
+    {
+        std::printf("[vdec-extbuf] chn=%d display picture missing private buffer binding\n", m_chn);
+        returnDecoderPicture(m_displayPicture);
+        m_currentFrameIndex = -1;
+        return false;
+    }
+
+    const unsigned int visibleWidth = m_displayPicture->nWidth > 0 ? static_cast<unsigned int>(m_displayPicture->nWidth) : static_cast<unsigned int>(m_width);
+    const unsigned int visibleHeight = m_displayPicture->nHeight > 0 ? static_cast<unsigned int>(m_displayPicture->nHeight) : static_cast<unsigned int>(m_height);
+    const bool keyFrame = (m_displayPicture->nCurFrameInfo.enVidFrmType == VIDEO_FORMAT_TYPE_I ||
+                           m_displayPicture->nCurFrameInfo.enVidFrmType == VIDEO_FORMAT_TYPE_IDR);
+
+    out->frame->refill(MEDIA_PT_YUV_420SP_NV21,
+                       reinterpret_cast<void*>(out->mem.virt),
+                       out->mem.phy,
+                       visibleWidth,
+                       visibleHeight,
+                       static_cast<unsigned long long>(m_displayPicture->nPts),
+                       keyFrame);
+    m_currentFrameIndex = m_displayPicture->nBufId;
+    return true;
+}
+
+int t507_vdec_node::create()
+{
+    if (m_bCreated)
+    {
+        return 0;
+    }
+
+    int ret = allocOpen(MEM_TYPE_CDX_NEW, &m_memopsParam, nullptr);
+    if (ret < 0)
+    {
+        std::printf("[vdec-extbuf] chn=%d allocOpen failed ret=%d\n", m_chn, ret);
+        return -1;
+    }
+    m_memOpsOpened = true;
+
+    std::memset(&m_streamInfo, 0, sizeof(m_streamInfo));
+    std::memset(&m_videoConf, 0, sizeof(m_videoConf));
+    std::memset(&m_fbmBufInfo, 0, sizeof(m_fbmBufInfo));
+
+    m_videoConf.memops = reinterpret_cast<struct ScMemOpsS*>(m_memopsParam.ops);
+    if (m_videoConf.memops == nullptr)
+    {
+        std::printf("[vdec-extbuf] chn=%d memops is null\n", m_chn);
+        destroy();
         return -1;
     }
 
-    if (frame == NULL)
+    m_streamInfo.eCodecFormat = VIDEO_CODEC_FORMAT_H264;
+    m_streamInfo.nWidth = m_width;
+    m_streamInfo.nHeight = m_height;
+
+    m_videoConf.eOutputPixelFormat = PIXEL_FORMAT_NV21;
+    m_videoConf.nDisplayHoldingFrameBufferNum = 1;
+    m_videoConf.nDecodeSmoothFrameBufferNum = 3;
+    m_videoConf.nVeFreq = 300 * 1000 * 1000;
+    m_videoConf.bIsFullFramePerPiece = 1;
+    m_videoConf.bGpuBufValid = 0;
+
+    m_decoder = CreateVideoDecoder();
+    if (m_decoder == nullptr)
     {
-        logError("frame is null\n");
+        std::printf("[vdec-extbuf] chn=%d CreateVideoDecoder failed\n", m_chn);
+        destroy();
         return -1;
     }
 
+    ret = InitializeVideoDecoder(m_decoder, &m_streamInfo, &m_videoConf);
+    if (ret != 0)
+    {
+        std::printf("[vdec-extbuf] chn=%d InitializeVideoDecoder failed ret=%d\n", m_chn, ret);
+        destroy();
+        return -1;
+    }
+
+    syncDecoderVeContext(m_decoder, &m_videoConf, m_chn, true);
+
+    m_bCreated = true;
+    m_decodeFailStreak = 0;
+    m_gpuBufferModeEnabled = false;
+    m_gpuBufferSwitchAttempts = 0;
+    m_externalReleaseModeArmed = false;
+    m_currentFrameIndex = -1;
+    {
+        std::lock_guard<std::mutex> perfLock(m_perfMutex);
+        m_perfWindowStartUs = 0;
+        m_perfDecodeCalls = 0;
+        m_perfDecodeFails = 0;
+        m_perfDecodeUsTotal = 0;
+        m_perfDecodeUsMax = 0;
+        m_perfCallbackCalls = 0;
+        m_perfCallbackUsTotal = 0;
+        m_perfCallbackUsMax = 0;
+        m_perfCopyUsTotal = 0;
+        m_perfCopyUsMax = 0;
+        m_perfSyncUsTotal = 0;
+        m_perfSyncUsMax = 0;
+        m_perfCallbackInsideDecodeCalls = 0;
+        m_perfCallbackOutsideDecodeCalls = 0;
+        m_perfDecodeOnlyUsTotal = 0;
+        m_perfDecodeOnlyUsMax = 0;
+        m_perfDecodeNestedCallbackUsTotal = 0;
+        m_perfDecodeNestedCallbackUsMax = 0;
+    }
+
+    return 0;
+}
+
+int t507_vdec_node::destroy()
+{
+    if (m_decoder != nullptr)
+    {
+        returnDecoderPicture(m_pendingPicture);
+        returnDecoderPicture(m_displayPicture);
+        while (!m_displayHoldQueue.empty())
+        {
+            VideoPicture* picture = m_displayHoldQueue.front();
+            m_displayHoldQueue.pop_front();
+            returnDecoderPicture(picture);
+        }
+
+        DestroyVideoDecoder(m_decoder);
+        m_decoder = nullptr;
+    }
+
+    if (m_memOpsOpened)
+    {
+        allocClose(MEM_TYPE_CDX_NEW, &m_memopsParam, nullptr);
+        m_memOpsOpened = false;
+        std::memset(&m_memopsParam, 0, sizeof(m_memopsParam));
+    }
+
+    {
+        std::lock_guard<std::mutex> lock(m_retainedInputsMutex);
+        m_retainedInputs.clear();
+        m_retainedInputBytes = 0;
+    }
+
+    m_outputBuffers.clear();
+    m_registeredBufferCount = 0;
+    m_externalReleaseModeArmed = false;
+    m_currentFrameIndex = -1;
+    m_bCreated = false;
+    m_pendingPicture = nullptr;
+    m_displayPicture = nullptr;
+    return 0;
+}
+
+int t507_vdec_node::sendFrame(media_frame* frame)
+{
+    if (!m_bCreated || m_decoder == nullptr)
+    {
+        std::printf("[vdec-extbuf] chn=%d decoder not created\n", m_chn);
+        return -1;
+    }
+    if (frame == nullptr)
+    {
+        return -1;
+    }
     if (frame->getPayloadType() != MEDIA_PT_H264)
     {
-        logError("VDEC(%d) payload type must be MEDIA_PT_H264\n", m_chn);
+        std::printf("[vdec-extbuf] chn=%d payload must be H264\n", m_chn);
         return -1;
     }
 
-    memset(&pkt, 0, sizeof(AVPacket));
-    clock_gettime(CLOCK_MONOTONIC, &time);
-    frame->lockPacket(0, (void **)&pkt.pAddrVir0, NULL);
-    pkt.dataLen0 = frame->getPacketSize(0);
-    pkt.id = (++m_count);
-    pkt.pts = (long long)time.tv_sec * 1000000 + time.tv_nsec / 1000;
-
-    FrameType ft = parseH264FrameType(pkt.pAddrVir0, pkt.dataLen0);
-    // logDebug("addrVir0 = %#x,  nalLen=%d,  m_decoder=%#x\n", pkt.pAddrVir0, pkt.dataLen0, m_decoder);
-    // logDebug("get %s frame\n",getFrameTypeName(ft));
-
-
-    if (memcmp(pkt.pAddrVir0, CODE_SPS, 5) == 0)
+    void* inputVir = nullptr;
+    frame->lockPacket(0, &inputVir, nullptr);
+    if (inputVir == nullptr)
     {
-        h264_decode_sps(pkt.pAddrVir0 + 5, pkt.dataLen0, &newW, &newH);
-        if ((m_width != newW) || (m_height != newH))
-        {
-            logWarn("oldW=%d, oldH=%d, newW=%d, newH=%d\n", m_width, m_height, newW, newH);
-            printf("\n\n\n###### new vdec attr!!! #######\n\n\n");
-            m_width = newW;
-            m_height = newH;
-            destroy();
-            create();
-            return 0;
-        }
+        return -1;
     }
 
+    const unsigned int inputLen = frame->getPacketSize(0);
+    if (inputLen == 0)
     {
-        std::lock_guard<std::mutex> perfLock(m_perfMutex);
-        m_decodeTimingActive = true;
-        m_decodeTimingCallbackUs = 0;
+        return -1;
     }
+
+    const FrameType ft = parseH264FrameType(static_cast<const uint8_t*>(inputVir), inputLen);
+
+    const int validSize = VideoStreamBufferSize(m_decoder, 0) - VideoStreamDataSize(m_decoder, 0);
+    if (static_cast<int>(inputLen) > validSize)
+    {
+        std::printf("[vdec-extbuf] chn=%d bitstream buffer too small input=%u valid=%d\n", m_chn, inputLen, validSize);
+        return -1;
+    }
+
+    char* packetBuf = nullptr;
+    int packetBufLen = 0;
+    char* packetRingBuf = nullptr;
+    int packetRingBufLen = 0;
+    int ret = RequestVideoStreamBuffer(m_decoder,
+                                       static_cast<int>(inputLen),
+                                       &packetBuf,
+                                       &packetBufLen,
+                                       &packetRingBuf,
+                                       &packetRingBufLen,
+                                       0);
+    if (ret != 0)
+    {
+        std::printf("[vdec-extbuf] chn=%d RequestVideoStreamBuffer failed ret=%d input=%u valid=%d\n",
+                    m_chn,
+                    ret,
+                    inputLen,
+                    validSize);
+        return -1;
+    }
+
+    if ((packetBufLen + packetRingBufLen) < static_cast<int>(inputLen) || packetBuf == nullptr)
+    {
+        std::printf("[vdec-extbuf] chn=%d invalid stream buffer packet=%d ring=%d input=%u\n",
+                    m_chn,
+                    packetBufLen,
+                    packetRingBufLen,
+                    inputLen);
+        return -1;
+    }
+
+    if (inputLen <= static_cast<unsigned int>(packetBufLen))
+    {
+        std::memcpy(packetBuf, inputVir, inputLen);
+    }
+    else
+    {
+        std::memcpy(packetBuf, inputVir, packetBufLen);
+        std::memcpy(packetRingBuf,
+                    static_cast<const uint8_t*>(inputVir) + packetBufLen,
+                    inputLen - static_cast<unsigned int>(packetBufLen));
+    }
+
+    VideoStreamDataInfo dataInfo;
+    std::memset(&dataInfo, 0, sizeof(dataInfo));
+    dataInfo.nID = static_cast<int>(++m_count);
+    dataInfo.pData = packetBuf;
+    dataInfo.nLength = static_cast<int>(inputLen);
+    dataInfo.nPts = frame->getPts() > 0 ? static_cast<int64_t>(frame->getPts()) : static_cast<int64_t>(monotonicTimeUs());
+    dataInfo.nPcr = dataInfo.nPts;
+    dataInfo.bIsFirstPart = 1;
+    dataInfo.bIsLastPart = 1;
+    dataInfo.bValid = 1;
+
+    ret = SubmitVideoStreamData(m_decoder, &dataInfo, 0);
+    if (ret != 0)
+    {
+        std::printf("[vdec-extbuf] chn=%d SubmitVideoStreamData failed ret=%d len=%u\n", m_chn, ret, inputLen);
+        return -1;
+    }
+
     const uint64_t decodeStartUs = monotonicTimeUs();
-    ret = m_decoder->decode(&pkt);
+    ret = DecodeVideoStream(m_decoder, 0, 0, 0, 0);
     const uint64_t decodeEndUs = monotonicTimeUs();
     const uint64_t decodeElapsedUs = decodeEndUs - decodeStartUs;
+
     {
         std::lock_guard<std::mutex> perfLock(m_perfMutex);
-        const uint64_t nestedCallbackUs = m_decodeTimingCallbackUs;
-        const uint64_t decodeOnlyUs = decodeElapsedUs >= nestedCallbackUs ? (decodeElapsedUs - nestedCallbackUs) : 0;
-        m_decodeTimingActive = false;
-        m_decodeTimingCallbackUs = 0;
         ++m_perfDecodeCalls;
         accumulatePerfDuration(decodeElapsedUs, m_perfDecodeUsTotal, m_perfDecodeUsMax);
-        accumulatePerfDuration(nestedCallbackUs, m_perfDecodeNestedCallbackUsTotal, m_perfDecodeNestedCallbackUsMax);
-        accumulatePerfDuration(decodeOnlyUs, m_perfDecodeOnlyUsTotal, m_perfDecodeOnlyUsMax);
-        if (ret < 0)
+        accumulatePerfDuration(decodeElapsedUs, m_perfDecodeOnlyUsTotal, m_perfDecodeOnlyUsMax);
+        if (!(ret == VDECODE_RESULT_KEYFRAME_DECODED ||
+              ret == VDECODE_RESULT_FRAME_DECODED ||
+              ret == VDECODE_RESULT_NO_BITSTREAM ||
+              ret == VDECODE_RESULT_CONTINUE))
         {
             ++m_perfDecodeFails;
         }
         maybeLogPerfWindowLocked(decodeEndUs);
     }
-    if (ret < 0)
+
+    if (!m_gpuBufferModeEnabled)
+    {
+        FbmBufInfo* info = GetVideoFbmBufInfo(m_decoder);
+        if (info != nullptr && (ft == FRAME_I || m_count > 30))
+        {
+            ++m_gpuBufferSwitchAttempts;
+            std::printf("[vdec-extbuf] chn=%d try switch to external buffers attempt=%lu frameType=%s count=%lu\n",
+                        m_chn,
+                        m_gpuBufferSwitchAttempts,
+                        getFrameTypeName(ft),
+                        m_count);
+            if (reopenDecoderWithGpuBuffers(true) == 0)
+            {
+                const int registerRet = registerExternalBuffers();
+                if (registerRet == 0)
+                {
+                    m_externalReleaseModeArmed = true;
+                    std::printf("[vdec-extbuf] chn=%d external buffers installed after reopen, stay on RequestPicture/ReturnPicture\n", m_chn);
+                    std::fflush(stdout);
+                    return 0;
+                }
+
+                std::printf("[vdec-extbuf] chn=%d register after reopen failed ret=%d, fallback to internal buffers\n",
+                            m_chn,
+                            registerRet);
+                reopenDecoderWithGpuBuffers(false);
+            }
+            return 0;
+        }
+    }
+
+    if (m_gpuBufferModeEnabled && m_registeredBufferCount == 0)
+    {
+        const int registerRet = registerExternalBuffers();
+        if (registerRet == 0)
+        {
+            m_externalReleaseModeArmed = true;
+            std::printf("[vdec-extbuf] chn=%d external buffers installed, defer release mode and stay on RequestPicture/ReturnPicture\n", m_chn);
+            std::fflush(stdout);
+
+            const uint64_t decodeRetryStartUs = monotonicTimeUs();
+            ret = DecodeVideoStream(m_decoder, 0, 0, 0, 0);
+            const uint64_t decodeRetryEndUs = monotonicTimeUs();
+            const uint64_t decodeRetryElapsedUs = decodeRetryEndUs - decodeRetryStartUs;
+            std::lock_guard<std::mutex> perfLock(m_perfMutex);
+            ++m_perfDecodeCalls;
+            accumulatePerfDuration(decodeRetryElapsedUs, m_perfDecodeUsTotal, m_perfDecodeUsMax);
+            accumulatePerfDuration(decodeRetryElapsedUs, m_perfDecodeOnlyUsTotal, m_perfDecodeOnlyUsMax);
+            if (!(ret == VDECODE_RESULT_KEYFRAME_DECODED ||
+                  ret == VDECODE_RESULT_FRAME_DECODED ||
+                  ret == VDECODE_RESULT_NO_BITSTREAM ||
+                  ret == VDECODE_RESULT_CONTINUE))
+            {
+                ++m_perfDecodeFails;
+            }
+            maybeLogPerfWindowLocked(decodeRetryEndUs);
+        }
+        else if (registerRet > 0)
+        {
+            return 0;
+        }
+        else
+        {
+            std::printf("[vdec-extbuf] chn=%d registerExternalBuffers hard failed ret=%d\n", m_chn, registerRet);
+            return -1;
+        }
+    }
+
+    if (!(ret == VDECODE_RESULT_KEYFRAME_DECODED ||
+          ret == VDECODE_RESULT_FRAME_DECODED ||
+          ret == VDECODE_RESULT_NO_BITSTREAM ||
+          ret == VDECODE_RESULT_CONTINUE ||
+          ret == VDECODE_RESULT_NO_FRAME_BUFFER))
     {
         ++m_decodeFailStreak;
         ++m_decodeFailCount;
@@ -716,44 +1111,33 @@ int t507_vdec_node::sendFrame(media_frame *frame)
             retainedBytes = m_retainedInputBytes;
         }
 
-        size_t scLen = 0;
-        unsigned nalType = 0;
-        if (findStartCode(pkt.pAddrVir0, pkt.dataLen0, &scLen) && pkt.dataLen0 > scLen)
-        {
-            nalType = pkt.pAddrVir0[scLen] & 0x1F;
-        }
-
         if (m_decodeFailStreak == 1 || (m_decodeFailStreak % 20) == 0)
         {
-            printf("[vdec-fail] chn=%d ret=%d streak=%u total=%lu nal=%u frameType=%s inputLen=%u retained=%zu retainedBytes=%zu head=%02X %02X %02X %02X\n",
-                   m_chn,
-                   ret,
-                   m_decodeFailStreak,
-                   m_decodeFailCount,
-                   nalType,
-                   getFrameTypeName(ft),
-                   pkt.dataLen0,
-                   retainedCount,
-                   retainedBytes,
-                   pkt.dataLen0 > 0 ? pkt.pAddrVir0[0] : 0,
-                   pkt.dataLen0 > 1 ? pkt.pAddrVir0[1] : 0,
-                   pkt.dataLen0 > 2 ? pkt.pAddrVir0[2] : 0,
-                   pkt.dataLen0 > 3 ? pkt.pAddrVir0[3] : 0);
+            std::printf("[vdec-fail] chn=%d ret=%d streak=%u total=%lu frameType=%s inputLen=%u retained=%zu retainedBytes=%zu\n",
+                        m_chn,
+                        ret,
+                        m_decodeFailStreak,
+                        m_decodeFailCount,
+                        getFrameTypeName(ft),
+                        inputLen,
+                        retainedCount,
+                        retainedBytes);
         }
         return -1;
     }
 
     if (m_decodeFailStreak > 0)
     {
-        printf("[vdec-recover] chn=%d streak=%u total=%lu frameType=%s inputLen=%u\n",
-               m_chn,
-               m_decodeFailStreak,
-               m_decodeFailCount,
-               getFrameTypeName(ft),
-               pkt.dataLen0);
+        std::printf("[vdec-recover] chn=%d streak=%u total=%lu frameType=%s inputLen=%u\n",
+                    m_chn,
+                    m_decodeFailStreak,
+                    m_decodeFailCount,
+                    getFrameTypeName(ft),
+                    inputLen);
         m_decodeFailStreak = 0;
     }
 
+    drainDecodedPictures();
     return 0;
 }
 
@@ -775,180 +1159,23 @@ void t507_vdec_node::retainInputBuffer(const std::shared_ptr<std::vector<uint8_t
     }
 }
 
-media_frame *t507_vdec_node::getFrame()
+media_frame* t507_vdec_node::getFrame()
 {
-    return m_frame[m_curFrame];
+    if (!promotePendingPicture())
+    {
+        return nullptr;
+    }
+
+    if (m_currentFrameIndex < 0 || m_currentFrameIndex >= static_cast<int>(m_outputBuffers.size()))
+    {
+        return nullptr;
+    }
+
+    return m_outputBuffers[static_cast<size_t>(m_currentFrameIndex)].frame.get();
 }
 
-int t507_vdec_node::decoderDataReady(awvideodecoder::AVPacket *packet)
-{
-    int ret = 0;
-    frame_shell frame;
-    // ion_mem mem;
-    static int bufIndex[MAX_CAM_NUM] = {0};
-    const uint64_t cbStartUs = monotonicTimeUs();
-    uint64_t copyElapsedUs = 0;
-    uint64_t syncElapsedUs = 0;
 
-    if (m_bypassCopyProbe)
-    {
-        ++m_bypassCopyFrameCount;
-        const uint64_t cbEndUs = monotonicTimeUs();
-        {
-            std::lock_guard<std::mutex> perfLock(m_perfMutex);
-            const uint64_t callbackElapsedUs = cbEndUs - cbStartUs;
-            ++m_perfCallbackCalls;
-            if (m_decodeTimingActive)
-            {
-                ++m_perfCallbackInsideDecodeCalls;
-                m_decodeTimingCallbackUs += callbackElapsedUs;
-            }
-            else
-            {
-                ++m_perfCallbackOutsideDecodeCalls;
-            }
-            accumulatePerfDuration(callbackElapsedUs, m_perfCallbackUsTotal, m_perfCallbackUsMax);
-            maybeLogPerfWindowLocked(cbEndUs);
-        }
-        if (m_bypassCopyFrameCount == 1 || (m_bypassCopyFrameCount % 60) == 0)
-        {
-            printf("[vdec-copy-bypass] chn=%d callbacks=%lu inputLen=%u pts=%lld\n",
-                   m_chn,
-                   m_bypassCopyFrameCount,
-                   packet != nullptr ? packet->dataLen0 : 0,
-                   packet != nullptr ? packet->pts : 0);
-        }
-        return 0;
-    }
 
-        my_buffer::getInstance()->getVideobuffer(m_chn, T507_PREVIEW_BUF_NUM + bufIndex[m_chn], &mem);
 
-    bool usedG2d = false;
-    if (m_useG2dCopy && m_g2dHandle >= 0 && ALIGN_16B(m_height) == 1088)
-    {
-        const uint64_t srcY = static_cast<uint64_t>(reinterpret_cast<uintptr_t>(packet->pAddrPhy0));
-        const uint64_t srcC = static_cast<uint64_t>(reinterpret_cast<uintptr_t>(packet->pAddrPhy1));
-        const int dstFd = mem.dmafd;
-        const uint64_t g2dStartUs = monotonicTimeUs();
-        const int g2dRet = g2dBlitNv21ToFd(m_g2dHandle,
-                                           srcY,
-                                           srcC,
-                                           static_cast<__u32>(m_width),
-                                           static_cast<__u32>(ALIGN_16B(m_height)),
-                                           static_cast<__u32>(m_width),
-                                           static_cast<__u32>(m_height),
-                                           dstFd,
-                                           static_cast<__u32>(IMAGEWIDTH),
-                                           static_cast<__u32>(IMAGEHEIGHT),
-                                           static_cast<__u32>(m_width),
-                                           static_cast<__u32>(m_height));
-        copyElapsedUs = monotonicTimeUs() - g2dStartUs;
-        {
-            std::lock_guard<std::mutex> perfLock(m_perfMutex);
-            ++m_perfG2dCalls;
-            accumulatePerfDuration(copyElapsedUs, m_perfG2dUsTotal, m_perfG2dUsMax);
-            if (g2dRet != 0)
-            {
-                ++m_perfG2dFails;
-            }
-        }
 
-        if (g2dRet == 0)
-        {
-            usedG2d = true;
-            const uint64_t syncStartUs = monotonicTimeUs();
-            IonDmaSync(mem.dmafd);
-            syncElapsedUs = monotonicTimeUs() - syncStartUs;
-        }
-        else
-        {
-            const int savedErrno = errno;
-            m_useG2dCopy = false;
-            printf("[vdec-g2d] chn=%d ioctl BITBLT_H failed ret=%d errno=%d(%s) srcY=%#llx srcC=%#llx dstFd=%d src=%dx%d/%dx%d dst=%dx%d/%dx%d, fallback to memcpy\n",
-                   m_chn,
-                   g2dRet,
-                   savedErrno,
-                   strerror(savedErrno),
-                   static_cast<unsigned long long>(srcY),
-                   static_cast<unsigned long long>(srcC),
-                   dstFd,
-                   m_width,
-                   ALIGN_16B(m_height),
-                   m_width,
-                   m_height,
-                   IMAGEWIDTH,
-                   IMAGEHEIGHT,
-                   m_width,
-                   m_height);
-        }
-    }
-
-    if (!usedG2d)
-    {
-        if (ALIGN_16B(m_height) == 1088)
-        {
-            const uint64_t copyStartUs = monotonicTimeUs();
-            memcpy((void *)mem.virt, packet->pAddrVir0, 1920 * 1080);
-            memcpy((void *)mem.virt + 1920 * 1080, packet->pAddrVir0 + 1920 * 1088, 1920 * 1080 / 2);
-            copyElapsedUs = monotonicTimeUs() - copyStartUs;
-            const uint64_t syncStartUs = monotonicTimeUs();
-            IonDmaSync(mem.dmafd);
-            syncElapsedUs = monotonicTimeUs() - syncStartUs;
-        }
-        else if (ALIGN_16B(m_height) == 720)
-        {
-            const uint64_t copyStartUs = monotonicTimeUs();
-            for (int i = 0; i < 720; i++)
-                memcpy((void *)mem.virt + i * 1920, packet->pAddrVir0 + i * 1280, 1280);
-            for (int i = 0; i < 720 / 2; i++)
-                memcpy((void *)mem.virt + 1920 * 1080 + i * 1920, packet->pAddrVir0 + 1280 * 720 + i * 1280, 1280);
-            copyElapsedUs = monotonicTimeUs() - copyStartUs;
-            const uint64_t syncStartUs = monotonicTimeUs();
-            IonDmaSync(mem.dmafd);
-            syncElapsedUs = monotonicTimeUs() - syncStartUs;
-        }
-    }
-
-    // frame.refill(MEDIA_PT_YUV_420SP_NV21, (void *)mem.virt,mem.phy, m_width, m_height, packet->pts, false);
-    m_frame[bufIndex[m_chn]]->refill(MEDIA_PT_YUV_420SP_NV21, (void *)mem.virt, mem.phy, m_width, m_height, packet->pts, false);
-
-    m_curFrame = bufIndex[m_chn];
-    // logDebug(" bufIndex[m_chn] = %d\n", bufIndex[m_chn]);
-
-    bufIndex[m_chn]++;
-    if (bufIndex[m_chn] == T507_PLAYBACK_BUF_NUM)
-        bufIndex[m_chn] = 0;
-
-    {
-        std::lock_guard<std::mutex> lock(m_retainedInputsMutex);
-        if (m_retainedInputs.size() > kRetainedInputSafetyCount)
-        {
-            // printf("======> vdec[%d] retained input buffers count: %zu, bytes: %zu, dropping oldest buffer\n", m_chn, m_retainedInputs.size(), m_retainedInputBytes);
-            m_retainedInputBytes -= m_retainedInputs.front()->size();
-            m_retainedInputs.pop_front();
-        }
-    }
-
-    const uint64_t cbEndUs = monotonicTimeUs();
-    {
-        std::lock_guard<std::mutex> perfLock(m_perfMutex);
-        const uint64_t callbackElapsedUs = cbEndUs - cbStartUs;
-        ++m_perfCallbackCalls;
-        if (m_decodeTimingActive)
-        {
-            ++m_perfCallbackInsideDecodeCalls;
-            m_decodeTimingCallbackUs += callbackElapsedUs;
-        }
-        else
-        {
-            ++m_perfCallbackOutsideDecodeCalls;
-        }
-        accumulatePerfDuration(callbackElapsedUs, m_perfCallbackUsTotal, m_perfCallbackUsMax);
-        accumulatePerfDuration(copyElapsedUs, m_perfCopyUsTotal, m_perfCopyUsMax);
-        accumulatePerfDuration(syncElapsedUs, m_perfSyncUsTotal, m_perfSyncUsMax);
-        maybeLogPerfWindowLocked(cbEndUs);
-    }
-
-    return 0;
-}
 

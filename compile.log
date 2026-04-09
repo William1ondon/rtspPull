@@ -1,0 +1,35 @@
+> make
+Scanning dependencies of target vdec_test
+[  8%] Building CXX object CMakeFiles/vdec_test.dir/src/t507_vdec.cpp.o
+In file included from /home/flork/workspace/rtspPull/include/my_buffer.h:4:0,
+                 from /home/flork/workspace/rtspPull/include/t507_vdec.h:5,
+                 from /home/flork/workspace/rtspPull/src/t507_vdec.cpp:13:
+/home/flork/workspace/rtspPull/include/common.h:29:0: warning: "SUCCESS" redefined
+ #define SUCCESS         1
+ 
+In file included from /home/flork/workspace/rtspPull/include/t507_vdec.h:4:0,
+                 from /home/flork/workspace/rtspPull/src/t507_vdec.cpp:13:
+/home/flork/workspace/rtspPull/include/sunxiMemInterface.h:12:0: note: this is the location of the previous definition
+ #define SUCCESS 0
+ 
+/home/flork/workspace/rtspPull/src/t507_vdec.cpp: In member function ‘int t507_vdec_node::registerExternalBuffers()’:
+/home/flork/workspace/rtspPull/src/t507_vdec.cpp:384:9: error: ‘VideoEngine’ was not declared in this scope
+         VideoEngine* engine = decoderCtx != nullptr ? decoderCtx->pVideoEngine : nullptr;
+         ^~~~~~~~~~~
+/home/flork/workspace/rtspPull/src/t507_vdec.cpp:384:9: note: suggested alternative: ‘ReopenVideoEngine’
+         VideoEngine* engine = decoderCtx != nullptr ? decoderCtx->pVideoEngine : nullptr;
+         ^~~~~~~~~~~
+         ReopenVideoEngine
+/home/flork/workspace/rtspPull/src/t507_vdec.cpp:384:22: error: ‘engine’ was not declared in this scope
+         VideoEngine* engine = decoderCtx != nullptr ? decoderCtx->pVideoEngine : nullptr;
+                      ^~~~~~
+/home/flork/workspace/rtspPull/src/t507_vdec.cpp:384:22: note: suggested alternative: ‘unlink’
+         VideoEngine* engine = decoderCtx != nullptr ? decoderCtx->pVideoEngine : nullptr;
+                      ^~~~~~
+                      unlink
+CMakeFiles/vdec_test.dir/build.make:198: recipe for target 'CMakeFiles/vdec_test.dir/src/t507_vdec.cpp.o' failed
+make[2]: *** [CMakeFiles/vdec_test.dir/src/t507_vdec.cpp.o] Error 1
+CMakeFiles/Makefile2:94: recipe for target 'CMakeFiles/vdec_test.dir/all' failed
+make[1]: *** [CMakeFiles/vdec_test.dir/all] Error 2
+Makefile:102: recipe for target 'all' failed
+make: *** [all] Error 2

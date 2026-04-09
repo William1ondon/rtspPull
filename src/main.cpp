@@ -708,9 +708,17 @@ int main(int argc, char* argv[])
     clearDumpFiles();
 
     // Alloc buffers for every display channel.
+    const size_t bufferHeight = static_cast<size_t>((IMAGEHEIGHT + 15) & ~15);
+    const size_t yPlaneSize = static_cast<size_t>(IMAGEWIDTH) * bufferHeight;
+    const size_t extBufferSize = yPlaneSize + yPlaneSize / 2;
+
     for (int i = 0; i < DISP_CHN_NUM; i++)
     {
-        my_buffer::getInstance()->AllocVideoBuffer(i, 1920 * 1088 * 3 / 2);
+        if (my_buffer::getInstance()->AllocVideoBuffer(i, static_cast<int>(extBufferSize)) != 0)
+        {
+            printf("AllocVideoBuffer failed for channel %d\n", i);
+            return 1;
+        }
     }
 
     // Init OpenGL singleton.

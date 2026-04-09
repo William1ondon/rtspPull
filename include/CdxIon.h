@@ -1,4 +1,4 @@
-/*
+﻿/*
 * Copyright (c) 2008-2016 Allwinner Technology Co. Ltd.
 * All rights reserved.
 *
@@ -14,6 +14,10 @@
 
 #ifndef _ION_ALLOCATOR_
 #define _ION_ALLOCATOR_
+
+#if __cplusplus
+extern "C" {
+#endif
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -149,4 +153,9 @@ void* CdxIonDrm(int size);
 //return total meminfo with MB
 int CdxIonGetTotalSize();
 
+#if __cplusplus
+}
+#endif
+
 #endif//  _ION_ALLOCATOR_
+

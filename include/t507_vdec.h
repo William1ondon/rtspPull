@@ -1,18 +1,17 @@
 #pragma once
 
-#include "AWVideoDecoder.h"
+#include "framework/libcedarc/include/vdecoder.h"
+#include "sunxiMemInterface.h"
 #include "my_buffer.h"
 #include "my_log.h"
 #include "media_frame.h"
 #include "DmaIon.h"
+
 #include <cstdint>
 #include <deque>
-#include <list>
 #include <memory>
 #include <mutex>
 #include <vector>
-
-using namespace awvideodecoder;
 
 typedef enum FrameType_
 {
@@ -20,28 +19,51 @@ typedef enum FrameType_
     FRAME_I,
     FRAME_P,
     FRAME_B
-}FrameType;
+} FrameType;
 
-class t507_vdec_node : public AWVideoDecoderDataCallback
+class t507_vdec_node
 {
 private:
+    struct ExternalOutputBuffer
+    {
+        ion_mem mem{};
+        VideoPicture picture{};
+        std::unique_ptr<frame_shell> frame;
+        bool registered = false;
+    };
+
     bool m_bCreated;
+    bool m_memOpsOpened;
     int m_chn;
-    AWVideoDecoder *m_decoder;
+    VideoDecoder* m_decoder;
     bool m_bOutEn;
     unsigned long m_count;
     int m_width;
     int m_height;
+    int m_bufferWidth;
+    int m_bufferHeight;
+    int m_currentFrameIndex;
+    bool m_gpuBufferModeEnabled;
+    unsigned long m_gpuBufferSwitchAttempts;
 
-    frame_shell *m_frame[T507_PLAYBACK_BUF_NUM];
-    ion_mem mem;
+    VideoStreamInfo m_streamInfo;
+    VConfig m_videoConf;
+    paramStruct_t m_memopsParam;
+    FbmBufInfo m_fbmBufInfo;
 
-    int m_curFrame;
+    std::vector<ExternalOutputBuffer> m_outputBuffers;
+    size_t m_registeredBufferCount;
+    bool m_externalReleaseModeArmed;
+    VideoPicture* m_pendingPicture;
+    VideoPicture* m_displayPicture;
+    std::deque<VideoPicture*> m_displayHoldQueue;
+
     std::deque<std::shared_ptr<std::vector<uint8_t>>> m_retainedInputs;
     std::mutex m_retainedInputsMutex;
     size_t m_retainedInputBytes;
     unsigned int m_decodeFailStreak;
     unsigned long m_decodeFailCount;
+
     std::mutex m_perfMutex;
     uint64_t m_perfWindowStartUs;
     unsigned long m_perfDecodeCalls;
@@ -61,56 +83,28 @@ private:
     uint64_t m_perfDecodeOnlyUsMax;
     uint64_t m_perfDecodeNestedCallbackUsTotal;
     uint64_t m_perfDecodeNestedCallbackUsMax;
-    bool m_decodeTimingActive;
-    uint64_t m_decodeTimingCallbackUs;
-    bool m_bypassCopyProbe;
-    unsigned long m_bypassCopyFrameCount;
-    bool m_useG2dCopy;
-    int m_g2dHandle;
-    unsigned long m_perfG2dCalls;
-    unsigned long m_perfG2dFails;
-    uint64_t m_perfG2dUsTotal;
-    uint64_t m_perfG2dUsMax;
 
 public:
-    // t507_vdec_node(int chn, const MEDIA_VDEC_ATTR *attr);
-    t507_vdec_node(int chn);
+    explicit t507_vdec_node(int chn);
     ~t507_vdec_node();
 
-    AWVideoDecoder *getDecoder();
-
-    /* AWVideoDecoderDataCallback */
-    int decoderDataReady(awvideodecoder::AVPacket *packet);
-
-    /* base node */
     bool isCreated();
     int create();
     int destroy();
-    // media_node *getNode();
-
-    /* input */
-    // int getInputId();
-    // /* vdec没有实现getFrame 直接调用sendFrame就是开启数据解码 */
-    int sendFrame(media_frame *frame);
+    int sendFrame(media_frame* frame);
     void retainInputBuffer(const std::shared_ptr<std::vector<uint8_t>>& buffer);
-    // bool isBound();
-    // // media_output *getBindObject();
-    // bool unbind();
-
-    /* output */
-    // int getOutputId();
-    // bool isEnable();
-    // int enable();
-    // int disable();
-    // int getBindCnt();
-    // int getBoundObject(media_input **inputArray);
-    // bool bind(media_input *input);
-    // bool unbind(media_input *input);
-    media_frame *getFrame();
-    // int releaseFrame(int seq);
+    media_frame* getFrame();
 
 private:
-    char *getFrameTypeName(FrameType t);
+    char* getFrameTypeName(FrameType t);
     void maybeLogPerfWindowLocked(uint64_t nowUs, bool force = false);
+    int registerExternalBuffers();
+    int reopenDecoderWithGpuBuffers(bool enable);
+    int armExternalBufferReleaseMode();
+    ExternalOutputBuffer* findOutputBuffer(VideoPicture* picture);
+    const ExternalOutputBuffer* findOutputBuffer(const VideoPicture* picture) const;
+    void releaseHeldPictures();
+    void returnDecoderPicture(VideoPicture*& picture);
+    void drainDecodedPictures();
+    bool promotePendingPicture();
 };
-

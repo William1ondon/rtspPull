@@ -297,6 +297,8 @@ static EGLImageKHR creatEglImage(EGLDisplay dpy, int dma_fd, unsigned int width,
 {
     int atti = 0;
     EGLint attribs0[30];
+    const unsigned int alignedHeight = (height + 15U) & ~15U;
+    const unsigned int lumaBytes = width * alignedHeight;
 
     // set the image's size
     attribs0[atti++] = EGL_WIDTH;
@@ -334,7 +336,7 @@ static EGLImageKHR creatEglImage(EGLDisplay dpy, int dma_fd, unsigned int width,
         attribs0[atti++] = EGL_DMA_BUF_PLANE1_FD_EXT;
         attribs0[atti++] = dma_fd;
         attribs0[atti++] = EGL_DMA_BUF_PLANE1_OFFSET_EXT;
-        attribs0[atti++] = width * height;
+        attribs0[atti++] = lumaBytes;
         attribs0[atti++] = EGL_DMA_BUF_PLANE1_PITCH_EXT;
         attribs0[atti++] = width;
         break;
@@ -639,12 +641,15 @@ int CT507Graphics::createShader(unsigned int *shader_id, int shaderType, const c
 
 int CT507Graphics::load_texture(void *yuv_virAddr, int w, int h, int chn)
 {
-    ion_mem mem;
+    ion_mem mem = {};
     int i;
 
     for (i = 0; i < T507_PREVIEW_BUF_NUM + T507_PLAYBACK_BUF_NUM; i++)
     {
-        my_buffer::getInstance()->getVideobuffer(chn, i, &mem);
+        if (my_buffer::getInstance()->getVideobuffer(chn, i, &mem) != 0)
+        {
+            continue;
+        }
         if (mem.virt == (unsigned long)yuv_virAddr)
         {
             TexIndex[chn] = i;
@@ -693,7 +698,12 @@ int CT507Graphics::setupTexture()
     {
         for (int j = 0; j < T507_PREVIEW_BUF_NUM + T507_PLAYBACK_BUF_NUM; j++)
         {
-            my_buffer::getInstance()->getVideobuffer(i, j, &mem);
+            memset(&mem, 0, sizeof(mem));
+            if (my_buffer::getInstance()->getVideobuffer(i, j, &mem) != 0)
+            {
+                printf("setupTexture skip invalid buffer chn=%d idx=%d\n", i, j);
+                return -1;
+            }
             img_pre = creatEglImage(m_egl.egl_display, mem.dmafd, IMAGEWIDTH, IMAGEHEIGHT, DRM_FORMAT_NV21);
             if (img_pre == EGL_NO_IMAGE_KHR)
             {
