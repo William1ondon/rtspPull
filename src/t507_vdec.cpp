@@ -168,11 +168,10 @@ static bool findStartCode(const uint8_t* data, size_t len, size_t* scLen)
 
 unsigned int Ue(unsigned char *pBuff, unsigned int nLen, unsigned int &nStartBit)
 {
-    // 计算0bit的个数
     unsigned int nZeroNum = 0;
     while (nStartBit < nLen * 8)
     {
-        if (pBuff[nStartBit / 8] & (0x80 >> (nStartBit % 8))) //&:按位与，%取余
+        if (pBuff[nStartBit / 8] & (0x80 >> (nStartBit % 8)))
         {
             break;
         }
@@ -181,7 +180,6 @@ unsigned int Ue(unsigned char *pBuff, unsigned int nLen, unsigned int &nStartBit
     }
     nStartBit++;
 
-    // 计算结果
     unsigned long dwRet = 0;
     for (unsigned int i = 0; i < nZeroNum; i++)
     {
@@ -199,7 +197,7 @@ int Se(unsigned char *pBuff, unsigned int nLen, unsigned int &nStartBit)
 {
     int UeVal = Ue(pBuff, nLen, nStartBit);
     double k = UeVal;
-    int nValue = ceil(k / 2); // ceil函数：ceil函数的作用是求不小于给定实数的最小整数。ceil(2)=ceil(1.2)=cei(1.5)=2.00
+    int nValue = ceil(k / 2);
     if (UeVal % 2 == 0)
         nValue = -nValue;
     return nValue;
@@ -220,7 +218,7 @@ unsigned long u(unsigned int BitCount, unsigned char *buf, unsigned int &nStartB
     return dwRet;
 }
 
-// 仅用于区分 I/P/B，解析 slice_type
+
 static FrameType parseH264FrameType(const uint8_t* data, size_t len)
 {
     size_t scLen = 0;
@@ -231,9 +229,9 @@ static FrameType parseH264FrameType(const uint8_t* data, size_t len)
     uint8_t nalType = nalHdr & 0x1f;
     if (nalType == 5) return FRAME_I; // IDR
 
-    if (nalType != 1) return FRAME_UNKNOWN; // 非 slice
+    if (nalType != 1) return FRAME_UNKNOWN; // 锟斤拷 slice
 
-    // 生成 RBSP（去掉 emulation_prevention_three_byte）
+
     const uint8_t* p = data + scLen + 1;
     size_t payloadLen = len - scLen - 1;
     std::vector<uint8_t> rbsp;
@@ -399,7 +397,6 @@ t507_vdec_node::t507_vdec_node(int chn)
 
     for (int i = 0; i < T507_PLAYBACK_BUF_NUM; i++)
     {
-        /* 初始化帧数组 要用这些帧去装载v4l2数据 */
         m_frame[i] = new frame_shell();
     }
 
@@ -515,7 +512,7 @@ int t507_vdec_node::destroy()
     if (m_decoder != NULL)
     {
         m_bCreated = false;
-        usleep(100 * 1000); // 延时是让送过去的解码视频帧解完
+        usleep(100 * 1000);
         if (m_g2dHandle >= 0)
         {
             close(m_g2dHandle);
@@ -911,7 +908,6 @@ int t507_vdec_node::decoderDataReady(awvideodecoder::AVPacket *packet)
             syncElapsedUs = monotonicTimeUs() - syncStartUs;
         }
     }
-    // 高一定要对齐 否则回放视频会有一道绿边
 
     // frame.refill(MEDIA_PT_YUV_420SP_NV21, (void *)mem.virt,mem.phy, m_width, m_height, packet->pts, false);
     m_frame[bufIndex[m_chn]]->refill(MEDIA_PT_YUV_420SP_NV21, (void *)mem.virt, mem.phy, m_width, m_height, packet->pts, false);

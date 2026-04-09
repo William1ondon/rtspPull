@@ -61,7 +61,6 @@ void rtspPuller::loop(){
       scheduler->doEventLoop();
     }
 
-    // 断开后自动重�?    std::this_thread::sleep_for(std::chrono::milliseconds(reconnectIntervalMs));
     reconnectCount++;
     if (reconnectCount >= reconnectMaxTimes) break;
   }
@@ -138,7 +137,7 @@ void continueAfterDESCRIBE(RTSPClient* rtspClient, int resultCode, char* resultS
                                         subsessionAfterPlaying,
                                         scs->subsession);
 
-    // Use RTP-over-RTSP(TCP) so the embedded pull path matches the PC ffmpeg check.
+    // Use RTP-over-RTSP(TCP)
     rtspClient->sendSetupCommand(*scs->subsession, [](RTSPClient* rtspClient, int resultCode, char* resultString) {
         UsageEnvironment& env = rtspClient->envir();
         if (resultCode != 0) {
@@ -279,7 +278,6 @@ void MyH264Sink::onSourceClosure(void* clientData) {
   sink->stopPlaying();
 }
 
-// If you don't want to see debugging output for each received frame, then comment out the following line:
 #define DEBUG_PRINT_EACH_RECEIVED_FRAME 0
 
 static const uint8_t kStartCode[4] = {0x00,0x00,0x00,0x01};
@@ -415,7 +413,6 @@ void MyH264Sink::afterGettingFrame(unsigned frameSize,
 
     // printf("===> presentation time: %lld, now Time: %lld, delay: %lld\n", ts_ms, getFramFromNetPts, getFramFromNetPts - ts_ms);
 
-    // 1️⃣ 解析 NAL type
     uint8_t nalType = (frameSize > 0) ? (fReceiveBuffer[0] & 0x1F) : 0;
     if (numTruncatedBytes > 0) {
         printf("[sink] WARNING chn=%d truncated bytes=%u, recvBuffer=%u\n", fChannel, numTruncatedBytes, fBufferSize);
@@ -452,14 +449,12 @@ void MyH264Sink::afterGettingFrame(unsigned frameSize,
 
     // spts = sv_safeFunc_GetTimeTick();
 
-    // 2️⃣ 拷贝一份数据（RTSP buffer 不能外用）
     uint8_t* copyBuf = new uint8_t[frameSize];
     memcpy(copyBuf, fReceiveBuffer, frameSize);
 
     pts = sv_safeFunc_GetTimeTick();
     // printf("===> copy frame data, size = %d, pts = %lld, copy cost = %lld ms\n", frameSize, pts, pts - spts);
 
-    // 3️⃣ 非阻塞入队（满了直接丢）
     fQueue.push(copyBuf, frameSize, isIDR, pts);
 
     continuePlaying();
