@@ -1,6 +1,7 @@
 #pragma once
 
 #include "framework/libcedarc/include/vdecoder.h"
+#include "framework/libcedarc/include/veInterface.h"
 #include "sunxiMemInterface.h"
 #include "my_buffer.h"
 #include "my_log.h"
@@ -29,6 +30,7 @@ private:
         ion_mem mem{};
         VideoPicture picture{};
         std::unique_ptr<frame_shell> frame;
+        std::vector<unsigned char> metadata;
         bool registered = false;
     };
 
@@ -45,6 +47,8 @@ private:
     int m_currentFrameIndex;
     bool m_gpuBufferModeEnabled;
     unsigned long m_gpuBufferSwitchAttempts;
+    VeOpsS* m_iommuVeOps;
+    void* m_iommuVeSelf;
 
     VideoStreamInfo m_streamInfo;
     VConfig m_videoConf;
@@ -83,6 +87,9 @@ private:
     uint64_t m_perfDecodeOnlyUsMax;
     uint64_t m_perfDecodeNestedCallbackUsTotal;
     uint64_t m_perfDecodeNestedCallbackUsMax;
+    unsigned long m_noDisplayPicturePolls;
+    unsigned long m_requestedPictureCount;
+    unsigned long m_promotedPictureCount;
 
 public:
     explicit t507_vdec_node(int chn);
@@ -98,6 +105,8 @@ public:
 private:
     char* getFrameTypeName(FrameType t);
     void maybeLogPerfWindowLocked(uint64_t nowUs, bool force = false);
+    bool ensureIommuMapper();
+    void releaseIommuMapper();
     int registerExternalBuffers();
     int reopenDecoderWithGpuBuffers(bool enable);
     int armExternalBufferReleaseMode();

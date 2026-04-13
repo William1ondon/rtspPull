@@ -69,108 +69,108 @@ Queue Depth : 10 (per channel)
 Puller Chn : 1
 Display Chn : 4
 ====================================
-allocOpen(MEM_TYPE_CDX_NEW) ok, ops=0x7f839230a8
-****alloc_buffer->phy = 0xfcc00000,alloc_buffer->vir = 0x7f82db2000
-[my_buffer] chn=0 idx=0 virt=547656245248 phy=4240441344 fd=5 size=3133440
-****alloc_buffer->phy = 0xfc800000,alloc_buffer->vir = 0x7f82ab5000
-[my_buffer] chn=0 idx=1 virt=547653111808 phy=4236247040 fd=6 size=3133440
-****alloc_buffer->phy = 0xfc400000,alloc_buffer->vir = 0x7f827b8000
-[my_buffer] chn=0 idx=2 virt=547649978368 phy=4232052736 fd=7 size=3133440
-****alloc_buffer->phy = 0xfc000000,alloc_buffer->vir = 0x7f824bb000
-[my_buffer] chn=0 idx=3 virt=547646844928 phy=4227858432 fd=8 size=3133440
-****alloc_buffer->phy = 0xfbc00000,alloc_buffer->vir = 0x7f821be000
-[my_buffer] chn=0 idx=4 virt=547643711488 phy=4223664128 fd=9 size=3133440
-****alloc_buffer->phy = 0xfb800000,alloc_buffer->vir = 0x7f81ec1000
-[my_buffer] chn=0 idx=5 virt=547640578048 phy=4219469824 fd=10 size=3133440
-****alloc_buffer->phy = 0xfb400000,alloc_buffer->vir = 0x7f81bc4000
-[my_buffer] chn=0 idx=6 virt=547637444608 phy=4215275520 fd=11 size=3133440
-****alloc_buffer->phy = 0xfb000000,alloc_buffer->vir = 0x7f818c7000
-[my_buffer] chn=0 idx=7 virt=547634311168 phy=4211081216 fd=12 size=3133440
-****alloc_buffer->phy = 0xfac00000,alloc_buffer->vir = 0x7f815ca000
-[my_buffer] chn=0 idx=8 virt=547631177728 phy=4206886912 fd=13 size=3133440
-****alloc_buffer->phy = 0xfa800000,alloc_buffer->vir = 0x7f812cd000
-[my_buffer] chn=0 idx=9 virt=547628044288 phy=4202692608 fd=14 size=3133440
-****alloc_buffer->phy = 0xfa400000,alloc_buffer->vir = 0x7f80fd0000
-[my_buffer] chn=0 idx=10 virt=547624910848 phy=4198498304 fd=15 size=3133440
-****alloc_buffer->phy = 0xfa000000,alloc_buffer->vir = 0x7f80cd3000
-[my_buffer] chn=0 idx=11 virt=547621777408 phy=4194304000 fd=16 size=3133440
+allocOpen(MEM_TYPE_CDX_NEW) ok, ops=0x7fb36740a8
+****alloc_buffer->phy = 0xfcc00000,alloc_buffer->vir = 0x7fb2b03000
+[my_buffer] chn=0 idx=0 virt=548458737664 phy=4240441344 fd=5 size=3133440
+****alloc_buffer->phy = 0xfc800000,alloc_buffer->vir = 0x7fb2806000
+[my_buffer] chn=0 idx=1 virt=548455604224 phy=4236247040 fd=6 size=3133440
+****alloc_buffer->phy = 0xfc400000,alloc_buffer->vir = 0x7fb2509000
+[my_buffer] chn=0 idx=2 virt=548452470784 phy=4232052736 fd=7 size=3133440
+****alloc_buffer->phy = 0xfc000000,alloc_buffer->vir = 0x7fb220c000
+[my_buffer] chn=0 idx=3 virt=548449337344 phy=4227858432 fd=8 size=3133440
+****alloc_buffer->phy = 0xfbc00000,alloc_buffer->vir = 0x7fb1f0f000
+[my_buffer] chn=0 idx=4 virt=548446203904 phy=4223664128 fd=9 size=3133440
+****alloc_buffer->phy = 0xfb800000,alloc_buffer->vir = 0x7fb1c12000
+[my_buffer] chn=0 idx=5 virt=548443070464 phy=4219469824 fd=10 size=3133440
+****alloc_buffer->phy = 0xfb400000,alloc_buffer->vir = 0x7fb1915000
+[my_buffer] chn=0 idx=6 virt=548439937024 phy=4215275520 fd=11 size=3133440
+****alloc_buffer->phy = 0xfb000000,alloc_buffer->vir = 0x7fb1618000
+[my_buffer] chn=0 idx=7 virt=548436803584 phy=4211081216 fd=12 size=3133440
+****alloc_buffer->phy = 0xfac00000,alloc_buffer->vir = 0x7fb131b000
+[my_buffer] chn=0 idx=8 virt=548433670144 phy=4206886912 fd=13 size=3133440
+****alloc_buffer->phy = 0xfa800000,alloc_buffer->vir = 0x7fb101e000
+[my_buffer] chn=0 idx=9 virt=548430536704 phy=4202692608 fd=14 size=3133440
+****alloc_buffer->phy = 0xfa400000,alloc_buffer->vir = 0x7fb0d21000
+[my_buffer] chn=0 idx=10 virt=548427403264 phy=4198498304 fd=15 size=3133440
+****alloc_buffer->phy = 0xfa000000,alloc_buffer->vir = 0x7fb0a24000
+[my_buffer] chn=0 idx=11 virt=548424269824 phy=4194304000 fd=16 size=3133440
 m_VideoBuf[0].size() = 12
-****alloc_buffer->phy = 0xf9c00000,alloc_buffer->vir = 0x7f809d6000
-[my_buffer] chn=1 idx=0 virt=547618643968 phy=4190109696 fd=17 size=3133440
-****alloc_buffer->phy = 0xf9800000,alloc_buffer->vir = 0x7f806d9000
-[my_buffer] chn=1 idx=1 virt=547615510528 phy=4185915392 fd=18 size=3133440
-****alloc_buffer->phy = 0xf9400000,alloc_buffer->vir = 0x7f803dc000
-[my_buffer] chn=1 idx=2 virt=547612377088 phy=4181721088 fd=19 size=3133440
-****alloc_buffer->phy = 0xf9000000,alloc_buffer->vir = 0x7f800df000
-[my_buffer] chn=1 idx=3 virt=547609243648 phy=4177526784 fd=20 size=3133440
-****alloc_buffer->phy = 0xf8c00000,alloc_buffer->vir = 0x7f7fde2000
-[my_buffer] chn=1 idx=4 virt=547606110208 phy=4173332480 fd=21 size=3133440
-****alloc_buffer->phy = 0xf8800000,alloc_buffer->vir = 0x7f7fae5000
-[my_buffer] chn=1 idx=5 virt=547602976768 phy=4169138176 fd=22 size=3133440
-****alloc_buffer->phy = 0xf8400000,alloc_buffer->vir = 0x7f7f7e8000
-[my_buffer] chn=1 idx=6 virt=547599843328 phy=4164943872 fd=23 size=3133440
-****alloc_buffer->phy = 0xf8000000,alloc_buffer->vir = 0x7f7f4eb000
-[my_buffer] chn=1 idx=7 virt=547596709888 phy=4160749568 fd=24 size=3133440
-****alloc_buffer->phy = 0xf7c00000,alloc_buffer->vir = 0x7f7f1ee000
-[my_buffer] chn=1 idx=8 virt=547593576448 phy=4156555264 fd=25 size=3133440
-****alloc_buffer->phy = 0xf7800000,alloc_buffer->vir = 0x7f7eef1000
-[my_buffer] chn=1 idx=9 virt=547590443008 phy=4152360960 fd=26 size=3133440
-****alloc_buffer->phy = 0xf7400000,alloc_buffer->vir = 0x7f7ebf4000
-[my_buffer] chn=1 idx=10 virt=547587309568 phy=4148166656 fd=27 size=3133440
-****alloc_buffer->phy = 0xf7000000,alloc_buffer->vir = 0x7f7e8f7000
-[my_buffer] chn=1 idx=11 virt=547584176128 phy=4143972352 fd=28 size=3133440
+****alloc_buffer->phy = 0xf9c00000,alloc_buffer->vir = 0x7fb0727000
+[my_buffer] chn=1 idx=0 virt=548421136384 phy=4190109696 fd=17 size=3133440
+****alloc_buffer->phy = 0xf9800000,alloc_buffer->vir = 0x7fb042a000
+[my_buffer] chn=1 idx=1 virt=548418002944 phy=4185915392 fd=18 size=3133440
+****alloc_buffer->phy = 0xf9400000,alloc_buffer->vir = 0x7fb012d000
+[my_buffer] chn=1 idx=2 virt=548414869504 phy=4181721088 fd=19 size=3133440
+****alloc_buffer->phy = 0xf9000000,alloc_buffer->vir = 0x7fafe30000
+[my_buffer] chn=1 idx=3 virt=548411736064 phy=4177526784 fd=20 size=3133440
+****alloc_buffer->phy = 0xf8c00000,alloc_buffer->vir = 0x7fafb33000
+[my_buffer] chn=1 idx=4 virt=548408602624 phy=4173332480 fd=21 size=3133440
+****alloc_buffer->phy = 0xf8800000,alloc_buffer->vir = 0x7faf836000
+[my_buffer] chn=1 idx=5 virt=548405469184 phy=4169138176 fd=22 size=3133440
+****alloc_buffer->phy = 0xf8400000,alloc_buffer->vir = 0x7faf539000
+[my_buffer] chn=1 idx=6 virt=548402335744 phy=4164943872 fd=23 size=3133440
+****alloc_buffer->phy = 0xf8000000,alloc_buffer->vir = 0x7faf23c000
+[my_buffer] chn=1 idx=7 virt=548399202304 phy=4160749568 fd=24 size=3133440
+****alloc_buffer->phy = 0xf7c00000,alloc_buffer->vir = 0x7faef3f000
+[my_buffer] chn=1 idx=8 virt=548396068864 phy=4156555264 fd=25 size=3133440
+****alloc_buffer->phy = 0xf7800000,alloc_buffer->vir = 0x7faec42000
+[my_buffer] chn=1 idx=9 virt=548392935424 phy=4152360960 fd=26 size=3133440
+****alloc_buffer->phy = 0xf7400000,alloc_buffer->vir = 0x7fae945000
+[my_buffer] chn=1 idx=10 virt=548389801984 phy=4148166656 fd=27 size=3133440
+****alloc_buffer->phy = 0xf7000000,alloc_buffer->vir = 0x7fae648000
+[my_buffer] chn=1 idx=11 virt=548386668544 phy=4143972352 fd=28 size=3133440
 m_VideoBuf[1].size() = 12
-****alloc_buffer->phy = 0xf6c00000,alloc_buffer->vir = 0x7f7e5fa000
-[my_buffer] chn=2 idx=0 virt=547581042688 phy=4139778048 fd=29 size=3133440
-****alloc_buffer->phy = 0xf6800000,alloc_buffer->vir = 0x7f7e2fd000
-[my_buffer] chn=2 idx=1 virt=547577909248 phy=4135583744 fd=30 size=3133440
-****alloc_buffer->phy = 0xf6400000,alloc_buffer->vir = 0x7f7e000000
-[my_buffer] chn=2 idx=2 virt=547574775808 phy=4131389440 fd=31 size=3133440
-****alloc_buffer->phy = 0xf6000000,alloc_buffer->vir = 0x7f7dd03000
-[my_buffer] chn=2 idx=3 virt=547571642368 phy=4127195136 fd=32 size=3133440
-****alloc_buffer->phy = 0xf5c00000,alloc_buffer->vir = 0x7f7da06000
-[my_buffer] chn=2 idx=4 virt=547568508928 phy=4123000832 fd=33 size=3133440
-****alloc_buffer->phy = 0xf5800000,alloc_buffer->vir = 0x7f7d709000
-[my_buffer] chn=2 idx=5 virt=547565375488 phy=4118806528 fd=34 size=3133440
-****alloc_buffer->phy = 0xf5400000,alloc_buffer->vir = 0x7f7d40c000
-[my_buffer] chn=2 idx=6 virt=547562242048 phy=4114612224 fd=35 size=3133440
-****alloc_buffer->phy = 0xf5000000,alloc_buffer->vir = 0x7f7d10f000
-[my_buffer] chn=2 idx=7 virt=547559108608 phy=4110417920 fd=36 size=3133440
-****alloc_buffer->phy = 0xf4c00000,alloc_buffer->vir = 0x7f7ce12000
-[my_buffer] chn=2 idx=8 virt=547555975168 phy=4106223616 fd=37 size=3133440
-****alloc_buffer->phy = 0xf4800000,alloc_buffer->vir = 0x7f7cb15000
-[my_buffer] chn=2 idx=9 virt=547552841728 phy=4102029312 fd=38 size=3133440
-****alloc_buffer->phy = 0xf4400000,alloc_buffer->vir = 0x7f7c818000
-[my_buffer] chn=2 idx=10 virt=547549708288 phy=4097835008 fd=39 size=3133440
-****alloc_buffer->phy = 0xf4000000,alloc_buffer->vir = 0x7f7c51b000
-[my_buffer] chn=2 idx=11 virt=547546574848 phy=4093640704 fd=40 size=3133440
+****alloc_buffer->phy = 0xf6c00000,alloc_buffer->vir = 0x7fae34b000
+[my_buffer] chn=2 idx=0 virt=548383535104 phy=4139778048 fd=29 size=3133440
+****alloc_buffer->phy = 0xf6800000,alloc_buffer->vir = 0x7fae04e000
+[my_buffer] chn=2 idx=1 virt=548380401664 phy=4135583744 fd=30 size=3133440
+****alloc_buffer->phy = 0xf6400000,alloc_buffer->vir = 0x7fadd51000
+[my_buffer] chn=2 idx=2 virt=548377268224 phy=4131389440 fd=31 size=3133440
+****alloc_buffer->phy = 0xf6000000,alloc_buffer->vir = 0x7fada54000
+[my_buffer] chn=2 idx=3 virt=548374134784 phy=4127195136 fd=32 size=3133440
+****alloc_buffer->phy = 0xf5c00000,alloc_buffer->vir = 0x7fad757000
+[my_buffer] chn=2 idx=4 virt=548371001344 phy=4123000832 fd=33 size=3133440
+****alloc_buffer->phy = 0xf5800000,alloc_buffer->vir = 0x7fad45a000
+[my_buffer] chn=2 idx=5 virt=548367867904 phy=4118806528 fd=34 size=3133440
+****alloc_buffer->phy = 0xf5400000,alloc_buffer->vir = 0x7fad15d000
+[my_buffer] chn=2 idx=6 virt=548364734464 phy=4114612224 fd=35 size=3133440
+****alloc_buffer->phy = 0xf5000000,alloc_buffer->vir = 0x7face60000
+[my_buffer] chn=2 idx=7 virt=548361601024 phy=4110417920 fd=36 size=3133440
+****alloc_buffer->phy = 0xf4c00000,alloc_buffer->vir = 0x7facb63000
+[my_buffer] chn=2 idx=8 virt=548358467584 phy=4106223616 fd=37 size=3133440
+****alloc_buffer->phy = 0xf4800000,alloc_buffer->vir = 0x7fac866000
+[my_buffer] chn=2 idx=9 virt=548355334144 phy=4102029312 fd=38 size=3133440
+****alloc_buffer->phy = 0xf4400000,alloc_buffer->vir = 0x7fac569000
+[my_buffer] chn=2 idx=10 virt=548352200704 phy=4097835008 fd=39 size=3133440
+****alloc_buffer->phy = 0xf4000000,alloc_buffer->vir = 0x7fac26c000
+[my_buffer] chn=2 idx=11 virt=548349067264 phy=4093640704 fd=40 size=3133440
 m_VideoBuf[2].size() = 12
-****alloc_buffer->phy = 0xf3c00000,alloc_buffer->vir = 0x7f7c21e000
-[my_buffer] chn=3 idx=0 virt=547543441408 phy=4089446400 fd=41 size=3133440
-****alloc_buffer->phy = 0xf3800000,alloc_buffer->vir = 0x7f7bf21000
-[my_buffer] chn=3 idx=1 virt=547540307968 phy=4085252096 fd=42 size=3133440
-****alloc_buffer->phy = 0xf3400000,alloc_buffer->vir = 0x7f7bc24000
-[my_buffer] chn=3 idx=2 virt=547537174528 phy=4081057792 fd=43 size=3133440
-****alloc_buffer->phy = 0xf3000000,alloc_buffer->vir = 0x7f7b927000
-[my_buffer] chn=3 idx=3 virt=547534041088 phy=4076863488 fd=44 size=3133440
-****alloc_buffer->phy = 0xf2c00000,alloc_buffer->vir = 0x7f7b62a000
-[my_buffer] chn=3 idx=4 virt=547530907648 phy=4072669184 fd=45 size=3133440
-****alloc_buffer->phy = 0xf2800000,alloc_buffer->vir = 0x7f7b32d000
-[my_buffer] chn=3 idx=5 virt=547527774208 phy=4068474880 fd=46 size=3133440
-****alloc_buffer->phy = 0xf2400000,alloc_buffer->vir = 0x7f7b030000
-[my_buffer] chn=3 idx=6 virt=547524640768 phy=4064280576 fd=47 size=3133440
-****alloc_buffer->phy = 0xf2000000,alloc_buffer->vir = 0x7f7ad33000
-[my_buffer] chn=3 idx=7 virt=547521507328 phy=4060086272 fd=48 size=3133440
-****alloc_buffer->phy = 0xf1c00000,alloc_buffer->vir = 0x7f7aa36000
-[my_buffer] chn=3 idx=8 virt=547518373888 phy=4055891968 fd=49 size=3133440
-****alloc_buffer->phy = 0xf1800000,alloc_buffer->vir = 0x7f7a739000
-[my_buffer] chn=3 idx=9 virt=547515240448 phy=4051697664 fd=50 size=3133440
-****alloc_buffer->phy = 0xf1400000,alloc_buffer->vir = 0x7f7a43c000
-[my_buffer] chn=3 idx=10 virt=547512107008 phy=4047503360 fd=51 size=3133440
-****alloc_buffer->phy = 0xf1000000,alloc_buffer->vir = 0x7f7a13f000
-[my_buffer] chn=3 idx=11 virt=547508973568 phy=4043309056 fd=52 size=3133440
+****alloc_buffer->phy = 0xf3c00000,alloc_buffer->vir = 0x7fabf6f000
+[my_buffer] chn=3 idx=0 virt=548345933824 phy=4089446400 fd=41 size=3133440
+****alloc_buffer->phy = 0xf3800000,alloc_buffer->vir = 0x7fabc72000
+[my_buffer] chn=3 idx=1 virt=548342800384 phy=4085252096 fd=42 size=3133440
+****alloc_buffer->phy = 0xf3400000,alloc_buffer->vir = 0x7fab975000
+[my_buffer] chn=3 idx=2 virt=548339666944 phy=4081057792 fd=43 size=3133440
+****alloc_buffer->phy = 0xf3000000,alloc_buffer->vir = 0x7fab678000
+[my_buffer] chn=3 idx=3 virt=548336533504 phy=4076863488 fd=44 size=3133440
+****alloc_buffer->phy = 0xf2c00000,alloc_buffer->vir = 0x7fab37b000
+[my_buffer] chn=3 idx=4 virt=548333400064 phy=4072669184 fd=45 size=3133440
+****alloc_buffer->phy = 0xf2800000,alloc_buffer->vir = 0x7fab07e000
+[my_buffer] chn=3 idx=5 virt=548330266624 phy=4068474880 fd=46 size=3133440
+****alloc_buffer->phy = 0xf2400000,alloc_buffer->vir = 0x7faad81000
+[my_buffer] chn=3 idx=6 virt=548327133184 phy=4064280576 fd=47 size=3133440
+****alloc_buffer->phy = 0xf2000000,alloc_buffer->vir = 0x7faaa84000
+[my_buffer] chn=3 idx=7 virt=548323999744 phy=4060086272 fd=48 size=3133440
+****alloc_buffer->phy = 0xf1c00000,alloc_buffer->vir = 0x7faa787000
+[my_buffer] chn=3 idx=8 virt=548320866304 phy=4055891968 fd=49 size=3133440
+****alloc_buffer->phy = 0xf1800000,alloc_buffer->vir = 0x7faa48a000
+[my_buffer] chn=3 idx=9 virt=548317732864 phy=4051697664 fd=50 size=3133440
+****alloc_buffer->phy = 0xf1400000,alloc_buffer->vir = 0x7faa18d000
+[my_buffer] chn=3 idx=10 virt=548314599424 phy=4047503360 fd=51 size=3133440
+****alloc_buffer->phy = 0xf1000000,alloc_buffer->vir = 0x7fa9e90000
+[my_buffer] chn=3 idx=11 virt=548311465984 phy=4043309056 fd=52 size=3133440
 m_VideoBuf[3].size() = 12
-pid: 11106, g_pAllocContext = 0x13e20c70
+pid: 5259, g_pAllocContext = 0xa8b8c70
 debug  : cedarc <CdcIniParserInit:24>: CdcIniParserInit
 debug  : cedarc <CdcIniParserInit:35>: load conf file /etc/cedarc.conf ok!
 
@@ -204,7 +204,7 @@ debug  : cedarc <VeInitialize:1330>: ve init ok
 debug  : cedarc <VideoEngineCreate:428>: *** pEngine->nIcVeVersion = 3301000012011, decIpVersion = 33010
 debug  : cedarc <VeGetChipId:1563>: 00007400
 
-debug  : cedarc <VideoEngineCreate:562>: **************eCtlAfcbMode = -2087571288
+debug  : cedarc <VideoEngineCreate:562>: **************eCtlAfcbMode = -1285078872
 debug  : cedarc <H264DecoderInit:238>:  get the nIcversion = 3301000012011, nDecIpVersion = 33010
 debug  : cedarc <GetSbmInterface:1768>: *********GetSbmInterface, nType=4
 
@@ -212,18 +212,14 @@ debug  : cedarc <GetSbmInterfaceFrame:1725>: ******* sbm-type: Frame*******
 debug  : cedarc <SbmFrameInit:197>: ************pSbm->sbmInterface.bUseNewVeMemoryProgram=0
 
 debug  : cedarc <CdcMessageQueueCreate:51>: nMessageSize = 40
-[vdec-extbuf] chn=0 sync ve context skipped decoderCtx=0x13e2c890 engine=(nil)
+[vdec-extbuf] chn=0 sync ve context skipped decoderCtx=0xa8c4890 engine=(nil)
 [I]main line:768 puller loop started, start Opengl
-=============> OpenGL thread started, tid: 547483795888
-puller[0] start, tid=11171 bind cpu=0
-=============> Decode thread for channel 0 started, tid: 547475403184
+=============> OpenGL thread started, tid: 548286288304
+=============> Decode thread for channel 0 started, tid: 548277895600
 listen_body: chn:0
+puller[0] start, tid=5332 bind cpu=0
 Opening connection to 192.168.88.40, port 554...
 [I]loop line:60 RTSP connected successfully, start eventloop
-EGL Version: "1.4 Bifrost-"r20p0-01rel0""
-EGL Vendor: "ARM"
-EGL Extensions: "EGL_KHR_partial_update EGL_KHR_config_attribs EGL_KHR_image EGL_KHR_image_base EGL_KHR_fence_sync EGL_KHR_wait_sync EGL_KHR_gl_colorspace EGL_KHR_get_all_proc_addresses EGL_IMG_context_priority EGL_KHR_no_config_context EGL_EXT_image_dma_buf_import EGL_EXT_pixel_format_float EGL_ARM_pixmap_multisample_discard EGL_EXT_protected_surface EGL_ARM_implicit_external_sync EGL_KHR_gl_texture_2D_image EGL_KHR_gl_renderbuffer_image EGL_KHR_create_context EGL_KHR_surfaceless_context EGL_KHR_gl_texture_cubemap_image EGL_EXT_image_gl_colorspace EGL_EXT_create_context_robustness"
-
 ...remote connection opened
 Sending request: DESCRIBE rtsp://192.168.88.40/mainstream RTSP/1.0
 CSeq: 2
@@ -231,8 +227,10 @@ User-Agent: rtspPuller (LIVE555 Streaming Media v2015.03.06)
 Accept: application/sdp
 
 
-GL_MAX_SAMPLES_IMG:: maxSamples =  -1
-native_window.width = 1280, native_window.height = 720
+EGL Version: "1.4 Bifrost-"r20p0-01rel0""
+EGL Vendor: "ARM"
+EGL Extensions: "EGL_KHR_partial_update EGL_KHR_config_attribs EGL_KHR_image EGL_KHR_image_base EGL_KHR_fence_sync EGL_KHR_wait_sync EGL_KHR_gl_colorspace EGL_KHR_get_all_proc_addresses EGL_IMG_context_priority EGL_KHR_no_config_context EGL_EXT_image_dma_buf_import EGL_EXT_pixel_format_float EGL_ARM_pixmap_multisample_discard EGL_EXT_protected_surface EGL_ARM_implicit_external_sync EGL_KHR_gl_texture_2D_image EGL_KHR_gl_renderbuffer_image EGL_KHR_create_context EGL_KHR_surfaceless_context EGL_KHR_gl_texture_cubemap_image EGL_EXT_image_gl_colorspace EGL_EXT_create_context_robustness"
+
 Received 404 new bytes of response data.
 Received a complete DESCRIBE response:
 RTSP/1.0 200 OK
@@ -241,7 +239,7 @@ Content-Length: 324
 Content-Type: application/sdp
 
 v=0
-o=- 91577837212 1 IN IP4 192.168.88.40
+o=- 91577836874 1 IN IP4 192.168.88.40
 t=0 0
 a=control:*
 m=video 0 RTP/AVP 96
@@ -252,7 +250,6 @@ a=control:track0
 m=audio 0 RTP/AVP 8
 a=rtpmap:8 PCMA/16000/1
 a=control:track1
-Surface size: 1280 * 720
 
 Sending request: SETUP rtsp://192.168.88.40/mainstream/track0 RTSP/1.0
 CSeq: 3
@@ -260,18 +257,21 @@ User-Agent: rtspPuller (LIVE555 Streaming Media v2015.03.06)
 Transport: RTP/AVP/TCP;unicast;interleaved=0-1
 
 
+GL_MAX_SAMPLES_IMG:: maxSamples =  -1
+native_window.width = 1280, native_window.height = 720
 Received 92 new bytes of response data.
 Received a complete SETUP response:
 RTSP/1.0 200 OK
 CSeq: 3
 Transport: RTP/AVP/TCP;unicast;interleaved=0-1
-Session: 62416
+Session: 16968
 
 
+Surface size: 1280 * 720
 Sending request: PLAY rtsp://192.168.88.40/mainstream RTSP/1.0
 CSeq: 4
 User-Agent: rtspPuller (LIVE555 Streaming Media v2015.03.06)
-Session: 62416
+Session: 16968
 Range: npt=0.000-
 
 
@@ -279,25 +279,23 @@ Received a complete PLAY response:
 RTSP/1.0 200 OK
 CSeq: 4
 Range: npt=0.000-
-Session: 62416; timeout=60
+Session: 16968; timeout=60
 
 
 PLAY started
 secceed to setupTexture!
-[pipe-prof] chn=0 elapsed_ms=1028.8 pop=27 send=0 send_fail=0 load=0 null=0 drop_pre=27 drop_resync=0 idr=0 qmax=0 in_kb=0.0 out_kb=0.0 popwait_avg=52.223 popwait_max=382.213 send_avg=0.000 send_max=0.000 get_avg=0.000 get_max=0.000 load_avg=0.000 load_max=0.000 loop_avg=52.260 loop_max=382.289
 debug  : cedarc <AvcSbmFrameCheckBitStreamType:325>: result: bStreamWithStartCode[1], with[1], whitout[0]
-[vdec-sync] chn=0 primed on IDR size=140778
+[vdec-sync] chn=0 primed on IDR size=107617
 debug  : cedarc <H264DecVuiParameters:341>: nFrameRate=25
 debug  : cedarc <H264DecodePictureScanType:2779>: here3:hCtx->bProgressice=1
 
-[vdec-fail] chn=0 ret=0 streak=1 total=1 frameType=P inputLen=3823 retained=2 retainedBytes=144026
-[dec-resync-arm] chn=0 sendRet=-1 q=1 nal=1 pkt=3819 out=3823 idr=0 first_mb=0 primed=1 sps=20 pps=4 extra=0
-[dec-fail] chn=0 sendRet=-1 q=1 nal=1 pkt=3819 out=3823 idr=0 first_mb=0 primed=1 sps=20 pps=4 extra=0
-[dec-fail-hist] chn=0 idx=0 q=0 nal=5 pkt=140778 out=140814 idr=1 first_mb=0 primed=0 sps=20 pps=4 extra=1
-[dec-fail-hist] chn=0 idx=1 q=0 nal=1 pkt=3208 out=3212 idr=0 first_mb=0 primed=1 sps=20 pps=4 extra=0
-[dec-fail-hist] chn=0 idx=2 q=1 nal=1 pkt=3819 out=3823 idr=0 first_mb=0 primed=1 sps=20 pps=4 extra=0
-[pipe-prof] chn=0 elapsed_ms=1000.1 pop=25 send=3 send_fail=1 load=0 null=2 drop_pre=16 drop_resync=6 idr=1 qmax=1 in_kb=144.3 out_kb=144.4 popwait_avg=39.846 popwait_max=190.477 send_avg=0.298 send_max=0.479 get_avg=0.001 get_max=0.001 load_avg=0.000 load_max=0.000 loop_avg=39.996 loop_max=192.910
-[pipe-prof] chn=0 elapsed_ms=1003.0 pop=25 send=0 send_fail=0 load=0 null=0 drop_pre=0 drop_resync=25 idr=0 qmax=0 in_kb=0.0 out_kb=0.0 popwait_avg=40.080 popwait_max=64.965 send_avg=0.000 send_max=0.000 get_avg=0.000 get_max=0.000 load_avg=0.000 load_max=0.000 loop_avg=40.113 loop_max=64.999
+[vdec-fail] chn=0 ret=0 streak=1 total=1 frameType=P inputLen=3192 retained=2 retainedBytes=177896
+[dec-resync-arm] chn=0 sendRet=-1 q=2 nal=1 pkt=3188 out=3192 idr=0 first_mb=0 primed=1 sps=20 pps=4 extra=0
+[dec-fail] chn=0 sendRet=-1 q=2 nal=1 pkt=3188 out=3192 idr=0 first_mb=0 primed=1 sps=20 pps=4 extra=0
+[dec-fail-hist] chn=0 idx=0 q=0 nal=5 pkt=107617 out=107653 idr=1 first_mb=0 primed=0 sps=20 pps=4 extra=1
+[dec-fail-hist] chn=0 idx=1 q=3 nal=5 pkt=70207 out=70243 idr=1 first_mb=0 primed=1 sps=20 pps=4 extra=1
+[dec-fail-hist] chn=0 idx=2 q=2 nal=1 pkt=3188 out=3192 idr=0 first_mb=0 primed=1 sps=20 pps=4 extra=0
+[pipe-prof] chn=0 elapsed_ms=1014.9 pop=31 send=3 send_fail=1 load=0 null=2 drop_pre=0 drop_resync=28 idr=2 qmax=3 in_kb=176.8 out_kb=176.8 popwait_avg=40.385 popwait_max=239.626 send_avg=0.304 send_max=0.421 get_avg=0.001 get_max=0.001 load_avg=0.000 load_max=0.000 loop_avg=40.525 loop_max=241.398
 debug  : cedarc <VeSetEnableAfbcFlag:1771>: **** VeSetEnableAfbcFlag: 0
 debug  : fbm.c <FbmCreateBuffer:148>: FbmCreate, total fbm number: 6, decoder needed: 2,  nWidth=1920, nHeight=1088 nAlignStride = 0
 debug  : fbm.c <FbmCreateBuffer:252>: ** call allocate pic buf, i = 0, maxNum = 6
@@ -313,73 +311,86 @@ debug  : fbm.c <FbmAllocatePictureBuffer:1454>: pPicture->bEnableAfbcFlag = 0
 debug  : fbm.c <FbmCreateBuffer:252>: ** call allocate pic buf, i = 5, maxNum = 6
 debug  : fbm.c <FbmAllocatePictureBuffer:1454>: pPicture->bEnableAfbcFlag = 0
 debug  : fbm.c <FbmCreateBuffer:405>: *** finish fbmCreateBuffer
-[vdec-prof] chn=0 extbuf=1 elapsed_ms=2001.5 decode=4 fail=1 decode_avg=3.474 decode_max=13.406 decode_only_avg=3.474 decode_only_max=13.406 in_decode_cb_avg=0.000 in_decode_cb_max=0.000 cb=0 cb_in=0 cb_out=0 cb_avg=0.000 cb_max=0.000 copy_avg=0.000 copy_max=0.000 sync_avg=0.000 sync_max=0.000
-[vdec-recover] chn=0 streak=1 total=1 frameType=U inputLen=123416
-[dec-resync-release] chn=0 dropped=47 idr_size=123380
-[vdec-extbuf] chn=0 display picture missing private buffer binding
-[vdec-extbuf] chn=0 display picture missing private buffer binding
-[vdec-extbuf] chn=0 display picture missing private buffer binding
-[vdec-extbuf] chn=0 display picture missing private buffer binding
-[vdec-extbuf] chn=0 display picture missing private buffer binding
-[vdec-extbuf] chn=0 display picture missing private buffer binding
-[vdec-extbuf] chn=0 display picture missing private buffer binding
-[vdec-extbuf] chn=0 display picture missing private buffer binding
-[pipe-prof] chn=0 elapsed_ms=1006.9 pop=25 send=9 send_fail=0 load=0 null=9 drop_pre=0 drop_resync=16 idr=1 qmax=2 in_kb=146.6 out_kb=146.6 popwait_avg=37.193 popwait_max=179.443 send_avg=8.246 send_max=13.641 get_avg=0.034 get_max=0.072 load_avg=0.000 load_max=0.000 loop_avg=40.270 loop_max=194.530
-[vdec-extbuf] chn=0 display picture missing private buffer binding
-[vdec-extbuf] chn=0 display picture missing private buffer binding
-[vdec-extbuf] chn=0 display picture missing private buffer binding
-[vdec-extbuf] chn=0 display picture missing private buffer binding
-[vdec-extbuf] chn=0 display picture missing private buffer binding
-[vdec-extbuf] chn=0 display picture missing private buffer binding
-[vdec-extbuf] chn=0 display picture missing private buffer binding
-[vdec-extbuf] chn=0 display picture missing private buffer binding
-[vdec-extbuf] chn=0 display picture missing private buffer binding
-[vdec-extbuf] chn=0 display picture missing private buffer binding
-[vdec-extbuf] chn=0 display picture missing private buffer binding
-[vdec-extbuf] chn=0 display picture missing private buffer binding
-[vdec-extbuf] chn=0 display picture missing private buffer binding
-[vdec-extbuf] chn=0 display picture missing private buffer binding
-[vdec-extbuf] chn=0 display picture missing private buffer binding
-[vdec-extbuf] chn=0 display picture missing private buffer binding
-[vdec-extbuf] chn=0 display picture missing private buffer binding
-[vdec-extbuf] chn=0 display picture missing private buffer binding
+[vdec-prof] chn=0 extbuf=1 elapsed_ms=2006.6 decode=4 fail=1 decode_avg=3.591 decode_max=13.823 decode_only_avg=3.591 decode_only_max=13.823 in_decode_cb_avg=0.000 in_decode_cb_max=0.000 cb=0 cb_in=0 cb_out=0 cb_avg=0.000 cb_max=0.000 copy_avg=0.000 copy_max=0.000 sync_avg=0.000 sync_max=0.000
+[vdec-recover] chn=0 streak=1 total=1 frameType=U inputLen=121029
+[dec-resync-release] chn=0 dropped=48 idr_size=120993
+[pipe-prof] chn=0 elapsed_ms=1005.0 pop=23 send=3 send_fail=0 load=0 null=3 drop_pre=0 drop_resync=20 idr=1 qmax=2 in_kb=121.6 out_kb=121.6 popwait_avg=42.401 popwait_max=172.323 send_avg=9.097 send_max=14.082 get_avg=0.000 get_max=0.000 load_avg=0.000 load_max=0.000 loop_avg=43.691 loop_max=187.857
 [vdec-extbuf] chn=0 try switch to external buffers attempt=1 frameType=P count=31
 debug  : cedarc <VeGetChipId:1563>: 00007400
 
 debug  : cedarc <H264DecoderInit:238>:  get the nIcversion = 3301000012011, nDecIpVersion = 33010
-[vdec-extbuf] chn=0 sync ve context skipped decoderCtx=0x13e2c890 engine=(nil)
+[vdec-extbuf] chn=0 sync ve context skipped decoderCtx=0xa8c4890 engine=(nil)
 [vdec-extbuf] chn=0 reopened decoder gpu=1
 [vdec-extbuf] chn=0 fbm info not ready yet
-[vdec-extbuf] chn=0 register after reopen failed ret=1, fallback to internal buffers
-debug  : cedarc <VeGetChipId:1563>: 00007400
-
-debug  : cedarc <H264DecoderInit:238>:  get the nIcversion = 3301000012011, nDecIpVersion = 33010
-[vdec-extbuf] chn=0 sync ve context skipped decoderCtx=0x13e2c890 engine=(nil)
-[vdec-extbuf] chn=0 reopened decoder gpu=0
-[vdec-prof] chn=0 extbuf=1 elapsed_ms=1004.9 decode=29 fail=0 decode_avg=7.137 decode_max=7.856 decode_only_avg=7.137 decode_only_max=7.856 in_decode_cb_avg=0.000 in_decode_cb_max=0.000 cb=0 cb_in=0 cb_out=0 cb_avg=0.000 cb_max=0.000 copy_avg=0.000 copy_max=0.000 sync_avg=0.000 sync_max=0.000
-[pipe-prof] chn=0 elapsed_ms=1032.2 pop=26 send=26 send_fail=0 load=0 null=26 drop_pre=0 drop_resync=0 idr=0 qmax=0 in_kb=68.2 out_kb=68.3 popwait_avg=33.662 popwait_max=56.932 send_avg=5.926 send_max=12.177 get_avg=0.046 get_max=0.076 load_avg=0.000 load_max=0.000 loop_avg=39.695 loop_max=64.871
+[vdec-extbuf] chn=0 gpu mode reopened, fbm info still pending, keep extbuf mode alive
+[vdec-extbuf] chn=0 fbm info not ready yet
+[vdec-extbuf] chn=0 extbuf registration pending in gpu mode
+[vdec-prof] chn=0 extbuf=1 elapsed_ms=1010.4 decode=29 fail=22 decode_avg=1.195 decode_max=7.703 decode_only_avg=1.195 decode_only_max=7.703 in_decode_cb_avg=0.000 in_decode_cb_max=0.000 cb=0 cb_in=0 cb_out=0 cb_avg=0.000 cb_max=0.000 copy_avg=0.000 copy_max=0.000 sync_avg=0.000 sync_max=0.000
+[vdec-extbuf] chn=0 fbm info not ready yet
+[vdec-extbuf] chn=0 extbuf registration pending in gpu mode
+[vdec-extbuf] chn=0 fbm info not ready yet
+[vdec-extbuf] chn=0 extbuf registration pending in gpu mode
+[pipe-prof] chn=0 elapsed_ms=1038.0 pop=28 send=28 send_fail=0 load=0 null=28 drop_pre=0 drop_resync=0 idr=0 qmax=1 in_kb=84.4 out_kb=84.5 popwait_avg=35.986 popwait_max=73.871 send_avg=1.015 send_max=7.815 get_avg=0.001 get_max=0.003 load_avg=0.000 load_max=0.000 loop_avg=37.067 loop_max=74.082
+[vdec-extbuf] chn=0 fbm info not ready yet
+[vdec-extbuf] chn=0 extbuf registration pending in gpu mode
+[vdec-extbuf] chn=0 fbm info not ready yet
+[vdec-extbuf] chn=0 extbuf registration pending in gpu mode
+[vdec-extbuf] chn=0 fbm info not ready yet
+[vdec-extbuf] chn=0 extbuf registration pending in gpu mode
+[vdec-extbuf] chn=0 fbm info not ready yet
+[vdec-extbuf] chn=0 extbuf registration pending in gpu mode
+[vdec-extbuf] chn=0 fbm info not ready yet
+[vdec-extbuf] chn=0 extbuf registration pending in gpu mode
+[vdec-extbuf] chn=0 fbm info not ready yet
+[vdec-extbuf] chn=0 extbuf registration pending in gpu mode
+[vdec-extbuf] chn=0 fbm info not ready yet
+[vdec-extbuf] chn=0 extbuf registration pending in gpu mode
+[vdec-extbuf] chn=0 fbm info not ready yet
+[vdec-extbuf] chn=0 extbuf registration pending in gpu mode
+[vdec-extbuf] chn=0 fbm info not ready yet
+[vdec-extbuf] chn=0 extbuf registration pending in gpu mode
+[vdec-extbuf] chn=0 fbm info not ready yet
+[vdec-extbuf] chn=0 extbuf registration pending in gpu mode
+[vdec-extbuf] chn=0 fbm info not ready yet
+[vdec-extbuf] chn=0 extbuf registration pending in gpu mode
+[vdec-extbuf] chn=0 fbm info not ready yet
+[vdec-extbuf] chn=0 extbuf registration pending in gpu mode
+[vdec-extbuf] chn=0 fbm info not ready yet
+[vdec-extbuf] chn=0 extbuf registration pending in gpu mode
+[vdec-extbuf] chn=0 fbm info not ready yet
+[vdec-extbuf] chn=0 extbuf registration pending in gpu mode
+[vdec-extbuf] chn=0 fbm info not ready yet
+[vdec-extbuf] chn=0 extbuf registration pending in gpu mode
+[vdec-extbuf] chn=0 fbm info not ready yet
+[vdec-extbuf] chn=0 extbuf registration pending in gpu mode
+[vdec-extbuf] chn=0 fbm info not ready yet
+[vdec-extbuf] chn=0 extbuf registration pending in gpu mode
+[vdec-extbuf] chn=0 fbm info not ready yet
+[vdec-extbuf] chn=0 extbuf registration pending in gpu mode
+[vdec-extbuf] chn=0 fbm info not ready yet
+[vdec-extbuf] chn=0 extbuf registration pending in gpu mode
 debug  : cedarc <H264DecVuiParameters:341>: nFrameRate=25
+[vdec-extbuf] chn=0 fbm info not ready yet
+[vdec-extbuf] chn=0 extbuf registration pending in gpu mode
+[vdec-extbuf] chn=0 fbm info not ready yet
+[vdec-extbuf] chn=0 extbuf registration pending in gpu mode
+[vdec-extbuf] chn=0 fbm info not ready yet
+[vdec-extbuf] chn=0 extbuf registration pending in gpu mode
+[vdec-extbuf] chn=0 fbm info not ready yet
+[vdec-extbuf] chn=0 extbuf registration pending in gpu mode
 debug  : cedarc <H264DecodePictureScanType:2779>: here3:hCtx->bProgressice=1
 
-[vdec-fail] chn=0 ret=0 streak=1 total=2 frameType=P inputLen=2593 retained=53 retainedBytes=526597
-[dec-resync-arm] chn=0 sendRet=-1 q=1 nal=1 pkt=2589 out=2593 idr=0 first_mb=0 primed=1 sps=20 pps=4 extra=0
-[dec-fail] chn=0 sendRet=-1 q=1 nal=1 pkt=2589 out=2593 idr=0 first_mb=0 primed=1 sps=20 pps=4 extra=0
-[dec-fail-hist] chn=0 idx=0 q=0 nal=1 pkt=2411 out=2415 idr=0 first_mb=0 primed=1 sps=20 pps=4 extra=0
-[dec-fail-hist] chn=0 idx=1 q=0 nal=1 pkt=2265 out=2269 idr=0 first_mb=0 primed=1 sps=20 pps=4 extra=0
-[dec-fail-hist] chn=0 idx=2 q=0 nal=1 pkt=2164 out=2168 idr=0 first_mb=0 primed=1 sps=20 pps=4 extra=0
-[dec-fail-hist] chn=0 idx=3 q=0 nal=1 pkt=2244 out=2248 idr=0 first_mb=0 primed=1 sps=20 pps=4 extra=0
-[dec-fail-hist] chn=0 idx=4 q=0 nal=1 pkt=2121 out=2125 idr=0 first_mb=0 primed=1 sps=20 pps=4 extra=0
-[dec-fail-hist] chn=0 idx=5 q=0 nal=1 pkt=5632 out=5636 idr=0 first_mb=0 primed=1 sps=20 pps=4 extra=0
-[dec-fail-hist] chn=0 idx=6 q=0 nal=5 pkt=122855 out=122891 idr=1 first_mb=0 primed=1 sps=20 pps=4 extra=1
-[dec-fail-hist] chn=0 idx=7 q=1 nal=1 pkt=2589 out=2593 idr=0 first_mb=0 primed=1 sps=20 pps=4 extra=0
-[pipe-prof] chn=0 elapsed_ms=1000.0 pop=25 send=17 send_fail=1 load=0 null=16 drop_pre=0 drop_resync=8 idr=1 qmax=1 in_kb=161.1 out_kb=161.2 popwait_avg=39.790 popwait_max=167.017 send_avg=0.128 send_max=0.197 get_avg=0.001 get_max=0.003 load_avg=0.000 load_max=0.000 loop_avg=39.993 loop_max=168.747
-[pipe-prof] chn=0 elapsed_ms=1039.0 pop=26 send=0 send_fail=0 load=0 null=0 drop_pre=0 drop_resync=26 idr=0 qmax=0 in_kb=0.0 out_kb=0.0 popwait_avg=39.921 popwait_max=64.159 send_avg=0.000 send_max=0.000 get_avg=0.000 get_max=0.000 load_avg=0.000 load_max=0.000 loop_avg=39.955 loop_max=64.178
+[vdec-extbuf] chn=0 fbm info not ready yet
+[vdec-extbuf] chn=0 extbuf registration pending in gpu mode
 debug  : cedarc <VeSetEnableAfbcFlag:1771>: **** VeSetEnableAfbcFlag: 0
 debug  : fbm.c <FbmCreateBuffer:148>: FbmCreate, total fbm number: 6, decoder needed: 2,  nWidth=1920, nHeight=1088 nAlignStride = 0
 debug  : fbm.c <FbmCreateBuffer:252>: ** call allocate pic buf, i = 0, maxNum = 6
 debug  : fbm.c <FbmAllocatePictureBuffer:1454>: pPicture->bEnableAfbcFlag = 0
 debug  : fbm.c <FbmCreateBuffer:252>: ** call allocate pic buf, i = 1, maxNum = 6
-debug  : fbm.c <FbmAllocatePictureBuffer:1454>: pPicture->bEnableAfbcFlag = 0
+debug[   70.387404] L2 PageTable Invalid
+[   70.393996] 0xfcc07000 is not mapped!
+[   70.398091] VE_R invalid address: 0xfcc07000, data:0x0, id:0x4
+  : fbm.c <FbmAllocatePictureBuffer:1454>: pPicture->bEnableAfbcFlag = 0
 debug  : fbm.c <FbmCreateBuffer:252>: ** call allocate pic buf, i = 2, maxNum = 6
 debug  : fbm.c <FbmAllocatePictureBuffer:1454>: pPicture->bEnableAfbcFlag = 0
 debug  : fbm.c <FbmCreateBuffer:252>: ** call allocate pic buf, i = 3, maxNum = 6
@@ -389,155 +400,49 @@ debug  : fbm.c <FbmAllocatePictureBuffer:1454>: pPicture->bEnableAfbcFlag = 0
 debug  : fbm.c <FbmCreateBuffer:252>: ** call allocate pic buf, i = 5, maxNum = 6
 debug  : fbm.c <FbmAllocatePictureBuffer:1454>: pPicture->bEnableAfbcFlag = 0
 debug  : fbm.c <FbmCreateBuffer:405>: *** finish fbmCreateBuffer
-[vdec-prof] chn=0 extbuf=1 elapsed_ms=2979.6 decode=23 fail=1 decode_avg=0.378 decode_max=7.892 decode_only_avg=0.378 decode_only_max=7.892 in_decode_cb_avg=0.000 in_decode_cb_max=0.000 cb=0 cb_in=0 cb_out=0 cb_avg=0.000 cb_max=0.000 copy_avg=0.000 copy_max=0.000 sync_avg=0.000 sync_max=0.000
-[vdec-extbuf] chn=0 try switch to external buffers attempt=1 frameType=U count=56
-debug  : cedarc <VeGetChipId:1563>: 00007400
-
-debug  : cedarc <H264DecoderInit:238>:  get the nIcversion = 3301000012011, nDecIpVersion = 33010
-[vdec-extbuf] chn=0 sync ve context skipped decoderCtx=0x13e2c890 engine=(nil)
-[vdec-extbuf] chn=0 reopened decoder gpu=1
-[vdec-extbuf] chn=0 fbm info not ready yet
-[vdec-extbuf] chn=0 register after reopen failed ret=1, fallback to internal buffers
-debug  : cedarc <VeGetChipId:1563>: 00007400
-
-debug  : cedarc <H264DecoderInit:238>:  get the nIcversion = 3301000012011, nDecIpVersion = 33010
-[vdec-extbuf] chn=0 sync ve context skipped decoderCtx=0x13e2c890 engine=(nil)
-[vdec-extbuf] chn=0 reopened decoder gpu=0
-[dec-resync-release] chn=0 dropped=48 idr_size=123696
-debug  : cedarc <H264DecVuiParameters:341>: nFrameRate=25
-debug  : cedarc <H264DecodePictureScanType:2779>: here3:hCtx->bProgressice=1
-
-[dec-resync-arm] chn=0 sendRet=-1 q=1 nal=1 pkt=4870 out=4874 idr=0 first_mb=0 primed=1 sps=20 pps=4 extra=0
-[dec-fail] chn=0 sendRet=-1 q=1 nal=1 pkt=4870 out=4874 idr=0 first_mb=0 primed=1 sps=20 pps=4 extra=0
-[dec-fail-hist] chn=0 idx=0 q=0 nal=1 pkt=2164 out=2168 idr=0 first_mb=0 primed=1 sps=20 pps=4 extra=0
-[dec-fail-hist] chn=0 idx=1 q=0 nal=1 pkt=2244 out=2248 idr=0 first_mb=0 primed=1 sps=20 pps=4 extra=0
-[dec-fail-hist] chn=0 idx=2 q=0 nal=1 pkt=2121 out=2125 idr=0 first_mb=0 primed=1 sps=20 pps=4 extra=0
-[dec-fail-hist] chn=0 idx=3 q=0 nal=1 pkt=5632 out=5636 idr=0 first_mb=0 primed=1 sps=20 pps=4 extra=0
-[dec-fail-hist] chn=0 idx=4 q=0 nal=5 pkt=122855 out=122891 idr=1 first_mb=0 primed=1 sps=20 pps=4 extra=1
-[dec-fail-hist] chn=0 idx=5 q=1 nal=1 pkt=2589 out=2593 idr=0 first_mb=0 primed=1 sps=20 pps=4 extra=0
-[dec-fail-hist] chn=0 idx=6 q=0 nal=5 pkt=123696 out=123732 idr=1 first_mb=0 primed=0 sps=20 pps=4 extra=1
-[dec-fail-hist] chn=0 idx=7 q=1 nal=1 pkt=4870 out=4874 idr=0 first_mb=0 primed=1 sps=20 pps=4 extra=0
-[pipe-prof] chn=0 elapsed_ms=1064.9 pop=26 send=2 send_fail=1 load=0 null=1 drop_pre=0 drop_resync=24 idr=1 qmax=1 in_kb=125.6 out_kb=125.6 popwait_avg=40.373 popwait_max=169.335 send_avg=6.212 send_max=12.126 get_avg=0.002 get_max=0.003 load_avg=0.000 load_max=0.000 loop_avg=40.953 loop_max=182.988
-[pipe-prof] chn=0 elapsed_ms=1002.0 pop=25 send=0 send_fail=0 load=0 null=0 drop_pre=0 drop_resync=25 idr=0 qmax=0 in_kb=0.0 out_kb=0.0 popwait_avg=40.040 popwait_max=66.928 send_avg=0.000 send_max=0.000 get_avg=0.000 get_max=0.000 load_avg=0.000 load_max=0.000 loop_avg=40.074 loop_max=66.957
-debug  : cedarc <VeSetEnableAfbcFlag:1771>: **** VeSetEnableAfbcFlag: 0
-debug  : fbm.c <FbmCreateBuffer:148>: FbmCreate, total fbm number: 6, decoder needed: 2,  nWidth=1920, nHeight=1088 nAlignStride = 0
-debug  : fbm.c <FbmCreateBuffer:252>: ** call allocate pic buf, i = 0, maxNum = 6
-debug  : fbm.c <FbmAllocatePictureBuffer:1454>: pPicture->bEnableAfbcFlag = 0
-debug  : fbm.c <FbmCreateBuffer:252>: ** call allocate pic buf, i = 1, maxNum = 6
-debug  : fbm.c <FbmAllocatePictureBuffer:1454>: pPicture->bEnableAfbcFlag = 0
-debug  : fbm.c <FbmCreateBuffer:252>: ** call allocate pic buf, i = 2, maxNum = 6
-debug  : fbm.c <FbmAllocatePictureBuffer:1454>: pPicture->bEnableAfbcFlag = 0
-debug  : fbm.c <FbmCreateBuffer:252>: ** call allocate pic buf, i = 3, maxNum = 6
-debug  : fbm.c <FbmAllocatePictureBuffer:1454>: pPicture->bEnableAfbcFlag = 0
-debug  : fbm.c <FbmCreateBuffer:252>: ** call allocate pic buf, i = 4, maxNum = 6
-debug  : fbm.c <FbmAllocatePictureBuffer:1454>: pPicture->bEnableAfbcFlag = 0
-debug  : fbm.c <FbmCreateBuffer:252>: ** call allocate pic buf, i = 5, maxNum = 6
-debug  : fbm.c <FbmAllocatePictureBuffer:1454>: pPicture->bEnableAfbcFlag = 0
-debug  : fbm.c <FbmCreateBuffer:405>: *** finish fbmCreateBuffer
-[vdec-prof] chn=0 extbuf=1 elapsed_ms=2012.8 decode=2 fail=1 decode_avg=4.051 decode_max=7.922 decode_only_avg=4.051 decode_only_max=7.922 in_decode_cb_avg=0.000 in_decode_cb_max=0.000 cb=0 cb_in=0 cb_out=0 cb_avg=0.000 cb_max=0.000 copy_avg=0.000 copy_max=0.000 sync_avg=0.000 sync_max=0.000
-[vdec-extbuf] chn=0 try switch to external buffers attempt=1 frameType=U count=58
-debug  : cedarc <VeGetChipId:1563>: 00007400
-
-debug  : cedarc <H264DecoderInit:238>:  get the nIcversion = 3301000012011, nDecIpVersion = 33010
-[vdec-extbuf] chn=0 sync ve context skipped decoderCtx=0x13e2c890 engine=(nil)
-[vdec-extbuf] chn=0 reopened decoder gpu=1
-[vdec-extbuf] chn=0 fbm info not ready yet
-[vdec-extbuf] chn=0 register after reopen failed ret=1, fallback to internal buffers
-debug  : cedarc <VeGetChipId:1563>: 00007400
-
-debug  : cedarc <H264DecoderInit:238>:  get the nIcversion = 3301000012011, nDecIpVersion = 33010
-[vdec-extbuf] chn=0 sync ve context skipped decoderCtx=0x13e2c890 engine=(nil)
-[vdec-extbuf] chn=0 reopened decoder gpu=0
-[dec-resync-release] chn=0 dropped=48 idr_size=123244
-debug  : cedarc <H264DecVuiParameters:341>: nFrameRate=25
-debug  : cedarc <H264DecodePictureScanType:2779>: here3:hCtx->bProgressice=1
-
-[dec-resync-arm] chn=0 sendRet=-1 q=2 nal=1 pkt=4677 out=4681 idr=0 first_mb=0 primed=1 sps=20 pps=4 extra=0
-[dec-fail] chn=0 sendRet=-1 q=2 nal=1 pkt=4677 out=4681 idr=0 first_mb=0 primed=1 sps=20 pps=4 extra=0
-[dec-fail-hist] chn=0 idx=0 q=0 nal=1 pkt=2121 out=2125 idr=0 first_mb=0 primed=1 sps=20 pps=4 extra=0
-[dec-fail-hist] chn=0 idx=1 q=0 nal=1 pkt=5632 out=5636 idr=0 first_mb=0 primed=1 sps=20 pps=4 extra=0
-[dec-fail-hist] chn=0 idx=2 q=0 nal=5 pkt=122855 out=122891 idr=1 first_mb=0 primed=1 sps=20 pps=4 extra=1
-[dec-fail-hist] chn=0 idx=3 q=1 nal=1 pkt=2589 out=2593 idr=0 first_mb=0 primed=1 sps=20 pps=4 extra=0
-[dec-fail-hist] chn=0 idx=4 q=0 nal=5 pkt=123696 out=123732 idr=1 first_mb=0 primed=0 sps=20 pps=4 extra=1
-[dec-fail-hist] chn=0 idx=5 q=1 nal=1 pkt=4870 out=4874 idr=0 first_mb=0 primed=1 sps=20 pps=4 extra=0
-[dec-fail-hist] chn=0 idx=6 q=2 nal=5 pkt=123244 out=123280 idr=1 first_mb=0 primed=0 sps=20 pps=4 extra=1
-[dec-fail-hist] chn=0 idx=7 q=2 nal=1 pkt=4677 out=4681 idr=0 first_mb=0 primed=1 sps=20 pps=4 extra=0
-[pipe-prof] chn=0 elapsed_ms=1013.0 pop=26 send=2 send_fail=1 load=0 null=1 drop_pre=0 drop_resync=24 idr=1 qmax=2 in_kb=124.9 out_kb=125.0 popwait_avg=38.366 popwait_max=183.921 send_avg=6.338 send_max=12.346 get_avg=0.002 get_max=0.003 load_avg=0.000 load_max=0.000 loop_avg=38.954 loop_max=197.751
-[pipe-prof] chn=0 elapsed_ms=1038.0 pop=26 send=0 send_fail=0 load=0 null=0 drop_pre=0 drop_resync=26 idr=0 qmax=0 in_kb=0.0 out_kb=0.0 popwait_avg=39.885 popwait_max=62.901 send_avg=0.000 send_max=0.000 get_avg=0.000 get_max=0.000 load_avg=0.000 load_max=0.000 loop_avg=39.920 loop_max=62.927
-debug  : cedarc <VeSetEnableAfbcFlag:1771>: **** VeSetEnableAfbcFlag: 0
-debug  : fbm.c <FbmCreateBuffer:148>: FbmCreate, total fbm number: 6, decoder needed: 2,  nWidth=1920, nHeight=1088 nAlignStride = 0
-debug  : fbm.c <FbmCreateBuffer:252>: ** call allocate pic buf, i = 0, maxNum = 6
-debug  : fbm.c <FbmAllocatePictureBuffer:1454>: pPicture->bEnableAfbcFlag = 0
-debug  : fbm.c <FbmCreateBuffer:252>: ** call allocate pic buf, i = 1, maxNum = 6
-debug  : fbm.c <FbmAllocatePictureBuffer:1454>: pPicture->bEnableAfbcFlag = 0
-debug  : fbm.c <FbmCreateBuffer:252>: ** call allocate pic buf, i = 2, maxNum = 6
-debug  : fbm.c <FbmAllocatePictureBuffer:1454>: pPicture->bEnableAfbcFlag = 0
-debug  : fbm.c <FbmCreateBuffer:252>: ** call allocate pic buf, i = 3, maxNum = 6
-debug  : fbm.c <FbmAllocatePictureBuffer:1454>: pPicture->bEnableAfbcFlag = 0
-debug  : fbm.c <FbmCreateBuffer:252>: ** call allocate pic buf, i = 4, maxNum = 6
-debug  : fbm.c <FbmAllocatePictureBuffer:1454>: pPicture->bEnableAfbcFlag = 0
-debug  : fbm.c <FbmCreateBuffer:252>: ** call allocate pic buf, i = 5, maxNum = 6
-debug  : fbm.c <FbmAllocatePictureBuffer:1454>: pPicture->bEnableAfbcFlag = 0
-debug  : fbm.c <FbmCreateBuffer:405>: *** finish fbmCreateBuffer
-[vdec-prof] chn=0 extbuf=1 elapsed_ms=2007.6 decode=2 fail=1 decode_avg=4.069 decode_max=7.950 decode_only_avg=4.069 decode_only_max=7.950 in_decode_cb_avg=0.000 in_decode_cb_max=0.000 cb=0 cb_in=0 cb_out=0 cb_avg=0.000 cb_max=0.000 copy_avg=0.000 copy_max=0.000 sync_avg=0.000 sync_max=0.000
-[vdec-extbuf] chn=0 try switch to external buffers attempt=1 frameType=U count=60
-debug  : cedarc <VeGetChipId:1563>: 00007400
-
-debug  : cedarc <H264DecoderInit:238>:  get the nIcversion = 3301000012011, nDecIpVersion = 33010
-[vdec-extbuf] chn=0 sync ve context skipped decoderCtx=0x13e2c890 engine=(nil)
-[vdec-extbuf] chn=0 reopened decoder gpu=1
-[vdec-extbuf] chn=0 fbm info not ready yet
-[vdec-extbuf] chn=0 register after reopen failed ret=1, fallback to internal buffers
-debug  : cedarc <VeGetChipId:1563>: 00007400
-
-debug  : cedarc <H264DecoderInit:238>:  get the nIcversion = 3301000012011, nDecIpVersion = 33010
-[vdec-extbuf] chn=0 sync ve context skipped decoderCtx=0x13e2c890 engine=(nil)
-[vdec-extbuf] chn=0 reopened decoder gpu=0
-[dec-resync-release] chn=0 dropped=48 idr_size=141761
-debug  : cedarc <H264DecVuiParameters:341>: nFrameRate=25
-debug  : cedarc <H264DecodePictureScanType:2779>: here3:hCtx->bProgressice=1
-
-[dec-resync-arm] chn=0 sendRet=-1 q=3 nal=1 pkt=1899 out=1903 idr=0 first_mb=0 primed=1 sps=20 pps=4 extra=0
-[dec-fail] chn=0 sendRet=-1 q=3 nal=1 pkt=1899 out=1903 idr=0 first_mb=0 primed=1 sps=20 pps=4 extra=0
-[dec-fail-hist] chn=0 idx=0 q=0 nal=5 pkt=122855 out=122891 idr=1 first_mb=0 primed=1 sps=20 pps=4 extra=1
-[dec-fail-hist] chn=0 idx=1 q=1 nal=1 pkt=2589 out=2593 idr=0 first_mb=0 primed=1 sps=20 pps=4 extra=0
-[dec-fail-hist] chn=0 idx=2 q=0 nal=5 pkt=123696 out=123732 idr=1 first_mb=0 primed=0 sps=20 pps=4 extra=1
-[dec-fail-hist] chn=0 idx=3 q=1 nal=1 pkt=4870 out=4874 idr=0 first_mb=0 primed=1 sps=20 pps=4 extra=0
-[dec-fail-hist] chn=0 idx=4 q=2 nal=5 pkt=123244 out=123280 idr=1 first_mb=0 primed=0 sps=20 pps=4 extra=1
-[dec-fail-hist] chn=0 idx=5 q=2 nal=1 pkt=4677 out=4681 idr=0 first_mb=0 primed=1 sps=20 pps=4 extra=0
-[dec-fail-hist] chn=0 idx=6 q=0 nal=5 pkt=141761 out=141797 idr=1 first_mb=0 primed=0 sps=20 pps=4 extra=1
-[dec-fail-hist] chn=0 idx=7 q=3 nal=1 pkt=1899 out=1903 idr=0 first_mb=0 primed=1 sps=20 pps=4 extra=0
-[pipe-prof] chn=0 elapsed_ms=1002.0 pop=25 send=2 send_fail=1 load=0 null=1 drop_pre=0 drop_resync=23 idr=1 qmax=3 in_kb=140.3 out_kb=140.3 popwait_avg=39.462 popwait_max=189.447 send_avg=6.319 send_max=12.319 get_avg=0.002 get_max=0.003 load_avg=0.000 load_max=0.000 loop_avg=40.074 loop_max=203.455
-[pipe-prof] chn=0 elapsed_ms=1039.0 pop=26 send=0 send_fail=0 load=0 null=0 drop_pre=0 drop_resync=26 idr=0 qmax=0 in_kb=0.0 out_kb=0.0 popwait_avg=39.925 popwait_max=63.990 send_avg=0.000 send_max=0.000 get_avg=0.000 get_max=0.000 load_avg=0.000 load_max=0.000 loop_avg=39.955 loop_max=64.019
-debug  : cedarc <VeSetEnableAfbcFlag:1771>: **** VeSetEnableAfbcFlag: 0
-debug  : fbm.c <FbmCreateBuffer:148>: FbmCreate, total fbm number: 6, decoder needed: 2,  nWidth=1920, nHeight=1088 nAlignStride = 0
-debug  : fbm.c <FbmCreateBuffer:252>: ** call allocate pic buf, i = 0, maxNum = 6
-debug  : fbm.c <FbmAllocatePictureBuffer:1454>: pPicture->bEnableAfbcFlag = 0
-debug  : fbm.c <FbmCreateBuffer:252>: ** call allocate pic buf, i = 1, maxNum = 6
-debug  : fbm.c <FbmAllocatePictureBuffer:1454>: pPicture->bEnableAfbcFlag = 0
-debug  : fbm.c <FbmCreateBuffer:252>: ** call allocate pic buf, i = 2, maxNum = 6
-debug  : fbm.c <FbmAllocatePictureBuffer:1454>: pPicture->bEnableAfbcFlag = 0
-debug  : fbm.c <FbmCreateBuffer:252>: ** call allocate pic buf, i = 3, maxNum = 6
-debug  : fbm.c <FbmAllocatePictureBuffer:1454>: pPicture->bEnableAfbcFlag = 0
-debug  : fbm.c <FbmCreateBuffer:252>: ** call allocate pic buf, i = 4, maxNum = 6
-debug  : fbm.c <FbmAllocatePictureBuffer:1454>: pPicture->bEnableAfbcFlag = 0
-debug  : fbm.c <FbmCreateBuffer:252>: ** call allocate pic buf, i = 5, maxNum = 6
-debug  : fbm.c <FbmAllocatePictureBuffer:1454>: pPicture->bEnableAfbcFlag = 0
-debug  : fbm.c <FbmCreateBuffer:405>: *** finish fbmCreateBuffer
-[vdec-prof] chn=0 extbuf=1 elapsed_ms=2004.9 decode=2 fail=1 decode_avg=4.070 decode_max=7.943 decode_only_avg=4.070 decode_only_max=7.943 in_decode_cb_avg=0.000 in_decode_cb_max=0.000 cb=0 cb_in=0 cb_out=0 cb_avg=0.000 cb_max=0.000 copy_avg=0.000 copy_max=0.000 sync_avg=0.000 sync_max=0.000
-[vdec-extbuf] chn=0 try switch to external buffers attempt=1 frameType=U count=62
-debug  : cedarc <VeGetChipId:1563>: 00007400
-
-debug  : cedarc <H264DecoderInit:238>:  get the nIcversion = 3301000012011, nDecIpVersion = 33010
-[vdec-extbuf] chn=0 sync ve context skipped decoderCtx=0x13e2c890 engine=(nil)
-[vdec-extbuf] chn=0 reopened decoder gpu=1
-[vdec-extbuf] chn=0 fbm info not ready yet
-[vdec-extbuf] chn=0 register after reopen failed ret=1, fallback to internal buffers
-debug  : cedarc <VeGetChipId:1563>: 00007400
-
-debug  : cedarc <H264DecoderInit:238>:  get the nIcversion = 3301000012011, nDecIpVersion = 33010
-[vdec-extbuf] chn=0 sync ve context skipped decoderCtx=0x13e2c890 engine=(nil)
-[vdec-extbuf] chn=0 reopened decoder gpu=0
-[dec-resync-release] chn=0 dropped=48 idr_size=140109
-debug  : cedarc <H264DecVuiParameters:341>: nFrameRate=25
-debug  : cedarc <H264DecodePictureScanType:2779>: here3:hCtx->bProgressice=1
+[vdec-prof] chn=0 extbuf=1 elapsed_ms=1051.0 decode=26 fail=1 decode_avg=0.340 decode_max=7.957 decode_only_avg=0.340 decode_only_max=7.957 in_decode_cb_avg=0.000 in_decode_cb_max=0.000 cb=0 cb_in=0 cb_out=0 cb_avg=0.000 cb_max=0.000 copy_avg=0.000 copy_max=0.000 sync_avg=0.000 sync_max=0.000
+[vdec-extbuf] chn=0 sync ve context skipped decoderCtx=0xa8c4890 engine=(nil)
+[vdec-extbuf] chn=0 fbm num=6 buf=1920x1088 align=16 fmt=5 crop(l=0,t=0,r=1920,b=1080)
+[vdec-extbuf] chn=0 idx=0 iommu skipped veOps=0xa8c4c40 veSelf=(nil) fd=5
+[vdec-extbuf] chn=0 idx=0 virt=0x7fb2b03000 phy=0xfcc00000 c=0xfcdfe000 fd=5 size=3133440
+[vdec-extbuf] chn=0 idx=1 iommu skipped veOps=0xa8c4c40 veSelf=(nil) fd=6
+[vdec-extbuf] chn=0 idx=1 virt=0x7fb2806000 phy=0xfc800000 c=0xfc9fe000 fd=6 size=3133440
+[vdec-extbuf] chn=0 idx=2 iommu skipped veOps=0xa8c4c40 veSelf=(nil) fd=7
+[vdec-extbuf] chn=0 idx=2 virt=0x7fb2509000 phy=0xfc400000 c=0xfc5fe000 fd=7 size=3133440
+[vdec-extbuf] chn=0 idx=3 iommu skipped veOps=0xa8c4c40 veSelf=(nil) fd=8
+[vdec-extbuf] chn=0 idx=3 virt=0x7fb220c000 phy=0xfc000000 c=0xfc1fe000 fd=8 size=3133440
+[vdec-extbuf] chn=0 idx=4 iommu skipped veOps=0xa8c4c40 veSelf=(nil) fd=9
+[vdec-extbuf] chn=0 idx=4 virt=0x7fb1f0f000 phy=0xfbc00000 c=0xfbdfe000 fd=9 size=3133440
+[vdec-extbuf] chn=0 idx=5 iommu skipped veOps=0xa8c4c40 veSelf=(nil) fd=10
+[vdec-extbuf] chn=0 idx=5 virt=0x7fb1c12000 phy=0xfb800000 c=0xfb9fe000 fd=10 size=3133440
+[vdec-extbuf] chn=0 registered 6 external fbm buffers
+[vdec-extbuf] chn=0 external buffers installed, prepare extbuf arm
+[vdec-extbuf] chn=0 enter extbuf arm gate registered=6 armed=0
+[vdec-extbuf] chn=0 arm extbuf enter decoder=0xa8c4890 registered=6 armed=0
+[vdec-extbuf] chn=0 external fbm not ready yet total=0
+[vdec-extbuf] chn=0 extbuf arm pending
+[pipe-prof] chn=0 elapsed_ms=1010.4 pop=25 send=25 send_fail=0 load=0 null=25 drop_pre=0 drop_resync=0 idr=1 qmax=2 in_kb=190.0 out_kb=190.1 popwait_avg=39.791 popwait_max=165.968 send_avg=0.501 send_max=8.475 get_avg=0.001 get_max=0.002 load_avg=0.000 load_max=0.000 loop_avg=40.413 loop_max=167.671
+[queue] overflow flush chn=0 depth=10 max=10 incoming_nal=1 incoming_size=515 isIDR=0 isSpsOrPps=0 isSei=0 pts=70768
+warning: cedarc <waitInterruptDecoder:772>: wait ve interrupt timeout. ret = 0
+[vdec-prof] chn=0 extbuf=1 elapsed_ms=1055.1 decode=1 fail=0 decode_avg=1026.151 decode_max=1026.151 decode_only_avg=1026.151 decode_only_max=1026.151 in_decode_cb_avg=0.000 in_decode_cb_max=0.000 cb=0 cb_in=0 cb_out=0 cb_avg=0.000 cb_max=0.000 copy_avg=0.000 copy_max=0.000 sync_avg=0.000 sync_max=0.000
+[vdec-extbuf] chn=0 enter extbuf arm gate registered=6 armed=0
+[vdec-extbuf] chn=0 arm extbuf enter decoder=0xa8c4890 registered=6 armed=0
+[vdec-extbuf] chn=0 armed extbuf direct-feed total=6 empty=10 valid=1 registered=6
+[vdec-extbuf] chn=0 extbuf armed, retry decode
+[pipe-prof] chn=0 elapsed_ms=1054.9 pop=1 send=1 send_fail=0 load=1 null=0 drop_pre=0 drop_resync=0 idr=0 qmax=0 in_kb=2.1 out_kb=2.1 popwait_avg=28.369 popwait_max=28.369 send_avg=1026.409 send_max=1026.409 get_avg=0.003 get_max=0.003 load_avg=0.054 load_max=0.054 loop_avg=1054.904 loop_max=1054.904
+[render-prof] elapsed_ms=5180.3 draws=1 draw_avg=1.288 draw_max=1.288 swap_avg=0.499 swap_max=0.499 finish_avg=8.805 finish_max=8.805 total_avg=5180.283 total_max=5180.283
+[queue] resync chn=0 dropped=33 incoming_size=135972 pts=72240
+[vdec-prof] chn=0 extbuf=1 elapsed_ms=1014.8 decode=9 fail=0 decode_avg=0.031 decode_max=0.097 decode_only_avg=0.031 decode_only_max=0.097 in_decode_cb_avg=0.000 in_decode_cb_max=0.000 cb=0 cb_in=0 cb_out=0 cb_avg=0.000 cb_max=0.000 copy_avg=0.000 copy_max=0.000 sync_avg=0.000 sync_max=0.000
+[pipe-prof] chn=0 elapsed_ms=1014.7 pop=8 send=8 send_fail=0 load=0 null=8 drop_pre=0 drop_resync=0 idr=1 qmax=3 in_kb=149.2 out_kb=149.2 popwait_avg=126.465 popwait_max=883.821 send_avg=0.117 send_max=0.232 get_avg=0.001 get_max=0.002 load_avg=0.000 load_max=0.000 loop_avg=126.827 loop_max=885.632
+[vdec-prof] chn=0 extbuf=1 elapsed_ms=1041.1 decode=26 fail=0 decode_avg=0.037 decode_max=0.043 decode_only_avg=0.037 decode_only_max=0.043 in_decode_cb_avg=0.000 in_decode_cb_max=0.000 cb=0 cb_in=0 cb_out=0 cb_avg=0.000 cb_max=0.000 copy_avg=0.000 copy_max=0.000 sync_avg=0.000 sync_max=0.000
+[pipe-prof] chn=0 elapsed_ms=1041.1 pop=26 send=26 send_fail=0 load=0 null=26 drop_pre=0 drop_resync=0 idr=0 qmax=0 in_kb=71.0 out_kb=71.1 popwait_avg=39.849 popwait_max=72.732 send_avg=0.123 send_max=0.264 get_avg=0.001 get_max=0.003 load_avg=0.000 load_max=0.000 loop_avg=40.040 loop_max=72.924
+[vdec-prof] chn=0 extbuf=1 elapsed_ms=1000.1 decode=25 fail=0 decode_avg=0.039 decode_max=0.160 decode_only_avg=0.039 decode_only_max=0.160 in_decode_cb_avg=0.000 in_decode_cb_max=0.000 cb=0 cb_in=0 cb_out=0 cb_avg=0.000 cb_max=0.000 copy_avg=0.000 copy_max=0.000 sync_avg=0.000 sync_max=0.000
+[pipe-prof] chn=0 elapsed_ms=1000.0 pop=25 send=25 send_fail=0 load=0 null=25 drop_pre=0 drop_resync=0 idr=1 qmax=1 in_kb=199.9 out_kb=200.0 popwait_avg=39.746 popwait_max=192.923 send_avg=0.124 send_max=0.239 get_avg=0.001 get_max=0.002 load_avg=0.000 load_max=0.000 loop_avg=39.999 loop_max=194.869
+[vdec-prof] chn=0 extbuf=1 elapsed_ms=1034.9 decode=26 fail=0 decode_avg=0.037 decode_max=0.042 decode_only_avg=0.037 decode_only_max=0.042 in_decode_cb_avg=0.000 in_decode_cb_max=0.000 cb=0 cb_in=0 cb_out=0 cb_avg=0.000 cb_max=0.000 copy_avg=0.000 copy_max=0.000 sync_avg=0.000 sync_max=0.000
+[pipe-prof] chn=0 elapsed_ms=1034.9 pop=26 send=26 send_fail=0 load=0 null=26 drop_pre=0 drop_resync=0 idr=0 qmax=0 in_kb=63.9 out_kb=64.0 popwait_avg=39.619 popwait_max=64.998 send_avg=0.121 send_max=0.231 get_avg=0.001 get_max=0.002 load_avg=0.000 load_max=0.000 loop_avg=39.800 loop_max=65.146
+[vdec-prof] chn=0 extbuf=1 elapsed_ms=1004.0 decode=25 fail=0 decode_avg=0.040 decode_max=0.148 decode_only_avg=0.040 decode_only_max=0.148 in_decode_cb_avg=0.000 in_decode_cb_max=0.000 cb=0 cb_in=0 cb_out=0 cb_avg=0.000 cb_max=0.000 copy_avg=0.000 copy_max=0.000 sync_avg=0.000 sync_max=0.000
+[pipe-prof] chn=0 elapsed_ms=1004.0 pop=25 send=25 send_fail=0 load=0 null=25 drop_pre=0 drop_resync=0 idr=1 qmax=0 in_kb=187.9 out_kb=188.0 popwait_avg=39.909 popwait_max=166.123 send_avg=0.129 send_max=0.263 get_avg=0.001 get_max=0.002 load_avg=0.000 load_max=0.000 loop_avg=40.158 loop_max=167.804
+[vdec-prof] chn=0 extbuf=1 elapsed_ms=1041.0 decode=26 fail=0 decode_avg=0.036 decode_max=0.042 decode_only_avg=0.036 decode_only_max=0.042 in_decode_cb_avg=0.000 in_decode_cb_max=0.000 cb=0 cb_in=0 cb_out=0 cb_avg=0.000 cb_max=0.000 copy_avg=0.000 copy_max=0.000 sync_avg=0.000 sync_max=0.000
+[pipe-prof] chn=0 elapsed_ms=1041.0 pop=26 send=26 send_fail=0 load=0 null=26 drop_pre=0 drop_resync=0 idr=0 qmax=0 in_kb=69.1 out_kb=69.2 popwait_avg=39.844 popwait_max=65.745 send_avg=0.128 send_max=0.259 get_avg=0.001 get_max=0.002 load_avg=0.000 load_max=0.000 loop_avg=40.035 loop_max=65.920
+[vdec-prof] chn=0 extbuf=1 elapsed_ms=1039.0 decode=26 fail=0 decode_avg=0.039 decode_max=0.176 decode_only_avg=0.039 decode_only_max=0.176 in_decode_cb_avg=0.000 in_decode_cb_max=0.000 cb=0 cb_in=0 cb_out=0 cb_avg=0.000 cb_max=0.000 copy_avg=0.000 copy_max=0.000 sync_avg=0.000 sync_max=0.000
+[pipe-prof] chn=0 elapsed_ms=1038.9 pop=26 send=26 send_fail=0 load=0 null=26 drop_pre=0 drop_resync=0 idr=1 qmax=2 in_kb=187.5 out_kb=187.6 popwait_avg=39.716 popwait_max=177.167 send_avg=0.125 send_max=0.250 get_avg=0.001 get_max=0.002 load_avg=0.000 load_max=0.000 loop_avg=39.956 loop_max=178.879
