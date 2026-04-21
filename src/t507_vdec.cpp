@@ -22,6 +22,28 @@ namespace {
 constexpr size_t kRetainedInputSafetyCount = 256;
 constexpr size_t kRetainedInputMaxBytes = 128 * 1024 * 1024;
 constexpr size_t kDisplayHoldCount = 2;
+constexpr bool kVdecStateTraceEnabled = false;
+
+template <typename... Args>
+void vdecStateTrace(const char* fmt, Args... args)
+{
+    if (!kVdecStateTraceEnabled)
+    {
+        return;
+    }
+    std::printf(fmt, args...);
+}
+
+template <typename... Args>
+void vdecStateTraceFlush(const char* fmt, Args... args)
+{
+    if (!kVdecStateTraceEnabled)
+    {
+        return;
+    }
+    std::printf(fmt, args...);
+    std::fflush(stdout);
+}
 
 struct DecoderInterfaceShadow;
 
@@ -57,10 +79,10 @@ static bool syncDecoderVeContext(VideoDecoder* decoder, VConfig* videoConf, int 
     {
         if (verbose)
         {
-            std::printf("[vdec-extbuf] chn=%d sync ve context skipped decoderCtx=%p engine=%p\n",
-                        chn,
-                        reinterpret_cast<void*>(decoderCtx),
-                        decoderCtx != nullptr ? reinterpret_cast<void*>(decoderCtx->pVideoEngine) : nullptr);
+            vdecStateTrace("[vdec-extbuf] chn=%d sync ve context skipped decoderCtx=%p engine=%p\n",
+                           chn,
+                           reinterpret_cast<void*>(decoderCtx),
+                           decoderCtx != nullptr ? reinterpret_cast<void*>(decoderCtx->pVideoEngine) : nullptr);
         }
         return false;
     }
@@ -79,19 +101,19 @@ static bool syncDecoderVeContext(VideoDecoder* decoder, VConfig* videoConf, int 
             videoConf->veOpsS = engineOps;
             videoConf->pVeOpsSelf = engineSelf;
         }
-        std::printf("[vdec-extbuf] chn=%d sync ve context cfg(%p,%p) <- engine(%p,%p)\n",
-                    chn,
-                    reinterpret_cast<void*>(cfgOps),
-                    cfgSelf,
-                    reinterpret_cast<void*>(engineOps),
-                    engineSelf);
+        vdecStateTrace("[vdec-extbuf] chn=%d sync ve context cfg(%p,%p) <- engine(%p,%p)\n",
+                       chn,
+                       reinterpret_cast<void*>(cfgOps),
+                       cfgSelf,
+                       reinterpret_cast<void*>(engineOps),
+                       engineSelf);
     }
     else if (verbose)
     {
-        std::printf("[vdec-extbuf] chn=%d sync ve context unchanged cfg(%p,%p)\n",
-                    chn,
-                    reinterpret_cast<void*>(cfgOps),
-                    cfgSelf);
+        vdecStateTrace("[vdec-extbuf] chn=%d sync ve context unchanged cfg(%p,%p)\n",
+                       chn,
+                       reinterpret_cast<void*>(cfgOps),
+                       cfgSelf);
     }
 
     return engineOps != nullptr && engineSelf != nullptr;
@@ -309,17 +331,14 @@ void t507_vdec_node::maybeLogPerfWindowLocked(uint64_t nowUs, bool force)
     const double decodeOnlyMaxMs = static_cast<double>(m_perfDecodeOnlyUsMax) / 1000.0;
     const double inDecodeCbAvgMs = m_perfDecodeCalls > 0 ? static_cast<double>(m_perfDecodeNestedCallbackUsTotal) / static_cast<double>(m_perfDecodeCalls) / 1000.0 : 0.0;
     const double inDecodeCbMaxMs = static_cast<double>(m_perfDecodeNestedCallbackUsMax) / 1000.0;
-    const double cbAvgMs = m_perfCallbackCalls > 0 ? static_cast<double>(m_perfCallbackUsTotal) / static_cast<double>(m_perfCallbackCalls) / 1000.0 : 0.0;
-    const double cbMaxMs = static_cast<double>(m_perfCallbackUsMax) / 1000.0;
     const double copyAvgMs = m_perfCallbackCalls > 0 ? static_cast<double>(m_perfCopyUsTotal) / static_cast<double>(m_perfCallbackCalls) / 1000.0 : 0.0;
     const double copyMaxMs = static_cast<double>(m_perfCopyUsMax) / 1000.0;
     const double syncAvgMs = m_perfCallbackCalls > 0 ? static_cast<double>(m_perfSyncUsTotal) / static_cast<double>(m_perfCallbackCalls) / 1000.0 : 0.0;
     const double syncMaxMs = static_cast<double>(m_perfSyncUsMax) / 1000.0;
 
-    std::printf("[vdec-prof] chn=%d extbuf=1 elapsed_ms=%.1f decode=%lu fail=%lu decode_avg=%.3f decode_max=%.3f decode_only_avg=%.3f decode_only_max=%.3f in_decode_cb_avg=%.3f in_decode_cb_max=%.3f cb=%lu cb_in=%lu cb_out=%lu cb_avg=%.3f cb_max=%.3f copy_avg=%.3f copy_max=%.3f sync_avg=%.3f sync_max=%.3f\n",
+    std::printf("[vdec-prof] chn=%d elapsed_ms=%.1f fail=%lu decode_avg=%.3f decode_max=%.3f decode_only_avg=%.3f decode_only_max=%.3f nested_cb_avg=%.3f nested_cb_max=%.3f copy_avg=%.3f copy_max=%.3f sync_avg=%.3f sync_max=%.3f\n",
                 m_chn,
                 elapsedMs,
-                m_perfDecodeCalls,
                 m_perfDecodeFails,
                 decodeAvgMs,
                 decodeMaxMs,
@@ -327,11 +346,6 @@ void t507_vdec_node::maybeLogPerfWindowLocked(uint64_t nowUs, bool force)
                 decodeOnlyMaxMs,
                 inDecodeCbAvgMs,
                 inDecodeCbMaxMs,
-                m_perfCallbackCalls,
-                m_perfCallbackInsideDecodeCalls,
-                m_perfCallbackOutsideDecodeCalls,
-                cbAvgMs,
-                cbMaxMs,
                 copyAvgMs,
                 copyMaxMs,
                 syncAvgMs,
@@ -386,11 +400,11 @@ bool t507_vdec_node::ensureIommuMapper()
         return false;
     }
 
-    std::printf("[vdec-extbuf] chn=%d temp iommu mapper ready veOps=%p veSelf=%p phyOff=0x%x\n",
-                m_chn,
-                reinterpret_cast<void*>(m_iommuVeOps),
-                m_iommuVeSelf,
-                CdcVeGetPhyOffset(m_iommuVeOps, m_iommuVeSelf));
+    vdecStateTrace("[vdec-extbuf] chn=%d temp iommu mapper ready veOps=%p veSelf=%p phyOff=0x%x\n",
+                   m_chn,
+                   reinterpret_cast<void*>(m_iommuVeOps),
+                   m_iommuVeSelf,
+                   CdcVeGetPhyOffset(m_iommuVeOps, m_iommuVeSelf));
     return true;
 }
 
@@ -398,10 +412,10 @@ void t507_vdec_node::releaseIommuMapper()
 {
     if (m_iommuVeOps != nullptr && m_iommuVeSelf != nullptr)
     {
-        std::printf("[vdec-extbuf] chn=%d release temp iommu mapper veOps=%p veSelf=%p\n",
-                    m_chn,
-                    reinterpret_cast<void*>(m_iommuVeOps),
-                    m_iommuVeSelf);
+        vdecStateTrace("[vdec-extbuf] chn=%d release temp iommu mapper veOps=%p veSelf=%p\n",
+                       m_chn,
+                       reinterpret_cast<void*>(m_iommuVeOps),
+                       m_iommuVeSelf);
         CdcVeRelease(m_iommuVeOps, m_iommuVeSelf);
     }
     m_iommuVeOps = nullptr;
@@ -413,7 +427,7 @@ int t507_vdec_node::registerExternalBuffers()
     FbmBufInfo* info = GetVideoFbmBufInfo(m_decoder);
     if (info == nullptr)
     {
-        std::printf("[vdec-extbuf] chn=%d fbm info not ready yet\n", m_chn);
+        vdecStateTrace("[vdec-extbuf] chn=%d fbm info not ready yet\n", m_chn);
         return 1;
     }
 
@@ -444,24 +458,24 @@ int t507_vdec_node::registerExternalBuffers()
     m_outputBuffers.resize(requiredBuffers);
     m_registeredBufferCount = 0;
 
-    std::printf("[vdec-extbuf] chn=%d fbm num=%d buf=%dx%d align=%d fmt=%d crop(l=%d,t=%d,r=%d,b=%d)\n",
-                m_chn,
-                m_fbmBufInfo.nBufNum,
-                m_fbmBufInfo.nBufWidth,
-                m_fbmBufInfo.nBufHeight,
-                m_fbmBufInfo.nAlignValue,
-                m_fbmBufInfo.ePixelFormat,
-                m_fbmBufInfo.nLeftOffset,
-                m_fbmBufInfo.nTopOffset,
-                m_fbmBufInfo.nRightOffset,
-                m_fbmBufInfo.nBottomOffset);
-    std::printf("[vdec-extbuf] chn=%d cfg gpu=%d memType=%d cfgVeOps=%p cfgVeSelf=%p memops=%p\n",
-                m_chn,
-                m_videoConf.bGpuBufValid,
-                CdcIonGetMemType(),
-                reinterpret_cast<void*>(m_videoConf.veOpsS),
-                m_videoConf.pVeOpsSelf,
-                reinterpret_cast<void*>(m_videoConf.memops));
+    vdecStateTrace("[vdec-extbuf] chn=%d fbm num=%d buf=%dx%d align=%d fmt=%d crop(l=%d,t=%d,r=%d,b=%d)\n",
+                   m_chn,
+                   m_fbmBufInfo.nBufNum,
+                   m_fbmBufInfo.nBufWidth,
+                   m_fbmBufInfo.nBufHeight,
+                   m_fbmBufInfo.nAlignValue,
+                   m_fbmBufInfo.ePixelFormat,
+                   m_fbmBufInfo.nLeftOffset,
+                   m_fbmBufInfo.nTopOffset,
+                   m_fbmBufInfo.nRightOffset,
+                   m_fbmBufInfo.nBottomOffset);
+    vdecStateTrace("[vdec-extbuf] chn=%d cfg gpu=%d memType=%d cfgVeOps=%p cfgVeSelf=%p memops=%p\n",
+                   m_chn,
+                   m_videoConf.bGpuBufValid,
+                   CdcIonGetMemType(),
+                   reinterpret_cast<void*>(m_videoConf.veOpsS),
+                   m_videoConf.pVeOpsSelf,
+                   reinterpret_cast<void*>(m_videoConf.memops));
 
     for (size_t i = 0; i < requiredBuffers; ++i)
     {
@@ -518,14 +532,14 @@ int t507_vdec_node::registerExternalBuffers()
                 const unsigned int phyOffset = CdcVeGetPhyOffset(veOps, veSelf);
                 out.picture.phyYBufAddr = static_cast<size_addr>(iommuBuf.iommu_addr - phyOffset);
                 out.picture.phyCBufAddr = static_cast<size_addr>(out.picture.phyYBufAddr + yPlaneSize);
-                std::printf("[vdec-extbuf] chn=%d idx=%zu iommu=0x%lx phyOff=0x%x y=0x%lx c=0x%lx fd=%d\n",
-                            m_chn,
-                            i,
-                            static_cast<unsigned long>(iommuBuf.iommu_addr),
-                            phyOffset,
-                            static_cast<unsigned long>(out.picture.phyYBufAddr),
-                            static_cast<unsigned long>(out.picture.phyCBufAddr),
-                            out.mem.dmafd);
+                vdecStateTrace("[vdec-extbuf] chn=%d idx=%zu iommu=0x%lx phyOff=0x%x y=0x%lx c=0x%lx fd=%d\n",
+                               m_chn,
+                               i,
+                               static_cast<unsigned long>(iommuBuf.iommu_addr),
+                               phyOffset,
+                               static_cast<unsigned long>(out.picture.phyYBufAddr),
+                               static_cast<unsigned long>(out.picture.phyCBufAddr),
+                               out.mem.dmafd);
             }
             else
             {
@@ -540,22 +554,22 @@ int t507_vdec_node::registerExternalBuffers()
         }
         else
         {
-            std::printf("[vdec-extbuf] chn=%d idx=%zu iommu skipped veOps=%p veSelf=%p fd=%d\n",
-                        m_chn,
-                        i,
-                        reinterpret_cast<void*>(veOps),
-                        veSelf,
-                        out.mem.dmafd);
+            vdecStateTrace("[vdec-extbuf] chn=%d idx=%zu iommu skipped veOps=%p veSelf=%p fd=%d\n",
+                           m_chn,
+                           i,
+                           reinterpret_cast<void*>(veOps),
+                           veSelf,
+                           out.mem.dmafd);
         }
 
-        std::printf("[vdec-extbuf] chn=%d idx=%zu virt=%p phy=0x%lx c=0x%lx fd=%d size=%d\n",
-                    m_chn,
-                    i,
-                    reinterpret_cast<void*>(out.mem.virt),
-                    static_cast<unsigned long>(out.picture.phyYBufAddr),
-                    static_cast<unsigned long>(out.picture.phyCBufAddr),
-                    out.mem.dmafd,
-                    out.picture.nBufSize);
+        vdecStateTrace("[vdec-extbuf] chn=%d idx=%zu virt=%p phy=0x%lx c=0x%lx fd=%d size=%d\n",
+                       m_chn,
+                       i,
+                       reinterpret_cast<void*>(out.mem.virt),
+                       static_cast<unsigned long>(out.picture.phyYBufAddr),
+                       static_cast<unsigned long>(out.picture.phyCBufAddr),
+                       out.mem.dmafd,
+                       out.picture.nBufSize);
 
         VideoPicture* registered = SetVideoFbmBufAddress(m_decoder, &out.picture, 0);
         if (registered == nullptr)
@@ -568,7 +582,7 @@ int t507_vdec_node::registerExternalBuffers()
         ++m_registeredBufferCount;
     }
 
-    std::printf("[vdec-extbuf] chn=%d registered %zu external fbm buffers\n", m_chn, m_registeredBufferCount);
+    vdecStateTrace("[vdec-extbuf] chn=%d registered %zu external fbm buffers\n", m_chn, m_registeredBufferCount);
     return 0;
 }
 
@@ -610,12 +624,12 @@ int t507_vdec_node::reopenDecoderWithGpuBuffers(bool enable)
     m_videoConf = reopenedConf;
     m_gpuBufferModeEnabled = enable;
     syncDecoderVeContext(m_decoder, &m_videoConf, m_chn, true);
-    std::printf("[vdec-extbuf] chn=%d reopened decoder gpu=%d\n", m_chn, enable ? 1 : 0);
-    std::printf("[vdec-extbuf] chn=%d reopened conf veOps=%p veSelf=%p memops=%p\n",
-                m_chn,
-                reinterpret_cast<void*>(m_videoConf.veOpsS),
-                m_videoConf.pVeOpsSelf,
-                reinterpret_cast<void*>(m_videoConf.memops));
+    vdecStateTrace("[vdec-extbuf] chn=%d reopened decoder gpu=%d\n", m_chn, enable ? 1 : 0);
+    vdecStateTrace("[vdec-extbuf] chn=%d reopened conf veOps=%p veSelf=%p memops=%p\n",
+                   m_chn,
+                   reinterpret_cast<void*>(m_videoConf.veOpsS),
+                   m_videoConf.pVeOpsSelf,
+                   reinterpret_cast<void*>(m_videoConf.memops));
     return 0;
 }
 
@@ -655,12 +669,11 @@ const t507_vdec_node::ExternalOutputBuffer* t507_vdec_node::findOutputBuffer(con
 
 int t507_vdec_node::armExternalBufferReleaseMode()
 {
-    std::printf("[vdec-extbuf] chn=%d arm extbuf enter decoder=%p registered=%zu armed=%d\n",
-                m_chn,
-                static_cast<void*>(m_decoder),
-                m_registeredBufferCount,
-                m_externalReleaseModeArmed ? 1 : 0);
-    std::fflush(stdout);
+    vdecStateTraceFlush("[vdec-extbuf] chn=%d arm extbuf enter decoder=%p registered=%zu armed=%d\n",
+                        m_chn,
+                        static_cast<void*>(m_decoder),
+                        m_registeredBufferCount,
+                        m_externalReleaseModeArmed ? 1 : 0);
 
     if (m_decoder == nullptr || m_registeredBufferCount == 0)
     {
@@ -678,10 +691,9 @@ int t507_vdec_node::armExternalBufferReleaseMode()
     const int totalNum = TotalPictureBufferNum(m_decoder, 0);
     if (totalNum <= 0)
     {
-        std::printf("[vdec-extbuf] chn=%d external fbm not ready yet total=%d\n",
-                    m_chn,
-                    totalNum);
-        std::fflush(stdout);
+        vdecStateTraceFlush("[vdec-extbuf] chn=%d external fbm not ready yet total=%d\n",
+                            m_chn,
+                            totalNum);
         return 1;
     }
 
@@ -689,13 +701,12 @@ int t507_vdec_node::armExternalBufferReleaseMode()
     const int validNum = ValidPictureNum(m_decoder, 0);
 
     m_externalReleaseModeArmed = true;
-    std::printf("[vdec-extbuf] chn=%d armed extbuf direct-feed total=%d empty=%d valid=%d registered=%zu\n",
-                m_chn,
-                totalNum,
-                emptyNum,
-                validNum,
-                m_registeredBufferCount);
-    std::fflush(stdout);
+    vdecStateTraceFlush("[vdec-extbuf] chn=%d armed extbuf direct-feed total=%d empty=%d valid=%d registered=%zu\n",
+                        m_chn,
+                        totalNum,
+                        emptyNum,
+                        validNum,
+                        m_registeredBufferCount);
     return 0;
 }
 
@@ -748,19 +759,7 @@ void t507_vdec_node::drainDecodedPictures()
         if (validNum <= 0)
         {
             ++m_noDisplayPicturePolls;
-            if (m_noDisplayPicturePolls == 1 || (m_noDisplayPicturePolls % 32) == 0)
-            {
-                const int emptyNum = EmptyPictureBufferNum(m_decoder, 0);
-                const int totalNum = TotalPictureBufferNum(m_decoder, 0);
-                std::printf("[vdec-extbuf] chn=%d no picture valid=%d empty=%d total=%d pending=%p display=%p hold=%zu\n",
-                            m_chn,
-                            validNum,
-                            emptyNum,
-                            totalNum,
-                            static_cast<void*>(m_pendingPicture),
-                            static_cast<void*>(m_displayPicture),
-                            m_displayHoldQueue.size());
-            }
+            (void)validNum;
             break;
         }
         m_noDisplayPicturePolls = 0;
@@ -768,23 +767,9 @@ void t507_vdec_node::drainDecodedPictures()
         VideoPicture* picture = RequestPicture(m_decoder, 0);
         if (picture == nullptr)
         {
-            std::printf("[vdec-extbuf] chn=%d RequestPicture returned null while valid=%d\n",
-                        m_chn,
-                        validNum);
             break;
         }
         ++m_requestedPictureCount;
-        if (m_requestedPictureCount <= 8 || (m_requestedPictureCount % 30) == 0)
-        {
-            std::printf("[vdec-extbuf] chn=%d request pic idx=%lu buf=%d id=%d pts=%lld phy=0x%lx priv=%p\n",
-                        m_chn,
-                        m_requestedPictureCount,
-                        picture->nBufId,
-                        picture->nID,
-                        static_cast<long long>(picture->nPts),
-                        static_cast<unsigned long>(picture->phyYBufAddr),
-                        picture->pPrivate);
-        }
 
         if (m_pendingPicture != nullptr)
         {
@@ -836,17 +821,6 @@ bool t507_vdec_node::promotePendingPicture()
                        keyFrame);
     m_currentFrameIndex = m_displayPicture->nBufId;
     ++m_promotedPictureCount;
-    if (m_promotedPictureCount <= 8 || (m_promotedPictureCount % 30) == 0)
-    {
-        std::printf("[vdec-extbuf] chn=%d promote idx=%lu buf=%d pts=%lld key=%d virt=%p phy=0x%lx\n",
-                    m_chn,
-                    m_promotedPictureCount,
-                    m_currentFrameIndex,
-                    static_cast<long long>(m_displayPicture->nPts),
-                    keyFrame ? 1 : 0,
-                    reinterpret_cast<void*>(out->mem.virt),
-                    static_cast<unsigned long>(out->mem.phy));
-    }
     return true;
 }
 
@@ -1111,23 +1085,21 @@ int t507_vdec_node::sendFrame(media_frame* frame)
         if (info != nullptr && (ft == FRAME_I || m_count > 30))
         {
             ++m_gpuBufferSwitchAttempts;
-            std::printf("[vdec-extbuf] chn=%d try switch to external buffers attempt=%lu frameType=%s count=%lu\n",
-                        m_chn,
-                        m_gpuBufferSwitchAttempts,
-                        getFrameTypeName(ft),
-                        m_count);
+            vdecStateTrace("[vdec-extbuf] chn=%d try switch to external buffers attempt=%lu frameType=%s count=%lu\n",
+                           m_chn,
+                           m_gpuBufferSwitchAttempts,
+                           getFrameTypeName(ft),
+                           m_count);
             if (reopenDecoderWithGpuBuffers(true) == 0)
             {
                 const int registerRet = registerExternalBuffers();
                 if (registerRet == 0)
                 {
-                    std::printf("[vdec-extbuf] chn=%d external buffers installed after reopen, prepare extbuf arm\n", m_chn);
-                    std::fflush(stdout);
+                    vdecStateTraceFlush("[vdec-extbuf] chn=%d external buffers installed after reopen, prepare extbuf arm\n", m_chn);
                 }
                 else if (registerRet > 0)
                 {
-                    std::printf("[vdec-extbuf] chn=%d gpu mode reopened, fbm info still pending, keep extbuf mode alive\n", m_chn);
-                    std::fflush(stdout);
+                    vdecStateTraceFlush("[vdec-extbuf] chn=%d gpu mode reopened, fbm info still pending, keep extbuf mode alive\n", m_chn);
                     return 0;
                 }
                 else
@@ -1147,12 +1119,11 @@ int t507_vdec_node::sendFrame(media_frame* frame)
         const int registerRet = registerExternalBuffers();
         if (registerRet == 0)
         {
-            std::printf("[vdec-extbuf] chn=%d external buffers installed, prepare extbuf arm\n", m_chn);
-            std::fflush(stdout);
+            vdecStateTraceFlush("[vdec-extbuf] chn=%d external buffers installed, prepare extbuf arm\n", m_chn);
         }
         else if (registerRet > 0)
         {
-            std::printf("[vdec-extbuf] chn=%d extbuf registration pending in gpu mode\n", m_chn);
+            vdecStateTrace("[vdec-extbuf] chn=%d extbuf registration pending in gpu mode\n", m_chn);
             return 0;
         }
         else
@@ -1164,16 +1135,14 @@ int t507_vdec_node::sendFrame(media_frame* frame)
 
     if (m_gpuBufferModeEnabled && m_registeredBufferCount > 0 && !m_externalReleaseModeArmed)
     {
-        std::printf("[vdec-extbuf] chn=%d enter extbuf arm gate registered=%zu armed=%d\n",
-                    m_chn,
-                    m_registeredBufferCount,
-                    m_externalReleaseModeArmed ? 1 : 0);
-        std::fflush(stdout);
+        vdecStateTraceFlush("[vdec-extbuf] chn=%d enter extbuf arm gate registered=%zu armed=%d\n",
+                            m_chn,
+                            m_registeredBufferCount,
+                            m_externalReleaseModeArmed ? 1 : 0);
         const int armRet = armExternalBufferReleaseMode();
         if (armRet > 0)
         {
-            std::printf("[vdec-extbuf] chn=%d extbuf arm pending\n", m_chn);
-            std::fflush(stdout);
+            vdecStateTraceFlush("[vdec-extbuf] chn=%d extbuf arm pending\n", m_chn);
             return 0;
         }
         if (armRet < 0)
@@ -1183,8 +1152,7 @@ int t507_vdec_node::sendFrame(media_frame* frame)
             return -1;
         }
 
-        std::printf("[vdec-extbuf] chn=%d extbuf armed, retry decode\n", m_chn);
-        std::fflush(stdout);
+        vdecStateTraceFlush("[vdec-extbuf] chn=%d extbuf armed, retry decode\n", m_chn);
         retryDecodeAfterArm = true;
     }
 

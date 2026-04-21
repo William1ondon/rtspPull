@@ -788,7 +788,7 @@ int CT507Graphics::picDraw()
     eglSwapBuffers(m_egl.egl_display, m_egl.egl_surface);
     const uint64_t swapEndUs = monotonicTimeUs();
     const uint64_t finishStartUs = swapEndUs;
-    glFinish();
+    // glFinish();
     const uint64_t totalEndUs = monotonicTimeUs();
 
     endTime = sv_safeFunc_GetTimeTick();

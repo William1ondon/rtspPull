@@ -119,20 +119,9 @@ static void maybePrintPipePerf(int chn, PipePerfWindow& perf, bool force = false
     const double loopAvgMs = perf.popCount > 0 ? static_cast<double>(perf.loopUsTotal) / static_cast<double>(perf.popCount) / 1000.0 : 0.0;
     const double loopMaxMs = static_cast<double>(perf.loopUsMax) / 1000.0;
 
-    printf("[pipe-prof] chn=%d elapsed_ms=%.1f pop=%zu send=%zu send_fail=%zu load=%zu null=%zu drop_pre=%zu drop_resync=%zu idr=%zu qmax=%zu in_kb=%.1f out_kb=%.1f popwait_avg=%.3f popwait_max=%.3f send_avg=%.3f send_max=%.3f get_avg=%.3f get_max=%.3f load_avg=%.3f load_max=%.3f loop_avg=%.3f loop_max=%.3f\n",
+    printf("[pipe-prof] chn=%d elapsed_ms=%.1f popwait_avg=%.3f popwait_max=%.3f send_avg=%.3f send_max=%.3f get_avg=%.3f get_max=%.3f load_avg=%.3f load_max=%.3f loop_avg=%.3f loop_max=%.3f\n",
            chn,
            elapsedMs,
-           perf.popCount,
-           perf.sendCount,
-           perf.sendFailCount,
-           perf.loadCount,
-           perf.nullFrameCount,
-           perf.preIdrDropCount,
-           perf.resyncDropCount,
-           perf.idrCount,
-           perf.queueDepthMax,
-           static_cast<double>(perf.inputBytes) / 1024.0,
-           static_cast<double>(perf.outputBytes) / 1024.0,
            popWaitAvgMs,
            popWaitMaxMs,
            sendAvgMs,
