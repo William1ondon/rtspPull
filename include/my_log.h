@@ -1,11 +1,6 @@
 #pragma once
 
-#define DECODE_LOG
-#ifdef DECODE_LOG
-#define DEBUG(format, ...) printf(format, ##__VA_ARGS__)
-#else
-#define DEBUG(format, ...)
-#endif
+#define DEBUG(format, ...) do {} while (0)
 
 #define HL_TWK_RED_YEL  "\033[1m\033[5;31;43m"
 #define HL_RED_WRT      "\033[1;31;47m"
@@ -25,42 +20,11 @@ enum LOG_LEVEL
     LOG_LEVEL_ALL,
 };
 
-static const int log_level = LOG_LEVEL_ALL;
+static const int log_level = LOG_LEVEL_OFF;
 
-#define logFatal(format, ...) \
-    do { \
-         if(log_level>=LOG_LEVEL_FATAL)\
-           DEBUG(HL_TWK_RED_YEL "[F]" PF_CLR"[%s]%s line:%d"format,__FILE__,__FUNCTION__, __LINE__,##__VA_ARGS__);\
-    } while (0)
-
-#define logError(format, ...) \
-    do { \
-         if(log_level>=LOG_LEVEL_ERR)\
-           DEBUG(HL_RED_WRT "[E]" PF_CLR"[%s]%s line:%d " format,__FILE__,__FUNCTION__, __LINE__,##__VA_ARGS__);\
-    } while (0)
-
-#define logWarn(format, ...) \
-    do { \
-         if(log_level>=LOG_LEVEL_WARN)\
-           DEBUG(HL_YEL "[W]" PF_CLR"[%s]%s line:%d " format,__FILE__,__FUNCTION__, __LINE__,##__VA_ARGS__);\
-    } while (0)
-
-#define logInfo(format, ...) \
-    do { \
-         if(log_level>=LOG_LEVEL_INFO)\
-           DEBUG(HL_RED "[I]" PF_CLR"%s line:%d " format,__FUNCTION__,__LINE__,##__VA_ARGS__);\
-    } while (0)
-
-#define logDebug(format, ...) \
-    do { \
-         if(log_level>=LOG_LEVEL_DBG){\
-           DEBUG( "[D]" "%s "  format,__FUNCTION__,##__VA_ARGS__);\
-           }\
-    } while (0)
-
-#define logr \
-    do { \
-         if(log_level>=LOG_LEVEL_ALL){\
-           DEBUG(HL_RED "[I]" PF_CLR"%s line:%d is run!\n", __FUNCTION__,__LINE__);\
-           }\
-    } while (0)
+#define logFatal(format, ...) do {} while (0)
+#define logError(format, ...) do {} while (0)
+#define logWarn(format, ...) do {} while (0)
+#define logInfo(format, ...) do {} while (0)
+#define logDebug(format, ...) do {} while (0)
+#define logr do {} while (0)

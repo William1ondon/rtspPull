@@ -231,18 +231,17 @@ static const char *eglErrorString(EGLint code)
 
 sv_s32 getEGL_GL_ErrInfo(sv_s32 s32chn)
 {
+    (void)s32chn;
     EGLint code;
     code = eglGetError();
     if (code != EGL_SUCCESS)
     {
-        printf("chn%d creatEglImage failed: err_description = %s, code = %d\n", s32chn, eglErrorString(code), code);
         return -1;
     }
 
     code = glGetError();
     if (code != GL_NO_ERROR)
     {
-        printf("glGetError: err_description = %s, code = %d\n", glErrorString(code), code);
         return -1;
     }
 
@@ -251,7 +250,6 @@ sv_s32 getEGL_GL_ErrInfo(sv_s32 s32chn)
 
 sv_s32 getImageSize(sv_u32 u32format, sv_u32 u32width, sv_u32 u32height)
 {
-    printf("getImageSize: width = %d, height = %d.\n", u32width, u32height);
     switch (u32format)
     {
     case DRM_FORMAT_ARGB8888:
@@ -341,7 +339,7 @@ static EGLImageKHR creatEglImage(EGLDisplay dpy, int dma_fd, unsigned int width,
         attribs0[atti++] = width;
         break;
     default:
-        printf("format not support, format = %d\n", format);
+        break;
     };
 
     // set color space and color range
@@ -357,10 +355,7 @@ static EGLImageKHR creatEglImage(EGLDisplay dpy, int dma_fd, unsigned int width,
 
 CT507Graphics::CT507Graphics()
 {
-    if (IonAllocOpen() < 0)
-    {
-        printf("IonAllocOpen failed\n");
-    }
+    IonAllocOpen();
 
     int ret = 0;
     for (int i = 0; i < DISP_CHN_NUM; i++)
@@ -403,7 +398,6 @@ int CT507Graphics::readShaderSource(string &vShader, string &fShader, int s32Ind
         FILE *pFp = fopen(g_shaderName[s32Index][i].c_str(), "rb");
         if (NULL == pFp)
         {
-            printf("open shader failed. \n");
             return -1;
         }
 
@@ -431,7 +425,6 @@ int CT507Graphics::initOpenGL()
     // init EGL
     if (initEGL() < 0)
     {
-        printf("init EGL failed! \n");
         return -1;
     }
     // init shader
@@ -439,7 +432,6 @@ int CT507Graphics::initOpenGL()
     ret = readShaderSource(vertexShader, fragmentShader, 0);
     if (initShader(vertexShader.c_str(), fragmentShader.c_str(), 0) < 0)
     {
-        printf("init Shader failed, index = %d. \n", 0);
         return -1;
     }
 
@@ -450,12 +442,6 @@ int CT507Graphics::initOpenGL()
 
     glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, tex_coord1080p);
     glEnableVertexAttribArray(1);
-
-    // if (ret < 0)
-    // {
-    //     printf("create texture buf failed! \n");
-    //     return -1;
-    // }
 
     setupTexture();
 
@@ -471,29 +457,22 @@ int CT507Graphics::initEGL()
     m_egl.egl_display = eglGetDisplay(EGL_DEFAULT_DISPLAY);
     if (m_egl.egl_display == EGL_NO_DISPLAY)
     {
-        printf("no display found!\n");
         return -1;
     }
 
     if (!eglInitialize(m_egl.egl_display, &(m_egl.egl_major), &(m_egl.egl_minor)))
     {
-        printf("eglInitialize failed!\n");
         return -1;
     }
-    printf("EGL Version: \"%s\" \n", eglQueryString(m_egl.egl_display, EGL_VERSION));
-    printf("EGL Vendor: \"%s\" \n", eglQueryString(m_egl.egl_display, EGL_VENDOR));
     extensions = eglQueryString(m_egl.egl_display, EGL_EXTENSIONS);
-    printf("EGL Extensions: \"%s\" \n\n", extensions);
 
     if (!checkEglExtension(extensions, "EGL_EXT_image_dma_buf_import"))
     {
-        printf("egl extension image can not be imported by dma buffer. \n");
         return -1;
     }
 
     if (!eglBindAPI(EGL_OPENGL_ES_API))
     {
-        printf("failed to bind api EGL_OPENGL_ES_API. \n");
         return -1;
     }
 
@@ -501,49 +480,29 @@ int CT507Graphics::initEGL()
     m_egl.egl_context = eglCreateContext(m_egl.egl_display, config, EGL_NO_CONTEXT, context_attribute_list);
     if (m_egl.egl_context == EGL_NO_CONTEXT)
     {
-        EGLint code;
-        code = eglGetError();
-        if (code != EGL_SUCCESS)
-            printf("eglCreateContext failed: err_description = %s, code = %d\n", eglErrorString(code), code);
-        else
-            printf("eglCreateContext failed, do not get err description. \n");
+        return -1;
     }
     GLint maxSamples = -1;
     glGetIntegerv(GL_MAX_SAMPLES_IMG, &maxSamples);
-    printf("GL_MAX_SAMPLES_IMG:: maxSamples =  %d \n", maxSamples);
 
     GLint width, height;
     // obtain an surface(buffer) that can be display diractly
     native_window.width = texConfig.view_width;
     native_window.height = texConfig.view_height;
-
-    printf("native_window.width = %d, native_window.height = %d \n", native_window.width, native_window.height);
     m_egl.egl_surface = eglCreateWindowSurface(m_egl.egl_display, config, (NativeWindowType)&native_window, window_attribute_list);
     if (m_egl.egl_surface == EGL_NO_SURFACE)
     {
-        printf("egl no surface. \n");
-        EGLint code;
-        code = eglGetError();
-        if (code != EGL_SUCCESS)
-        {
-            printf("alloc egl surface failed: %s, %d\n", eglErrorString(code), code);
-            return -1;
-        }
-        else
-            printf("alloc egl surface failed, no reason! \n");
+        return -1;
     }
 
     if (!eglQuerySurface(m_egl.egl_display, m_egl.egl_surface, EGL_WIDTH, &width) ||
         !eglQuerySurface(m_egl.egl_display, m_egl.egl_surface, EGL_HEIGHT, &height))
     {
-        printf("check error 1. \n");
         return -1;
     }
-    printf("Surface size: %d * %d\n", width, height);
 
     if (!eglMakeCurrent(m_egl.egl_display, m_egl.egl_surface, m_egl.egl_surface, m_egl.egl_context))
     {
-        printf("check error 2. \n");
         return -1;
     }
     eglSwapInterval(m_egl.egl_display, 1);
@@ -553,11 +512,6 @@ int CT507Graphics::initEGL()
 
 void CT507Graphics::EGLInfoDump()
 {
-    printf("GL Vendor: \"%s\"\n", glGetString(GL_VENDOR));
-    printf("GL Renderer: \"%s\"\n", glGetString(GL_RENDERER));
-    printf("GL Version: \"%s\"\n", glGetString(GL_VERSION));
-    printf("GL Extensions: \"%s\"\n", glGetString(GL_EXTENSIONS));
-    printf("\n\n\n");
 }
 
 int CT507Graphics::initShader(const char *vertexShader, const char *fragmentShader, int index)
@@ -566,20 +520,17 @@ int CT507Graphics::initShader(const char *vertexShader, const char *fragmentShad
     // 创建顶点着色器
     if (createShader(&vs_id, GL_VERTEX_SHADER, vertexShader) < 0)
     {
-        printf("createShader vertex shader failed! \n");
         return 0;
     }
     // 创建片段着色器
     if (createShader(&fs_id, GL_FRAGMENT_SHADER, fragmentShader) < 0)
     {
-        printf("createShader fragment shader failed!\n");
         return 0;
     }
 
     shader_program[index] = glCreateProgram();
     if (!shader_program[index])
     {
-        printf("failed to create shader_program!\n");
         return -1;
     }
     // 绑定并链接着色器
@@ -595,9 +546,6 @@ int CT507Graphics::initShader(const char *vertexShader, const char *fragmentShad
     glGetProgramiv(shader_program[index], GL_LINK_STATUS, &ret);
     if (!ret)
     {
-        char infoLog[1024] = {0};
-        glGetProgramInfoLog(shader_program[index], 1024, NULL, infoLog);
-        printf("shader_program link failed, errInfo = %s\n", infoLog);
         return -1;
     }
     glUseProgram(shader_program[index]);
@@ -612,13 +560,6 @@ int CT507Graphics::createShader(unsigned int *shader_id, int shaderType, const c
     *shader_id = glCreateShader(shaderType);
     if (*shader_id == 0)
     {
-        int code;
-        code = glGetError();
-        if (code != GL_NO_ERROR)
-            printf("glCreateShader failed: err_description = %s, code = %d\n", glErrorString(code), code);
-        else
-            printf("glCreateShader failed, do not get err description. \n");
-
         return -1;
     }
 
@@ -628,10 +569,6 @@ int CT507Graphics::createShader(unsigned int *shader_id, int shaderType, const c
     glGetShaderiv(*shader_id, GL_COMPILE_STATUS, &ret);
     if (!ret)
     {
-        char infoLog[1024] = {0};
-        glGetShaderInfoLog(*shader_id, 1024, NULL, infoLog);
-        printf("shader compilation failed, type = %d, errInfo = %s\n", shaderType, infoLog);
-
         return -1;
     }
 
@@ -656,28 +593,6 @@ int CT507Graphics::load_texture(void *yuv_virAddr, int w, int h, int chn)
             break;
         }
     }
-
-
-    // printf("load idx = %d\n", i);
-
-    // writeCacheToFile()
-
-    // static int cnt = 0;
-
-    // if(cnt == 100)
-    // {
-    //     cnt = -1;
-    // }
-    // else if (cnt == -1)
-    // {
-    //     ;
-    // }
-    // else
-    // {
-    //     cnt++;
-    //     writeCacheToFile(yuv_virAddr,1920*1080*3/2, "/root/test.yuv");
-    // }
-
     // Trigger render whenever any channel gets a new frame.`r`n    pthread_mutex_lock(&RenderMutex);`r`n    bRender = true;`r`n    pthread_cond_signal(&RenderCond);`r`n    pthread_mutex_unlock(&RenderMutex);
     pthread_mutex_lock(&RenderMutex);
     bRender = true;
@@ -701,16 +616,13 @@ int CT507Graphics::setupTexture()
             memset(&mem, 0, sizeof(mem));
             if (my_buffer::getInstance()->getVideobuffer(i, j, &mem) != 0)
             {
-                printf("setupTexture skip invalid buffer chn=%d idx=%d\n", i, j);
                 return -1;
             }
             img_pre = creatEglImage(m_egl.egl_display, mem.dmafd, IMAGEWIDTH, IMAGEHEIGHT, DRM_FORMAT_NV21);
             if (img_pre == EGL_NO_IMAGE_KHR)
             {
                 ret = getEGL_GL_ErrInfo(i);
-                if (ret)
-                    printf("create EGLImage failed. \n");
-
+                (void)ret;
                 return -1;
             }
             glGenTextures(1, &Tex[i][j]);
@@ -727,13 +639,10 @@ int CT507Graphics::setupTexture()
             ret = getEGL_GL_ErrInfo(i);
             if (ret)
             {
-                printf("MIPMAP failed. \n");
                 return -1;
             }
         }
     }
-
-    printf("secceed to setupTexture!\n");
 
     return 0;
 }
@@ -755,8 +664,6 @@ int CT507Graphics::picDraw()
     };
 
     static RenderPerfWindow perf;
-    static long long startTime = 0;
-    static long long endTime = 0;
     const uint64_t totalStartUs = monotonicTimeUs();
     pthread_mutex_lock(&RenderMutex);
     while (!bRender)
@@ -765,9 +672,6 @@ int CT507Graphics::picDraw()
     }
     bRender = false;
     pthread_mutex_unlock(&RenderMutex);
-
-    startTime = sv_safeFunc_GetTimeTick();
-    // printf("PIC DRAW!!!!\n");
 
     const uint64_t drawStartUs = monotonicTimeUs();
     glUseProgram(shader_program[0]);
@@ -791,9 +695,6 @@ int CT507Graphics::picDraw()
     // glFinish();
     const uint64_t totalEndUs = monotonicTimeUs();
 
-    endTime = sv_safeFunc_GetTimeTick();
-    // printf("===============> Render time = %lld ms\n", endTime - startTime);
-
     if (perf.windowStartUs == 0)
     {
         perf.windowStartUs = totalStartUs;
@@ -807,28 +708,6 @@ int CT507Graphics::picDraw()
     const uint64_t elapsedUs = totalEndUs - perf.windowStartUs;
     if (elapsedUs >= 1000000ULL)
     {
-        const double elapsedMs = static_cast<double>(elapsedUs) / 1000.0;
-        const double drawAvgMs = perf.drawCount > 0 ? static_cast<double>(perf.drawWorkUsTotal) / static_cast<double>(perf.drawCount) / 1000.0 : 0.0;
-        const double drawMaxMs = static_cast<double>(perf.drawWorkUsMax) / 1000.0;
-        const double swapAvgMs = perf.drawCount > 0 ? static_cast<double>(perf.swapUsTotal) / static_cast<double>(perf.drawCount) / 1000.0 : 0.0;
-        const double swapMaxMs = static_cast<double>(perf.swapUsMax) / 1000.0;
-        const double finishAvgMs = perf.drawCount > 0 ? static_cast<double>(perf.finishUsTotal) / static_cast<double>(perf.drawCount) / 1000.0 : 0.0;
-        const double finishMaxMs = static_cast<double>(perf.finishUsMax) / 1000.0;
-        const double totalAvgMs = perf.drawCount > 0 ? static_cast<double>(perf.totalUsTotal) / static_cast<double>(perf.drawCount) / 1000.0 : 0.0;
-        const double totalMaxMs = static_cast<double>(perf.totalUsMax) / 1000.0;
-
-        printf("[render-prof] elapsed_ms=%.1f draws=%zu draw_avg=%.3f draw_max=%.3f swap_avg=%.3f swap_max=%.3f finish_avg=%.3f finish_max=%.3f total_avg=%.3f total_max=%.3f\n",
-               elapsedMs,
-               perf.drawCount,
-               drawAvgMs,
-               drawMaxMs,
-               swapAvgMs,
-               swapMaxMs,
-               finishAvgMs,
-               finishMaxMs,
-               totalAvgMs,
-               totalMaxMs);
-
         perf = RenderPerfWindow{};
         perf.windowStartUs = totalEndUs;
     }

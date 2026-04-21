@@ -51,21 +51,13 @@ int getPhyFromIommu(int VeFd,void *pIommuBuf,unsigned long *phyaddr)
 	if(0 == ret){
 		ret = ioctl(VeFd,IOCTL_GET_IOMMU_ADDR,pIommuBuffer);
 		if(ret != 0){
-			printf("get iommu addr fail! ret:[%d]\n", ret);            
 			ret = ioctl(VeFd, IOCTL_ENGINE_REL, 0);            
-			if(ret != 0){
-				printf("fatal error! ENGINE_REL err, ret %d\n", ret);
-			}            
 			return -1;
 		}else{
 			if(pIommuBuffer->iommu_addr & 0xff)
 		    {
-		        printf("get iommu addr maybe wrong:%x\n", pIommuBuffer->iommu_addr);
 		        return -1;
 		    }
-		    //printf("ion_alloc_palloc: fd:%d, iommu_addr:%x\n",
-		    //    		 pIommuBuffer->fd,	pIommuBuffer->iommu_addr);
-
 		    *phyaddr = (unsigned long)pIommuBuffer->iommu_addr;
 	    }
     }
@@ -78,9 +70,6 @@ int freePhyFromIommu(int VeFd,void *pIommuBuf)
 				(struct aw_user_iommu_param *)pIommuBuf);
 				
     ret = ioctl(VeFd, IOCTL_ENGINE_REL, 0);
-    if(ret != 0){
-        printf("fatal error! ENGINE_REL err, ret %d", ret);
-    }
     
 	return ret;
 }
@@ -101,7 +90,6 @@ int GetIonTotalMem()
 	int ion_fd = open(DEV_NAME, O_WRONLY);
 
 	if (ion_fd < 0) {
-		printf("open ion dev failed, cannot get ion mem.");
 		goto err;
 	}
 
@@ -109,11 +97,9 @@ int GetIonTotalMem()
 	cdata.aw_arg = (unsigned long)&binfo;
 	ret = ioctl(ion_fd, AW_MEM_ION_IOC_CUSTOM, &cdata);
 	if (ret < 0){
-		printf("Failed to ioctl ion device, errno:%s\n", strerror(errno));
 		goto err;
 	}
 
-	printf("ion dev get free pool [%d MB], total [%d MB]\n", binfo.free_mb, binfo.total / 1024);
 	ret = binfo.total;
 err:
 	if(ion_fd > 0)
@@ -127,19 +113,13 @@ int IonAllocOpen()
 
 	if (g_pAllocContext != NULL)
 	{
-		printf("ion allocator has already been created \n");
 		goto SUCCEED_OUT;
 	}
 
 	g_pAllocContext = (ion_alloc_context*)malloc(sizeof(ion_alloc_context));
 	if (g_pAllocContext == NULL)
 	{
-		printf("create ion allocator failed, out of memory \n");
 		goto ERROR_OUT;
-	}
-	else
-	{
-		printf("pid: %d, g_pAllocContext = %p \n", getpid(), g_pAllocContext);
 	}
 
     memset((void*)g_pAllocContext, 0, sizeof(ion_alloc_context));
@@ -148,7 +128,6 @@ int IonAllocOpen()
 
     if (g_pAllocContext->fd <= 0)
 	{
-		printf("open %s failed \n", DEV_NAME);
 		goto ERROR_OUT;
 	}
 
@@ -156,7 +135,6 @@ int IonAllocOpen()
 	gVefd = openVe();
 	if (gVefd <= 0)
 	{
-		printf("open %s failed \n", VE_NAME);
 		goto ERROR_OUT;
 	}
 
@@ -198,18 +176,14 @@ int IonAllocClose()
 
 	//
 	if(!g_pAllocContext){
-		printf("error:open and close dismatch.\n");
 		return 0;	
 	}
 	
 	if (--g_pAllocContext->ref_cnt <= 0)
 	{
-		printf("pid: %d, release g_pAllocContext = %p \n", getpid(), g_pAllocContext);
-
 		aw_mem_list_for_each_safe(pos, q, &g_pAllocContext->list)
 		{
 			tmp = aw_mem_list_entry(pos, ion_buffer_node, i_list);
-			printf("IonAllocClose del item phy = 0x%lx vir = 0x%lx, size = %d \n", tmp->phy, tmp->vir, tmp->size);
 			aw_mem_list_del(pos);
 			free(tmp);
 		}
@@ -226,10 +200,6 @@ int IonAllocClose()
 		free(g_pAllocContext);
 		g_pAllocContext = NULL;
 	}
-	else
-	{
-		printf("ref cnt: %d > 0, do not free \n", g_pAllocContext->ref_cnt);
-	}
 	return 0;
 }
 
@@ -244,16 +214,13 @@ unsigned long IonAlloc(int size)
 	unsigned long addr_vir = 0;
 	ion_buffer_node * alloc_buffer = NULL;
 	int ret = 0;
-	//printf("\n ===IonAlloc \n");
 	if (g_pAllocContext == NULL)
 	{
-		printf("IonAlloc do not opened, should call ion_alloc_open() before ion_alloc(size) \n");
 		goto ALLOC_OUT;
 	}
 
 	if(size <= 0)
 	{
-		printf("can not alloc size 0 \n");
 		goto ALLOC_OUT;
 	}
 
@@ -277,7 +244,6 @@ unsigned long IonAlloc(int size)
 	ret = ioctl(g_pAllocContext->fd, AW_MEM_ION_IOC_ALLOC, &alloc_data);
 	if (ret)
 	{
-		printf("ION_IOC_ALLOC error \n");
 		goto ALLOC_OUT;
 	}
 
@@ -286,7 +252,6 @@ unsigned long IonAlloc(int size)
 	ret = ioctl(g_pAllocContext->fd, AW_MEM_ION_IOC_MAP, &fd_data);
 	if(ret)
 	{
-		printf("ION_IOC_MAP err, ret %d, dmabuf fd 0x%08x\n", ret, (unsigned int)fd_data.aw_fd);
 		goto ALLOC_OUT;
 	}
 
@@ -294,12 +259,9 @@ unsigned long IonAlloc(int size)
 	addr_vir = (unsigned long)mmap(NULL, alloc_data.aw_len, PROT_READ | PROT_WRITE, MAP_SHARED, fd_data.aw_fd, 0);
 	if((unsigned long)MAP_FAILED == addr_vir)
 	{
-		printf("mmap err, ret %d\n", (unsigned int)addr_vir);
 		addr_vir = 0;
 		goto ALLOC_OUT;
 	}
-	//printf("fd_data.aw_fd %d\n", fd_data.aw_fd);
-
 #ifndef CONFIG_IOMMU
 	/* get phy address */
 	memset(&phys_data, 0, sizeof(phys_data));
@@ -310,7 +272,6 @@ unsigned long IonAlloc(int size)
 
 	ret = ioctl(g_pAllocContext->fd, AW_MEM_ION_IOC_CUSTOM, &custom_data);
 	if(ret) {
-		printf("ION_IOC_CUSTOM err, ret %d\n", ret);
 		addr_phy = 0;
 		addr_vir = 0;
 		goto ALLOC_OUT;
@@ -321,12 +282,8 @@ unsigned long IonAlloc(int size)
 	alloc_buffer = (ion_buffer_node *)malloc(sizeof(ion_buffer_node));
 	if (alloc_buffer == NULL)
 	{
-		printf("malloc buffer node failed");
-
 		/* unmmap */
 		ret = munmap((void*)addr_vir, alloc_data.aw_len);
-		if(ret)
-			printf("munmap err, ret %d\n", ret);
 
 		/* close dmabuf fd */
 		close(fd_data.aw_fd);
@@ -334,9 +291,6 @@ unsigned long IonAlloc(int size)
 		/* free buffer */
 		handle_data.handle = alloc_data.handle;
 		ret = ioctl(g_pAllocContext->fd, AW_MEM_ION_IOC_FREE, &handle_data);
-
-		if(ret)
-			printf("ION_IOC_FREE err, ret %d\n", ret);
 
 		addr_phy = 0;
 		addr_vir = 0; /* value of MAP_FAILED is -1, should return 0 */
@@ -348,11 +302,9 @@ unsigned long IonAlloc(int size)
     struct aw_user_iommu_param iommu_buffer;
     memset(&iommu_buffer, 0, sizeof(struct aw_user_iommu_param));
     iommu_buffer.fd = fd_data.aw_fd;
-	//printf("getPhyFromIommu gVefd(%d) aw_fd(%d)\n",gVefd,iommu_buffer.fd);
 	ret = getPhyFromIommu(gVefd,(void *)&iommu_buffer, &addr_phy);
     if(ret < 0)
     {
-        printf("get phy addr error\n");
         goto ALLOC_OUT;
     }
 #endif
@@ -362,8 +314,6 @@ unsigned long IonAlloc(int size)
 	alloc_buffer->size	= size;
 	alloc_buffer->fd_data.handle = fd_data.handle;
 	alloc_buffer->fd_data.aw_fd = fd_data.aw_fd;
-
-	//printf("ionAlloc vir=0x%lx phy=0x%lx, size %d, fd %d\n", addr_vir, addr_phy,size, fd_data.aw_fd);
 
 	aw_mem_list_add_tail(&alloc_buffer->i_list, &g_pAllocContext->list);
 
@@ -379,16 +329,13 @@ int IonFree(void *pbuf)
 	int ret;
 	struct dma_handle_data handle_data;
 	int nFreeSize = 0;
-	//printf("\n===IonFree \n");
 	if (0 == pbuf)
 	{
-		printf("can not free NULL buffer \n");
 		return 0;
 	}
 
 	if (g_pAllocContext == NULL)
 	{
-		printf("IonAlloc do not opened, should call ion_alloc_open() before ion_alloc(size) \n");
 		return 0;
 	}
 
@@ -400,19 +347,11 @@ int IonFree(void *pbuf)
 			    struct aw_user_iommu_param iommu_buffer;
 			    memset(&iommu_buffer, 0, sizeof(struct aw_user_iommu_param));
 			    iommu_buffer.fd = tmp->fd_data.aw_fd;
-				//printf("IonFree freePhyFromIommu gVefd(%d) aw_fd(%d)\n",gVefd,iommu_buffer.fd);
 		    	ret = freePhyFromIommu(gVefd,(void *)&iommu_buffer);
-			    if(ret < 0){
-			        printf("free phy addr error\n");
-			    }
 		    #endif
 		
-			//printf("IonFree item phy= 0x%lx vir= 0x%lx, size= %d \n", tmp->phy, tmp->vir, tmp->size);
 			/*unmap user space*/
-			if (munmap(pbuf, tmp->size) < 0)
-			{
-				printf("munmap 0x%p, size: %d failed \n", (void*)addr_vir, tmp->size);
-			}
+			munmap(pbuf, tmp->size);
 			nFreeSize = tmp->size;
 
 			/*close dma buffer fd*/
@@ -421,8 +360,6 @@ int IonFree(void *pbuf)
 			handle_data.handle = tmp->fd_data.handle;
 
 			ret = ioctl(g_pAllocContext->fd, AW_MEM_ION_IOC_FREE, &handle_data);
-			if (ret)
-				printf("TON_IOC_FREE failed \n");
 			
 			aw_mem_list_del(&tmp->i_list);
 			free(tmp);
@@ -430,8 +367,6 @@ int IonFree(void *pbuf)
 			break;
 		}
 	}
-	if (0 == flag)
-		printf("IonFree failed, do not find virtual address: 0x%lx \n", addr_vir);
 	return nFreeSize;
 }
 
@@ -443,7 +378,6 @@ int IonVir2fd(void *pbuf)
 
 	if (0 == pbuf)
 	{
-		printf("can not vir2phy NULL buffer \n");
 		return 0;
 	}
 
@@ -452,14 +386,10 @@ int IonVir2fd(void *pbuf)
 		if (addr_vir >= tmp->vir && addr_vir < tmp->vir + tmp->size)
 		{
 			fd = tmp->fd_data.aw_fd;
-			//printf("ion mem vir = %p, fd = %d\n", (void*)addr_vir, fd);
 			flag = 1;
 			break;
 		}
 	}
-
-	if (0 == flag)
-		printf("IonVir2fd failed, do not find virtual address: 0x%lx \n", addr_vir);
 
 	return fd;
 }
@@ -474,7 +404,6 @@ unsigned long IonVir2phy(void *pbuf)
 
 	if (0 == pbuf)
 	{
-		printf("can not vir2phy NULL buffer \n");
 		return 0;
 	}
 
@@ -483,15 +412,10 @@ unsigned long IonVir2phy(void *pbuf)
 		if (addr_vir >= tmp->vir && addr_vir < tmp->vir + tmp->size)
 		{
 			addr_phy = tmp->phy + addr_vir - tmp->vir;
-			//printf("IonVir2phy tmp->phy%p + addr_vir%p - tmp->vir%p \n",(void*)tmp->phy,(void*)addr_vir,(void*)tmp->vir);
-			//printf("IonVir2phy phy= 0x%p vir= 0x%p \n", (void*)addr_phy, (void*)addr_vir);
 			flag = 1;
 			break;
 		}
 	}
-
-	if (0 == flag)
-		printf("IonVir2phy failed, do not find virtual address: 0x%lx \n", addr_vir);
 
 	return addr_phy;
 }
@@ -505,7 +429,6 @@ unsigned long IonPhy2vir(void *pbuf)
 
 	if (0 == pbuf)
 	{
-		printf("can not phy2vir NULL buffer \n");
 		return 0;
 	}
 
@@ -518,9 +441,6 @@ unsigned long IonPhy2vir(void *pbuf)
 			break;
 		}
 	}
-
-	if (0 == flag)
-		printf("IonPhy2vir failed, do not find physical address: 0x%lx \n", addr_phy);
 
 	return addr_vir;
 }
@@ -535,8 +455,6 @@ void IonFlushCache(void *startAddr, int size)
 	range.end = (unsigned long)startAddr + size;
 
 	ret = ioctl(g_pAllocContext->fd, ION_IOC_SUNXI_FLUSH_RANGE, &range);
-	if (ret)
-		printf("ION_IOC_SUNXI_FLUSH_RANGE failed \n");
 
 	return;
 }
@@ -561,13 +479,11 @@ unsigned long IonAllocDrm(int size)
 
 	if (g_pAllocContext == NULL)
 	{
-		printf("IonAlloc do not opened, should call ion_alloc_open() before ion_alloc(size) \n");
 		goto ALLOC_OUT;
 	}
 
 	if(size <= 0)
 	{
-		printf("can not alloc size 0 \n");
 		goto ALLOC_OUT;
 	}
 
@@ -579,7 +495,6 @@ unsigned long IonAllocDrm(int size)
 	ret = ioctl(g_pAllocContext->fd, AW_MEM_ION_IOC_ALLOC, &alloc_data);
 	if (ret)
 	{
-		printf("ION_IOC_ALLOC error %s \n", strerror(errno));
 		goto ALLOC_OUT;
 	}
 
@@ -588,7 +503,6 @@ unsigned long IonAllocDrm(int size)
 	ret = ioctl(g_pAllocContext->fd, AW_MEM_ION_IOC_MAP, &fd_data);
 	if(ret)
 	{
-		printf("ION_IOC_MAP err, ret %d, dmabuf fd 0x%08x\n", ret, (unsigned int)fd_data.aw_fd);
 		goto ALLOC_OUT;
 	}
 
@@ -611,7 +525,6 @@ unsigned long IonAllocDrm(int size)
 	ret = ioctl(g_pAllocContext->fd, AW_MEM_ION_IOC_CUSTOM, &custom_data);
 	if(ret)
 	{
-		printf("ION_IOC_CUSTOM err, ret %d\n", ret);
 		addr_phy = 0;
 		addr_vir = 0;
 		goto ALLOC_OUT;
@@ -621,12 +534,8 @@ unsigned long IonAllocDrm(int size)
 	alloc_buffer = (ion_buffer_node *)malloc(sizeof(ion_buffer_node));
 	if (alloc_buffer == NULL)
 	{
-		printf("malloc buffer node failed");
-
 		/* unmmap */
 		ret = munmap((void*)addr_vir, alloc_data.aw_len);
-		if(ret)
-			printf("munmap err, ret %d\n", ret);
 
 		/* close dmabuf fd */
 		close(fd_data.aw_fd);
@@ -634,9 +543,6 @@ unsigned long IonAllocDrm(int size)
 		/* free buffer */
 		handle_data.handle = alloc_data.handle;
 		ret = ioctl(g_pAllocContext->fd, AW_MEM_ION_IOC_FREE, &handle_data);
-
-		if(ret)
-			printf("ION_IOC_FREE err, ret %d\n", ret);
 
 		addr_phy = 0;
 		addr_vir = 0; /*value of MAP_FAILED is -1, should return 0*/

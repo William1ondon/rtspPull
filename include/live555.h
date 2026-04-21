@@ -76,16 +76,6 @@ public:
 
         // Once overflow happens, flush broken backlog and wait for the next clean sync point.
         if (mQueue.size() >= mMaxDepth) {
-            printf("[queue] overflow flush chn=%d depth=%zu max=%zu incoming_nal=%u incoming_size=%zu isIDR=%d isSpsOrPps=%d isSei=%d pts=%lld\n",
-                   mChn,
-                   mQueue.size(),
-                   mMaxDepth,
-                   static_cast<unsigned>(nalType),
-                   size,
-                   isIDR ? 1 : 0,
-                   isSpsOrPps ? 1 : 0,
-                   isSei ? 1 : 0,
-                   pts);
             while (!mQueue.empty()) {
                 H264Packet old = mQueue.front();
                 mQueue.pop();
@@ -97,11 +87,6 @@ public:
 
         if (mNeedIdr) {
             if (isIDR) {
-                printf("[queue] resync chn=%d dropped=%zu incoming_size=%zu pts=%lld\n",
-                       mChn,
-                       mDroppedWhileWaitingIdr,
-                       size,
-                       pts);
                 mNeedIdr = false;
                 mDroppedWhileWaitingIdr = 0;
             } else if (!isSpsOrPps && !isSei) {

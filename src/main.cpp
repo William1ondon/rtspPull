@@ -29,7 +29,6 @@
 #include "my_264test.h"
 #include "live555.h"
 #include "my_util.h"
-
 #define FILE_TEST
 
 bool bThreadShouldStop = false;
@@ -95,6 +94,7 @@ struct PipePerfWindow
 
 static void maybePrintPipePerf(int chn, PipePerfWindow& perf, bool force = false)
 {
+    (void)chn;
     const uint64_t nowUs = monotonicTimeUs();
     if (perf.windowStartUs == 0)
     {
@@ -106,32 +106,6 @@ static void maybePrintPipePerf(int chn, PipePerfWindow& perf, bool force = false
     {
         return;
     }
-
-    const double elapsedMs = static_cast<double>(elapsedUs) / 1000.0;
-    const double popWaitAvgMs = perf.popCount > 0 ? static_cast<double>(perf.popWaitUsTotal) / static_cast<double>(perf.popCount) / 1000.0 : 0.0;
-    const double popWaitMaxMs = static_cast<double>(perf.popWaitUsMax) / 1000.0;
-    const double sendAvgMs = perf.sendCount > 0 ? static_cast<double>(perf.sendUsTotal) / static_cast<double>(perf.sendCount) / 1000.0 : 0.0;
-    const double sendMaxMs = static_cast<double>(perf.sendUsMax) / 1000.0;
-    const double getAvgMs = perf.sendCount > 0 ? static_cast<double>(perf.getFrameUsTotal) / static_cast<double>(perf.sendCount) / 1000.0 : 0.0;
-    const double getMaxMs = static_cast<double>(perf.getFrameUsMax) / 1000.0;
-    const double loadAvgMs = perf.loadCount > 0 ? static_cast<double>(perf.loadUsTotal) / static_cast<double>(perf.loadCount) / 1000.0 : 0.0;
-    const double loadMaxMs = static_cast<double>(perf.loadUsMax) / 1000.0;
-    const double loopAvgMs = perf.popCount > 0 ? static_cast<double>(perf.loopUsTotal) / static_cast<double>(perf.popCount) / 1000.0 : 0.0;
-    const double loopMaxMs = static_cast<double>(perf.loopUsMax) / 1000.0;
-
-    printf("[pipe-prof] chn=%d elapsed_ms=%.1f popwait_avg=%.3f popwait_max=%.3f send_avg=%.3f send_max=%.3f get_avg=%.3f get_max=%.3f load_avg=%.3f load_max=%.3f loop_avg=%.3f loop_max=%.3f\n",
-           chn,
-           elapsedMs,
-           popWaitAvgMs,
-           popWaitMaxMs,
-           sendAvgMs,
-           sendMaxMs,
-           getAvgMs,
-           getMaxMs,
-           loadAvgMs,
-           loadMaxMs,
-           loopAvgMs,
-           loopMaxMs);
 
     perf = PipePerfWindow{};
     perf.windowStartUs = nowUs;
@@ -318,7 +292,6 @@ bool startOpengl()
     pthread_attr_init(&attr);
     pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_DETACHED);
     pthread_create(&ret, &attr, runOpenGL, nullptr);
-    printf("=============> OpenGL thread started, tid: %ld\n", ret);
     pthread_attr_destroy(&attr);
     return true;
 }
@@ -328,7 +301,6 @@ static void* listen_body(void* arg)
     DecodeThreadContext* ctx = static_cast<DecodeThreadContext*>(arg);
     if (ctx == nullptr || ctx->vdecNode == nullptr || ctx->h264Queue == nullptr)
     {
-        logError("listen_body invalid context\n");
         return nullptr;
     }
 
@@ -341,8 +313,6 @@ static void* listen_body(void* arg)
         CPU_SET(1 + chn_num, &mask);
         pthread_setaffinity_np(pthread_self(), sizeof(mask), &mask);
     }
-
-    printf("listen_body: chn:%d\n", chn_num);
 
     H264Packet pkt;
     std::vector<uint8_t> sps;
@@ -489,13 +459,6 @@ static void* listen_body(void* arg)
             recentDecHistory.pop_front();
         }
 
-        // printf("[dec-in] chn=%d nal=%u size=%zu idr=%d first_mb=%d\n",
-        //        chn_num,
-        //        static_cast<unsigned>(nalType),
-        //        pkt.size,
-        //        pkt.isIDR ? 1 : 0,
-        //        firstMbInSlice);
-
         pipePerf.inputBytes += pkt.size;
         pipePerf.outputBytes += outSize;
         if (pkt.isIDR)
@@ -513,24 +476,10 @@ static void* listen_body(void* arg)
             ++pipePerf.sendFailCount;
             if (!decoderNeedResync)
             {
-                printf("[dec-resync-arm] chn=%d sendRet=%d %s\n", chn_num, sendRet, decHistoryBuf);
                 decoderResyncDropped = 0;
             }
             decoderNeedResync = true;
             decoderPrimed = false;
-            printf("[dec-fail] chn=%d sendRet=%d %s\n", chn_num, sendRet, decHistoryBuf);
-            size_t histIdx = 0;
-            for (const std::string& hist : recentDecHistory)
-            {
-                printf("[dec-fail-hist] chn=%d idx=%zu %s\n", chn_num, histIdx, hist.c_str());
-                ++histIdx;
-            }
-            // printf("[dec-fail] chn=%d nal=%u size=%zu idr=%d first_mb=%d\\n",
-            //        chn_num,
-            //        static_cast<unsigned>(nalType),
-            //        pkt.size,
-            //        pkt.isIDR ? 1 : 0,
-            //        firstMbInSlice);
             finishLoop();
             continue;
         }
@@ -539,13 +488,11 @@ static void* listen_body(void* arg)
         {
             decoderNeedResync = false;
             decoderPrimed = true;
-            printf("[dec-resync-release] chn=%d dropped=%zu idr_size=%zu\n", chn_num, decoderResyncDropped, pkt.size);
             decoderResyncDropped = 0;
         }
         else if (pkt.isIDR && !decoderPrimed)
         {
             decoderPrimed = true;
-            printf("[vdec-sync] chn=%d primed on IDR size=%zu\n", chn_num, pkt.size);
         }
 
         ctx->vdecNode->retainInputBuffer(decodeBuf);
@@ -570,9 +517,6 @@ static void* listen_body(void* arg)
             ++pipePerf.loadCount;
         }
 
-        // if(pkt.isIDR)
-        //     printf("I==D==R\n");
-
         finishLoop();
     }
 
@@ -590,7 +534,6 @@ bool startChn(size_t activeChnCount)
     for (size_t i = 0; i < activeChnCount; ++i)
     {
         pthread_create(&ret, &attr, listen_body, &g_decodeCtx[i]);
-        printf("=============> Decode thread for channel %zu started, tid: %ld\n", i, ret);
     }
 
     pthread_attr_destroy(&attr);
@@ -611,10 +554,7 @@ static void recvSignal(int sig)
 
 static void print_usage(const char* prog)
 {
-    printf("Usage: %s [-u rtsp_url]... [-d queue_depth]\n", prog);
-    printf("  -u : RTSP url. Repeat up to %d times, or pass comma-separated list\n", DISP_CHN_NUM);
-    printf("       Example: -u rtsp://cam1/main -u rtsp://cam2/main -u rtsp://cam3/main -u rtsp://cam4/main\n");
-    printf("  -d : H264 queue depth per channel (default: 8)\n");
+    (void)prog;
 }
 
 int main(int argc, char* argv[])
@@ -656,7 +596,6 @@ int main(int argc, char* argv[])
                 queueDepth = atoi(optarg);
                 if (queueDepth <= 0)
                 {
-                    printf("Invalid queue depth!\n");
                     return -1;
                 }
                 break;
@@ -676,23 +615,9 @@ int main(int argc, char* argv[])
     {
         size_t activeCount = std::min(userUrls.size(), static_cast<size_t>(DISP_CHN_NUM));
         rtspUrls.assign(userUrls.begin(), userUrls.begin() + activeCount);
-
-        if (userUrls.size() > static_cast<size_t>(DISP_CHN_NUM))
-        {
-            printf("Provided %zu RTSP URL(s); only the first %d will be used.\n", userUrls.size(), DISP_CHN_NUM);
-        }
     }
 
     const size_t activeStreamCount = rtspUrls.size();
-    printf("========== Runtime Config ==========\n");
-    for (size_t i = 0; i < activeStreamCount; ++i)
-    {
-        printf("RTSP URL[%zu] : %s\n", i, rtspUrls[i].c_str());
-    }
-    printf("Queue Depth : %d (per channel)\n", queueDepth);
-    printf("Puller Chn : %zu\n", activeStreamCount);
-    printf("Display Chn : %d\n", DISP_CHN_NUM);
-    printf("====================================\n");
 
     clearDumpFiles();
 
@@ -705,7 +630,6 @@ int main(int argc, char* argv[])
     {
         if (my_buffer::getInstance()->AllocVideoBuffer(i, static_cast<int>(extBufferSize)) != 0)
         {
-            printf("AllocVideoBuffer failed for channel %d\n", i);
             return 1;
         }
     }
@@ -718,7 +642,6 @@ int main(int argc, char* argv[])
         g_vdecNodes[i] = new t507_vdec_node(static_cast<int>(i));
         if (g_vdecNodes[i]->create() == -1)
         {
-            printf("Failed to create decoder for channel %zu\n", i);
             return 1;
         }
 
@@ -745,8 +668,7 @@ int main(int argc, char* argv[])
             );
 
             pid_t tid = syscall(SYS_gettid);
-
-            printf("puller[%zu] start, tid=%d bind cpu=%zu\n", i, tid, i);
+            (void)tid;
 
             g_pullers[i]->loop();
         });
@@ -754,7 +676,6 @@ int main(int argc, char* argv[])
         t.detach();
     }
 
-    logInfo("puller loop started, start Opengl\n");
     startOpengl();
 
 #ifdef FILE_TEST

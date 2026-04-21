@@ -37,17 +37,19 @@ void streamTimerHandler(void* clientData);
 
 // A function that outputs a string that identifies each stream (for debugging output).  Modify this if you wish:
 UsageEnvironment& operator<<(UsageEnvironment& env, const RTSPClient& rtspClient) {
-  return env << "[URL:\"" << rtspClient.url() << "\"]: ";
+  (void)rtspClient;
+  return env;
 }
 
 // A function that outputs a string that identifies each subsession (for debugging output).  Modify this if you wish:
 UsageEnvironment& operator<<(UsageEnvironment& env, const MediaSubsession& subsession) {
-  return env << subsession.mediumName() << "/" << subsession.codecName();
+  (void)subsession;
+  return env;
 }
 
 void usage(UsageEnvironment& env, char const* progName) {
-  env << "Usage: " << progName << " <rtsp-url-1> ... <rtsp-url-N>\n";
-  env << "\t(where each <rtsp-url-i> is a \"rtsp://\" URL)\n";
+  (void)env;
+  (void)progName;
 }
 
 char eventLoopWatchVariable = 0;
@@ -57,7 +59,6 @@ rtspPuller::rtspPuller(const char* rtspURL, H264Queue* h264queue, int chn) : rts
 void rtspPuller::loop(){
   while(true){
     if(tryConnect()){
-      logInfo("RTSP connected successfully, start eventloop\n");
       scheduler->doEventLoop();
     }
 
@@ -72,7 +73,6 @@ bool rtspPuller::tryConnect() {
 
   ourRTSPClient* rtspClient = ourRTSPClient::createNew(*env, rtspURL, &scs, this, 1, "rtspPuller");
   if (!rtspClient) {
-      std::cerr << "Failed to create RTSPClient\n";
       return false;
   }
   
@@ -93,7 +93,6 @@ void continueAfterDESCRIBE(RTSPClient* rtspClient, int resultCode, char* resultS
     StreamClientState* scs = client->scs;
 
     if (resultCode != 0) {
-        env << "DESCRIBE failed: " << resultString << "\n";
         delete[] resultString;
         return;
     }
@@ -102,7 +101,6 @@ void continueAfterDESCRIBE(RTSPClient* rtspClient, int resultCode, char* resultS
     scs->session = MediaSession::createNew(env, sdpDescription);
 
     if (!scs->session) {
-        env << "Failed to create MediaSession\n";
         return;
     }
 
@@ -110,18 +108,15 @@ void continueAfterDESCRIBE(RTSPClient* rtspClient, int resultCode, char* resultS
     scs->subsession = scs->iter->next();
 
     if (!scs->subsession) {
-        env << "No subsession found\n";
         return;
     }
 
     // only handle first subsession (video)
     if (strcmp(scs->subsession->mediumName(), "video") != 0) {
-        env << "Not video\n";
         return;
     }
 
     if (!scs->subsession->initiate()) {
-        env << "Failed to initiate subsession\n";
         return;
     }
 
@@ -129,7 +124,6 @@ void continueAfterDESCRIBE(RTSPClient* rtspClient, int resultCode, char* resultS
     scs->subsession->sink = MyH264Sink::createNew(env, *scs->subsession, *client->owner->h264Queue, client->owner->chn);
 
     if (!scs->subsession->sink) {
-        env << "Failed to create sink\n";
         return;
     }
 
@@ -141,7 +135,6 @@ void continueAfterDESCRIBE(RTSPClient* rtspClient, int resultCode, char* resultS
     rtspClient->sendSetupCommand(*scs->subsession, [](RTSPClient* rtspClient, int resultCode, char* resultString) {
         UsageEnvironment& env = rtspClient->envir();
         if (resultCode != 0) {
-            env << "SETUP failed: " << resultString << "\n";
             delete[] resultString;
             return;
         }
@@ -151,11 +144,9 @@ void continueAfterDESCRIBE(RTSPClient* rtspClient, int resultCode, char* resultS
         rtspClient->sendPlayCommand(*((ourRTSPClient*)rtspClient)->scs->session, [](RTSPClient* rtspClient, int resultCode, char* resultString) {
             UsageEnvironment& env = rtspClient->envir();
             if (resultCode != 0) {
-                env << "PLAY failed: " << resultString << "\n";
                 delete[] resultString;
                 return;
             }
-            env << "PLAY started\n";
             delete[] resultString;
         });
     }, False, True);
@@ -188,9 +179,6 @@ void subsessionByeHandler(void* clientData) {
   MediaSubsession* subsession = (MediaSubsession*)clientData;
   RTSPClient* rtspClient = (RTSPClient*)subsession->miscPtr;
 
-  UsageEnvironment& env = rtspClient->envir(); // alias
-  env << *rtspClient << "Received RTCP \"BYE\" on \"" << *subsession << "\" subsession\n";
-
   // Now act as if the subsession had closed:
   subsessionAfterPlaying(subsession);
 }
@@ -198,9 +186,6 @@ void subsessionByeHandler(void* clientData) {
 void streamTimerHandler(void* clientData) {
   ourRTSPClient* rtspClient = (ourRTSPClient*)clientData;
   StreamClientState* scs = rtspClient->scs;
-
-  UsageEnvironment& env = rtspClient->envir();
-  env << "Stream timeout, closing session\n";
 
   Medium::close(rtspClient);
   rtspClient = nullptr;
@@ -403,20 +388,8 @@ void MyH264Sink::afterGettingFrame(unsigned frameSize,
                                   unsigned numTruncatedBytes,
                                   struct timeval presentationTime,
                                   unsigned /*duration*/) {
-    // long long ts_ms =
-    // (long long)presentationTime.tv_sec * 1000 +
-    // presentationTime.tv_usec / 1000;
-
-    // struct timespec t;
-    // clock_gettime(CLOCK_REALTIME, &t);
-    // long long getFramFromNetPts = (long long)t.tv_sec * 1000 + t.tv_nsec / 1000000;
-
-    // printf("===> presentation time: %lld, now Time: %lld, delay: %lld\n", ts_ms, getFramFromNetPts, getFramFromNetPts - ts_ms);
-
     uint8_t nalType = (frameSize > 0) ? (fReceiveBuffer[0] & 0x1F) : 0;
-    if (numTruncatedBytes > 0) {
-        printf("[sink] WARNING chn=%d truncated bytes=%u, recvBuffer=%u\n", fChannel, numTruncatedBytes, fBufferSize);
-    }
+    (void)numTruncatedBytes;
     bool isIDR = (nalType == 5);
 
     // if (nalType == 7) {
@@ -447,14 +420,10 @@ void MyH264Sink::afterGettingFrame(unsigned frameSize,
     long long pts = 0;
     long long spts = 0;
 
-    // spts = sv_safeFunc_GetTimeTick();
-
     uint8_t* copyBuf = new uint8_t[frameSize];
     memcpy(copyBuf, fReceiveBuffer, frameSize);
 
     pts = sv_safeFunc_GetTimeTick();
-    // printf("===> copy frame data, size = %d, pts = %lld, copy cost = %lld ms\n", frameSize, pts, pts - spts);
-
     fQueue.push(copyBuf, frameSize, isIDR, pts);
 
     continuePlaying();

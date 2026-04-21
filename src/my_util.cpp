@@ -7,17 +7,13 @@ void save_yuv(const void *yuv_vAddr, char *file_path, int w, int h)
     fp = fopen(file_path, "w+");
     if (fp == NULL)
     {
-        printf("%s: Error: cannot open file !\n", __func__);
         return;
     }
     int ret = fwrite(yuv_vAddr, 1, w * h * 3 / 2, fp);
     if (ret <= 0)
     {
-        printf("%s: Error: cannot write file !\n", __func__);
         return;
     }
-
-    printf(" === save_yuv ====\n");
 
     fclose(fp);
 
@@ -34,10 +30,5 @@ void writeCacheToFile(const void *address, std::size_t size, const std::string &
     {
         file.write(reinterpret_cast<const char *>(address), size); // 将地址的缓存内容写入文件
         file.close();
-        printf("************* saved *************\n");
-    }
-    else
-    {
-        printf("************* can not open file *************\n");
     }
 }
