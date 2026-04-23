@@ -48,8 +48,6 @@ static std::array<H264Queue*, DISP_CHN_NUM> g_h264Queues{};
 static std::array<rtspPuller*, DISP_CHN_NUM> g_pullers{};
 static std::array<DecodeThreadContext, DISP_CHN_NUM> g_decodeCtx{};
 
-static const uint8_t START_CODE[4] = {0x00, 0x00, 0x00, 0x01};
-
 static uint64_t monotonicTimeUs()
 {
     struct timespec ts;
@@ -410,36 +408,6 @@ static void* listen_body(void* arg)
             needExtra = true;
         }
 
-        std::shared_ptr<std::vector<uint8_t>> decodeBuf = std::make_shared<std::vector<uint8_t>>(outSize);
-        uint8_t* inputBuf = decodeBuf->data();
-        uint8_t* p = inputBuf;
-
-        if (needExtra)
-        {
-            memcpy(p, START_CODE, 4);
-            p += 4;
-            memcpy(p, sps.data(), sps.size());
-            p += sps.size();
-
-            memcpy(p, START_CODE, 4);
-            p += 4;
-            memcpy(p, pps.data(), pps.size());
-            p += pps.size();
-        }
-
-        memcpy(p, START_CODE, 4);
-        p += 4;
-        memcpy(p, pkt.data, pkt.size);
-        delete[] pkt.data;
-
-        frame_shell fs;
-        // if(pkt.isIDR == true)
-        // {
-        //     ifReceiveIDR[chn_num] = 1;
-        // }
-        // if(ifReceiveIDR[chn_num] == 1)
-        //     writeCacheToFile(inputBuf, outSize, "chn" + std::to_string(chn_num) + ".h264");
-        fs.refill(MEDIA_PT_H264, inputBuf, 0, outSize, 1, 0, pkt.isIDR);
         char decHistoryBuf[256] = {0};
         snprintf(decHistoryBuf, sizeof(decHistoryBuf),
                  "q=%zu nal=%u pkt=%zu out=%zu idr=%d first_mb=%d primed=%d sps=%zu pps=%zu extra=%d",
@@ -467,7 +435,8 @@ static void* listen_body(void* arg)
         }
 
         const uint64_t sendStartUs = monotonicTimeUs();
-        int sendRet = ctx->vdecNode->sendFrame(&fs);
+        int sendRet = ctx->vdecNode->sendH264FrameDirect(pkt.data, pkt.size, sps, pps, pkt.isIDR, 0);
+        delete[] pkt.data;
         ++pipePerf.sendCount;
         accumulatePerfDuration(monotonicTimeUs() - sendStartUs, pipePerf.sendUsTotal, pipePerf.sendUsMax);
 
@@ -494,8 +463,6 @@ static void* listen_body(void* arg)
         {
             decoderPrimed = true;
         }
-
-        ctx->vdecNode->retainInputBuffer(decodeBuf);
 
         const uint64_t getFrameStartUs = monotonicTimeUs();
         media_frame* tempFrame = ctx->vdecNode->getFrame();

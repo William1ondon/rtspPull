@@ -23,6 +23,53 @@ constexpr size_t kRetainedInputSafetyCount = 256;
 constexpr size_t kRetainedInputMaxBytes = 128 * 1024 * 1024;
 constexpr size_t kDisplayHoldCount = 2;
 constexpr bool kVdecStateTraceEnabled = false;
+constexpr uint8_t kStartCode[4] = {0x00, 0x00, 0x00, 0x01};
+
+static bool appendToDecoderStreamBuffer(const uint8_t* src,
+                                        size_t len,
+                                        char*& packetBuf,
+                                        int& packetBufLen,
+                                        char*& packetRingBuf,
+                                        int& packetRingBufLen)
+{
+    if (len == 0)
+    {
+        return true;
+    }
+    if (src == nullptr)
+    {
+        return false;
+    }
+
+    while (len > 0)
+    {
+        if (packetBufLen > 0 && packetBuf != nullptr)
+        {
+            const size_t copyLen = std::min(len, static_cast<size_t>(packetBufLen));
+            std::memcpy(packetBuf, src, copyLen);
+            packetBuf += copyLen;
+            packetBufLen -= static_cast<int>(copyLen);
+            src += copyLen;
+            len -= copyLen;
+            continue;
+        }
+
+        if (packetRingBufLen > 0 && packetRingBuf != nullptr)
+        {
+            const size_t copyLen = std::min(len, static_cast<size_t>(packetRingBufLen));
+            std::memcpy(packetRingBuf, src, copyLen);
+            packetRingBuf += copyLen;
+            packetRingBufLen -= static_cast<int>(copyLen);
+            src += copyLen;
+            len -= copyLen;
+            continue;
+        }
+
+        return false;
+    }
+
+    return true;
+}
 
 template <typename... Args>
 void vdecStateTrace(const char* fmt, Args... args)
@@ -881,8 +928,103 @@ int t507_vdec_node::sendFrame(media_frame* frame)
         return -1;
     }
 
+    return decodeSubmittedFrame(ft, inputLen);
+}
+
+int t507_vdec_node::sendH264FrameDirect(const uint8_t* nalData,
+                                        size_t nalSize,
+                                        const std::vector<uint8_t>& sps,
+                                        const std::vector<uint8_t>& pps,
+                                        bool isIDR,
+                                        long long pts)
+{
+    if (!m_bCreated || m_decoder == nullptr || nalData == nullptr || nalSize == 0)
+    {
+        return -1;
+    }
+
+    const bool needExtra = isIDR && !sps.empty() && !pps.empty();
+    size_t inputLen = sizeof(kStartCode) + nalSize;
+    if (needExtra)
+    {
+        inputLen += sizeof(kStartCode) + sps.size();
+        inputLen += sizeof(kStartCode) + pps.size();
+    }
+
+    if (inputLen > static_cast<size_t>(0x7fffffff))
+    {
+        return -1;
+    }
+
+    const int validSize = VideoStreamBufferSize(m_decoder, 0) - VideoStreamDataSize(m_decoder, 0);
+    if (static_cast<int>(inputLen) > validSize)
+    {
+        return -1;
+    }
+
+    char* packetBuf = nullptr;
+    int packetBufLen = 0;
+    char* packetRingBuf = nullptr;
+    int packetRingBufLen = 0;
+    int ret = RequestVideoStreamBuffer(m_decoder,
+                                       static_cast<int>(inputLen),
+                                       &packetBuf,
+                                       &packetBufLen,
+                                       &packetRingBuf,
+                                       &packetRingBufLen,
+                                       0);
+    if (ret != 0)
+    {
+        return -1;
+    }
+
+    if ((packetBufLen + packetRingBufLen) < static_cast<int>(inputLen) || packetBuf == nullptr)
+    {
+        return -1;
+    }
+
+    char* packetStart = packetBuf;
+    if (needExtra)
+    {
+        if (!appendToDecoderStreamBuffer(kStartCode, sizeof(kStartCode), packetBuf, packetBufLen, packetRingBuf, packetRingBufLen) ||
+            !appendToDecoderStreamBuffer(sps.data(), sps.size(), packetBuf, packetBufLen, packetRingBuf, packetRingBufLen) ||
+            !appendToDecoderStreamBuffer(kStartCode, sizeof(kStartCode), packetBuf, packetBufLen, packetRingBuf, packetRingBufLen) ||
+            !appendToDecoderStreamBuffer(pps.data(), pps.size(), packetBuf, packetBufLen, packetRingBuf, packetRingBufLen))
+        {
+            return -1;
+        }
+    }
+
+    if (!appendToDecoderStreamBuffer(kStartCode, sizeof(kStartCode), packetBuf, packetBufLen, packetRingBuf, packetRingBufLen) ||
+        !appendToDecoderStreamBuffer(nalData, nalSize, packetBuf, packetBufLen, packetRingBuf, packetRingBufLen))
+    {
+        return -1;
+    }
+
+    VideoStreamDataInfo dataInfo;
+    std::memset(&dataInfo, 0, sizeof(dataInfo));
+    dataInfo.nID = static_cast<int>(++m_count);
+    dataInfo.pData = packetStart;
+    dataInfo.nLength = static_cast<int>(inputLen);
+    dataInfo.nPts = pts > 0 ? static_cast<int64_t>(pts) : static_cast<int64_t>(monotonicTimeUs());
+    dataInfo.nPcr = dataInfo.nPts;
+    dataInfo.bIsFirstPart = 1;
+    dataInfo.bIsLastPart = 1;
+    dataInfo.bValid = 1;
+
+    ret = SubmitVideoStreamData(m_decoder, &dataInfo, 0);
+    if (ret != 0)
+    {
+        return -1;
+    }
+
+    return decodeSubmittedFrame(isIDR ? FRAME_I : FRAME_P, static_cast<unsigned int>(inputLen));
+}
+
+int t507_vdec_node::decodeSubmittedFrame(FrameType ft, unsigned int inputLen)
+{
     const uint64_t decodeStartUs = monotonicTimeUs();
-    ret = DecodeVideoStream(m_decoder, 0, 0, 0, 0);
+    int ret = DecodeVideoStream(m_decoder, 0, 0, 0, 0);
     const uint64_t decodeEndUs = monotonicTimeUs();
     const uint64_t decodeElapsedUs = decodeEndUs - decodeStartUs;
     bool retryDecodeAfterArm = false;
@@ -1046,9 +1188,6 @@ media_frame* t507_vdec_node::getFrame()
 
     return m_outputBuffers[static_cast<size_t>(m_currentFrameIndex)].frame.get();
 }
-
-
-
 
 
 

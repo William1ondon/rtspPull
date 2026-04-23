@@ -98,7 +98,17 @@ public:
     bool isCreated();
     int create();
     int destroy();
+    
+    // 还是原来的用法，会在内部进行必要的封装和拷贝，适用于输入数据不完整或者没有完整NALU数据的场景
     int sendFrame(media_frame* frame);
+
+    // 直接往解码器输入NALU数据，绕过sendFrame接口的封装（可以少一次拷贝），适用于已经有完整NALU数据的场景
+    int sendH264FrameDirect(const uint8_t* nalData,
+                            size_t nalSize,
+                            const std::vector<uint8_t>& sps,
+                            const std::vector<uint8_t>& pps,
+                            bool isIDR,
+                            long long pts);
     void retainInputBuffer(const std::shared_ptr<std::vector<uint8_t>>& buffer);
     media_frame* getFrame();
 
@@ -116,4 +126,5 @@ private:
     void returnDecoderPicture(VideoPicture*& picture);
     void drainDecodedPictures();
     bool promotePendingPicture();
+    int decodeSubmittedFrame(FrameType ft, unsigned int inputLen);
 };
