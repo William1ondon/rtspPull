@@ -874,7 +874,11 @@ int FbmReturnPicture(Fbm* pFbm, VideoPicture* pVPicture)
     {
         return 0;
     }
-    dy_log("****FbmReturnPicture pVPicture=%p, id = %d", pVPicture,pVPicture->nID);
+    
+    /*
+        双流共享帧缓冲的处理
+        如果是共享，则需要根据当前 pFbm 是主流还是副流来清除不同的使用标志位
+    */
     if(pFbmInfo->bTwoStreamShareOneFbm == 1)
     {
         if(pFbm == pFbmInfo->pFbmFirst)
@@ -897,6 +901,11 @@ int FbmReturnPicture(Fbm* pFbm, VideoPicture* pVPicture)
 
     int i;
 
+    /*
+        定位物理帧
+        GPU缓冲使用文件描述符匹配
+        普通内存使用物理地址匹配
+    */
     if(pFbm->bUseGpuBuf == 1)
     {
         for(i=0; i<pFbm->nMaxFrameNum; i++)
@@ -981,6 +990,9 @@ int FbmReturnPicture(Fbm* pFbm, VideoPicture* pVPicture)
         return -1;
     }
 
+    /*
+        帧状态更新和队列管理
+    */
     pFrameNode->Flag.bUsedByRender = 0;
     pFbm->nRenderHoldingNum--;
     if(pFrameNode->Flag.bUsedByDecoder)

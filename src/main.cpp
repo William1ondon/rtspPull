@@ -64,6 +64,7 @@ static void accumulatePerfDuration(uint64_t elapsedUs, uint64_t& totalUs, uint64
     }
 }
 
+// Performance tracking for the pull-decode-display pipeline, aggregated and printed at 1-second intervals.
 struct PipePerfWindow
 {
     uint64_t windowStartUs{0};

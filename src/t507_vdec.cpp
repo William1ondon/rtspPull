@@ -726,8 +726,24 @@ int t507_vdec_node::create()
     }
     m_memOpsOpened = true;
 
+    /*
+        表示原始视频流的参数结构体，
+        包含编码格式、宽高、帧率、时长、纵横比、3D/安全流标志、帧/流包标记
+        以及 codec 特定数据指针等字段。
+    */
     std::memset(&m_streamInfo, 0, sizeof(m_streamInfo));
+    
+    /*
+        表示一个用于视频解码器/视频处理配置的结构体，
+        包含缩放、旋转、输出格式、缓冲区、硬件加速、保护、内存操作和其他解码控制标志等
+        一系列配置选项
+    */
     std::memset(&m_videoConf, 0, sizeof(m_videoConf));
+    
+    /*
+        表示新显示用的缓冲区信息，
+        包含缓冲区编号、宽高、像素格式、对齐值、各种标志位以及上下左右偏移量。
+    */
     std::memset(&m_fbmBufInfo, 0, sizeof(m_fbmBufInfo));
 
     m_videoConf.memops = reinterpret_cast<struct ScMemOpsS*>(m_memopsParam.ops);
@@ -1024,7 +1040,14 @@ int t507_vdec_node::sendH264FrameDirect(const uint8_t* nalData,
 int t507_vdec_node::decodeSubmittedFrame(FrameType ft, unsigned int inputLen)
 {
     const uint64_t decodeStartUs = monotonicTimeUs();
+
+    /*
+        负责处理视频流解码的整个过程，
+        包括是否为流结束、是否仅解码关键帧、是否丢弃 B 帧以减少延迟，以及当前时间戳。
+        函数返回解码结果，表示解码状态
+    */
     int ret = DecodeVideoStream(m_decoder, 0, 0, 0, 0);
+    
     const uint64_t decodeEndUs = monotonicTimeUs();
     const uint64_t decodeElapsedUs = decodeEndUs - decodeStartUs;
     bool retryDecodeAfterArm = false;
